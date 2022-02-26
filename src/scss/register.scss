@@ -1,0 +1,115 @@
+#login{//主体的样式
+    height: 100%;
+    width: 100%;
+    background-color: #e8eaf2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .box-card{//卡片的样式
+        width: 478px;
+        height:528px;
+        padding:24px;
+        border-radius: 10px;
+        .title{//卡片标题
+            height:40px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            padding-bottom:5px;
+            color: #343a40;
+            span{
+                letter-spacing:1px;
+                transition: border .3s;
+                border-bottom: 2px solid transparent;
+                &:hover{
+                    cursor: pointer;
+                    border-bottom: 2px solid #c93232;
+                }
+            }
+            
+            
+        }
+        .tips{//卡片提示
+            margin-top: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #6b7077;
+        }
+        .name,.id,.vCode,.psw{//账号,验证码,密码输入框
+            margin-bottom: 21px;
+            
+        }
+        .vCode{//验证码框
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .el-input{
+                width: 60%;
+            }
+            span{
+                font-size: 24px;
+                margin-left: 10px;
+                padding: 3px 10px;
+                border-radius:5px;
+                background-color: #c93232;
+                color: #fff;
+            }
+            button{
+                height:36px;
+                width: 36px;
+                border: 1px solid transparent;
+                border-radius: 50%;
+                background-color: #343a40;
+                i{
+                    color: #fff;
+                    transition: transform 0.6s;
+                }
+                &:hover{
+                    background-color: #c93232;
+                    i{
+                        transform:rotateZ(360deg)
+                    }
+                }
+            }
+        }
+        .btn-register{//登录按钮的外层div
+            display: flex;
+            justify-content: center;
+            margin-top: 28px;
+            margin-bottom: 30px;
+            .register-btn{//登录按钮
+                width: 80%;
+                height:40px;
+                background-color: #D0475A;
+                border: 1px transparent;
+                border-radius: 5px;
+                color:#fff;
+                box-shadow: 0px 0px 0px #888888;
+                transition: all .2s linear .1s;
+                &:hover{//登录按钮 hover效果
+                    cursor: pointer;
+                    background-color: #c93232;
+                    transform: translateY(-5px);
+                    box-shadow: 0px 5px 8px #888888;
+                }
+            }
+        }
+        .other{//底下的注册和忘记密码
+            display: flex;
+            justify-content: center;
+            .left{
+                color: #BA7272;
+                font-size: 16px;
+                font-weight: bold;
+                margin-right: 5px;
+                transition: transform 0.3s;
+                &:hover{
+                    color:#343a40;
+                    transform:scale(1.1)
+                }
+            }
+        }
+    }
+}

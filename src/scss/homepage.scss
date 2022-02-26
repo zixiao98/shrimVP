@@ -1,0 +1,107 @@
+//首页的样式
+#homepage{//最外层div
+    height:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .box{//第二层div
+        width: 60%;
+    }
+    .english{//英文标题
+        width: 50%;
+        margin-left: 50%;
+        font-size: 56px;
+        cursor: default;
+        animation:english .8s forwards;
+            @keyframes english {
+                0%{ 
+                    margin-left: 0%;
+                }
+                50%{ 
+                    margin-left:20%;
+                }
+                100%{ 
+                    margin-left: 50%;
+                }
+            }
+        span{
+            color: rgb(201, 50, 50);//主题色之一
+            transition: font-size .4s;
+            &:hover{
+                cursor: pointer;
+                font-size: 66px;
+            }
+        }
+    }
+    .chinese{//中文标题
+        width: 50%;
+        text-align:right;
+        font-size: 56px;
+        animation:chinese .8s;//动画
+            @keyframes chinese {//关键帧
+                0%{ 
+                    font-size: 56px;
+                }
+                50%{ 
+                    font-size: 36px;
+                }
+                100%{ 
+                    font-size: 56px;
+                }
+            }
+        span{
+            transition: border-bottom .1s;
+            &:hover{
+                cursor: pointer;
+                border-bottom: 3px solid rgb(201, 50, 50);
+            }
+        }
+    }
+    .hamal{//@子萧xhxka的样式
+        cursor: pointer;
+        letter-spacing:1px;
+        span{
+            animation: hamal .8s alternate;
+            @keyframes hamal {
+                0%{
+                    font-size: 17px;
+                }
+                50%{
+                    font-size: 37px;
+                }
+                100%{
+                    font-size: 17px;
+                }
+            }
+        }
+    }
+    .tips{//最底下tips的样式
+        margin-top: 60px;
+        text-align: right;
+        span{
+            padding: 5px;
+            // border: 2px solid #221312;
+            // border-radius: 5px;
+            font-size: 20px;
+            &:hover{
+                cursor: pointer;
+            }
+            animation: tips .8s forwards;//使用动画
+            @keyframes tips {//关键帧
+                0%{
+                    border: 0px solid transparent;
+                    border-radius: 0px;
+                }
+                50%{
+                    border: 5px solid #2213127e;
+                    border-radius: 8px;
+                }
+                100%{
+                    border: 3px solid #221312;
+                    border-radius: 5px;
+                }
+            }
+            
+        }
+    }
+}
