@@ -4,6 +4,11 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path:'/testMain',
+    name:'TestMain',
+    component:()=> import(/* webpackChunkName: "about" */ '../views/testMain.vue')
+  },
   {//登入
     path: '/',
     name: 'Login',
