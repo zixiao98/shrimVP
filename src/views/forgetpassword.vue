@@ -1,12 +1,100 @@
 <template>
     <!-- 忘记密码 -->
-    <div id="login">
+    <div class="psw-container">
+        <el-dialog
+            title="by 密保问题-找回密码"
+            :visible.sync="dialogVisible"
+            :modal-append-to-body="false"
+            width="35%"
+            center
+            :before-close="handleClose">
+            <el-form :model="userSecurityQuestion" ref="userSecurityQuestion" label-width="80px">
+                <div class="question">
+                    <el-form-item label="密保问题:">
+                        <span>{{question}}</span>
+                    </el-form-item>
+                </div>
+                <div class="answer">
+                    <el-form-item label="密保答案:">
+                        <el-input v-model="userSecurityQuestion.answer" placeholder="答案"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="vCode">
+                    <el-form-item label="验证码:"></el-form-item>
+                    <el-input v-model="userSecurityQuestion.vCode"  maxlength="4" show-word-limit placeholder="验证码"></el-input>
+                    <span>{{vCode}}</span>
+                    <button @click='refreshVcode'><i class="el-icon-refresh"></i></button>
+                </div>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <button class='left' @click="dialogVisible = false">取 消</button>
+                <button class='right' type="primary" @click="findBackByQuestion">确 定</button>
+            </span>
+        </el-dialog>
+        <div class="psw-box">
+        <!-- logo区域 -->
+        <div class="avatar-box left">
+            <img src="@/assets/img/logo.png" alt="logo"/>
+            <p class="account-copyright">2022 © shrimp culture by lzj</p>
+        </div>
+        <div class="right">
+            <div class="title">
+            <div class="outSide">
+                <div>
+                    <img src="@/assets/img/logo2.png" alt="logo2">
+                    <span>重置 </span>reset
+                </div>
+                <span class="other">
+                    <el-link :underline="false" class="otherRight" @click.native.prevent='backLogin'>返回登录</el-link>
+                </span>
+            </div>
+            </div>
+            <!-- 表单区域 -->
+            <div class="box-card" v-if="!changeFlag">
+                <div class="card-left">
+                    <div class="words">
+                        请输入你需要找回密码的账号！
+                    </div>
+                </div>
+                <div class="card-right">
+                    <div class="accNumber">
+                        <el-input v-model="accNumber" placeholder="账号"></el-input>
+                    </div>
+                    <div class="btn-check">
+                        <button class="check-btn" @click='toCheck'>查询</button>
+                    </div>
+                </div>
+            </div>
+            <div class="box-card" v-if="changeFlag">
+                <div class="card-left">
+                    <div class="words">
+                        请选择你需要找回密码的方式！
+                    </div>
+                </div>
+                <div class="card-right">
+                    <div class="accNumber">
+                        <span class="left">你的账号：</span>
+                        <span class="right">{{accNumber}}</span>
+                    </div>
+                    <div class="btn-email">
+                        <button class="check-btn" @click='toFindBackByEmail'>找回</button>by
+                        <el-link :underline="false" class="link">邮箱验证</el-link>
+                    </div>
+                    <div class="btn-securityQuestion">
+                        <button class="check-btn" @click='toFindBackByQuestion'>找回</button>by
+                        <el-link :underline="false" class="link">密保问题</el-link>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <!-- <div id="login">
         <el-dialog
             title="by 密保问题-找回密码"
             :visible.sync="dialogVisible"
             width="35%"
             :before-close="handleClose">
-            <!-- <span>这是一段信息</span> -->
             <el-form :model="userSecurityQuestion" ref="userSecurityQuestion" label-width="80px">
                 <div class="question">
                     <el-form-item label="密保问题:">
@@ -50,9 +138,6 @@
                     <button class="check-btn" @click='toCheck'>查询</button>|
                     <el-link :underline="false" class="login-link" @click.native.prevent='backLogin'>返回登录</el-link>
                 </div>
-                <!-- <div class="other">
-                    <el-link :underline="false" class="left">账号注册</el-link>|<el-link :underline="false" class="right">忘记密码</el-link>
-                </div> -->
             </div>
         </el-card>
         <el-card class="box-card" v-if="changeFlag">
@@ -85,7 +170,7 @@
                 <el-link :underline="false" class="login-link" @click.native.prevent='backLogin'>返回登录</el-link>
             </div>
         </el-card>
-    </div>
+    </div> -->
 </template>
 
 <script>
@@ -132,33 +217,34 @@ export default {
         },
         //找回密码
         toCheck(){
-            zx_axios.get('/accNumber',{
-                params:{
-                    accNumber:this.accNumber
-                }
-            }).then(res=>{
-                //切换
-                this.changeFlag = !this.changeFlag;
-                //存储密保问题
-                this.question = res.data.question;
-                console.log(this.question)
-            }).catch(err=>{
-                if(err.response.status ===401){
-                    this.$notify({
-                        type: 'error',
-                        title: `状态码：${err.response.status}`,
-                        message: `${err.response.data.tips}`,
-                        duration:1500
-                    });
-                }else{
-                    this.$notify({
-                        type: 'warning',
-                        title: `状态码：${err.response.status}`,
-                        message: `${err.response.data.errors[0].msg}`,
-                        duration:1500
-                    });
-                }
-            })
+            this.changeFlag = !this.changeFlag;
+            // zx_axios.get('/accNumber',{
+            //     params:{
+            //         accNumber:this.accNumber
+            //     }
+            // }).then(res=>{
+            //     //切换
+            //     this.changeFlag = !this.changeFlag;
+            //     //存储密保问题
+            //     this.question = res.data.question;
+            //     console.log(this.question)
+            // }).catch(err=>{
+            //     if(err.response.status ===401){
+            //         this.$notify({
+            //             type: 'error',
+            //             title: `状态码：${err.response.status}`,
+            //             message: `${err.response.data.tips}`,
+            //             duration:1500
+            //         });
+            //     }else{
+            //         this.$notify({
+            //             type: 'warning',
+            //             title: `状态码：${err.response.status}`,
+            //             message: `${err.response.data.errors[0].msg}`,
+            //             duration:1500
+            //         });
+            //     }
+            // })
         },
         //通过邮箱验证找回
         toFindBackByEmail(){

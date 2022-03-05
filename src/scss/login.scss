@@ -1,44 +1,109 @@
 //登录的样式
-#login{//主体的样式
+.login-container {
     height: 100%;
     width: 100%;
-    background-color: #e8eaf2;
+    position: relative;
+}
+  
+.login-box {
+    min-width: 850px;
+    min-height: 450px;
+    background-color: transparent;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
-    justify-content: center;
     align-items: center;
-    .box-card{//卡片的样式
-        width: 40%;
-        height: 50%;
-        min-width: 478px;
-        min-height:388px;
-        padding:24px;
-        border-radius: 10px;
-        .title{//卡片标题
-            height:40px;
-            text-align: center;
-            font-size: 36px;
-            font-weight: bold;
-            padding-bottom:5px;
-            span{
-                color: rgb(201, 50, 50);//主题色之一
-                letter-spacing:1px;
-                transition: border .3s;
-                border-bottom: 2px solid transparent;
-                &:hover{
-                    cursor: pointer;
-                    border-bottom: 2px solid #0396FF;
+    justify-content:center;
+    .left,.right{
+        box-sizing: border-box;
+        display: inline-block;
+        // height: 100%;
+        // border:1px solid #000;
+        text-align: center;
+    }
+    .left{
+        width: 45%;
+        img{
+            width: 310px;
+            height: 80.5px;
+        }
+        .account-copyright{
+            color: #343a40;
+            font-family: '微软雅黑';
+        }
+    }
+    .right{
+        width: 60%;
+        animation: rotate cubic-bezier(.48,.52,1,.2) forwards .3s;
+        @keyframes rotate{
+            0%{
+                border-left: 2px solid #fff;
+            }
+            20%{
+                border-left: 2px solid rgb(206, 128, 128)232;
+            }
+            50%{
+                border-left: 2px solid rgb(182, 87, 87)232;
+            }
+            70%{
+                border-left: 2px solid rgb(180, 60, 60)232;
+            }
+            100%{
+                border-left: 2px solid #c93232;
+            }
+        }
+        padding:0 4%;
+        .title{
+            margin-bottom: 10px;
+            .outSide{
+                width: 100%;
+                position: relative;
+                div{
+                    color:#c93232;
+                    font-size: 24px;
+                    letter-spacing: 1px;
+                    display: flex;
+                    align-items: center;
+                    line-height: 70px;
+                    img{
+                        width: 60px;
+                    }
+                    span{
+                        color: #343a40;
+                        font-size: 28px;
+                    }
                 }
             }
-        
-            
-        }
-        .tips{//卡片提示
-            margin-top: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: bold;
-            color: #6b7077;
+            .other{
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+                .otherLeft{
+                    font-size: 16px;
+                    font-weight: 800;
+                    margin-right: 8px;
+                    border-bottom: 2px solid transparent;
+                    transition: all .1s;
+                    &:hover{
+                        color:#c93232;
+                        border-bottom: 2px solid #c93232;
+                    }
+                }
+                .otherRight{
+                    font-size: 16px;
+                    font-weight: 800;
+                    margin-left: 8px;
+                    border-bottom: 2px solid transparent;
+                    transition: all .1s;
+                    &:hover{
+                        color:#c93232;
+                        border-bottom: 2px solid #c93232;
+                    }
+                }
+            }
         }
         .id,.psw,.vCode{//账号,密码输入框
             margin-bottom: 21px;
@@ -64,15 +129,13 @@
                 border: 1px solid transparent;
                 border-radius: 50%;
                 background-color: #343a40;
+                transition: all .2s;
                 i{
                     color: #fff;
-                    transition: transform 0.6s;
                 }
                 &:hover{
                     background-color: #c93232;
-                    i{
-                        transform:rotateZ(360deg)
-                    }
+                    box-shadow: 0px 0px 8px #343a40;
                 }
             }
         }
@@ -83,44 +146,24 @@
             .login-btn{//登录按钮
                 width: 80%;
                 height:40px;
-                background-color: #606266;
+                background-color: #c93232;
                 border: 1px transparent;
                 border-radius: 5px;
                 color:#fff;
-                box-shadow: 0px 0px 0px #888;
                 transition: all .2s linear .1s;
                 &:hover{//登录按钮 hover效果
                     cursor: pointer;
-                    background-color: #343a40;
-                    transform: translateY(-5px);
-                    box-shadow: 0px 5px 8px #888;
-                }
-            }
-        }
-        .other{//底下的注册和忘记密码
-            display: flex;
-            justify-content: center;
-            .left,.right{
-                font-size: 16px;
-                font-weight: bold;
-                color: #909399;
-            }
-            .left{
-                margin-right: 8px;
-                transition: transform 0.3s;
-                &:hover{
-                    color:#c93232;
-                    transform:scale(1.1)
-                }
-            }
-            .right{
-                margin-left: 8px;
-                transition: transform 0.3s;
-                &:hover{
-                    color:#c93232;
-                    transform:scale(1.1)
+                    box-shadow: 0px 6px 10px #888;
                 }
             }
         }
     }
 }
+  //星空背景
+#particles-js {
+    background: #343a40;
+    height: 100vh;
+    width: 100vw;
+    // position: fixed;
+    // z-index: -100;
+  }

@@ -1,6 +1,59 @@
 <template>
     <!-- 邮箱注册 -->
-    <div id="login">
+    <div class="register-container">
+    <div class="register-box">
+      <!-- logo区域 -->
+      <div class="avatar-box left">
+        <img src="@/assets/img/logo.png" alt="logo"/>
+        <p class="account-copyright">2022 © shrimp culture by lzj</p>
+      </div>
+      <div class="right">
+        <div class="title">
+          <div class="outSide">
+            <div>
+                <img src="@/assets/img/logo2.png" alt="logo2">
+                <span>注册 </span>register
+            </div>
+            <span class="other">
+                <el-link :underline="false" class="otherRight" @click='backLogin'>返回登录</el-link>
+            </span>
+          </div>
+        </div>
+        <!-- 表单区域 -->
+        <el-form :model="userForm" :rules="rules" ref="userForm">
+                <div class="name">
+                    <el-form-item prop="name">
+                        <el-input v-model="userForm.name" placeholder="昵称"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="id">
+                    <el-form-item prop="accNumber">
+                        <el-input v-model="userForm.accNumber" placeholder="邮箱"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="vCode">
+                    <el-input placeholder="验证码" v-model="userForm.vCode" maxlength="4" show-word-limit></el-input>
+                    <span>{{vCode}}</span>
+                    <button @click='refreshVcode'><i class="el-icon-refresh"></i></button>
+                </div>
+                <div class="psw">
+                    <el-form-item prop="password">
+                        <el-input placeholder="密码" v-model="userForm.password" show-password></el-input>
+                    </el-form-item>
+                </div>
+                <div class="psw">
+                    <el-form-item prop="psws">
+                        <el-input placeholder="密码" v-model="userForm.psws" show-password></el-input>
+                    </el-form-item>
+                </div>
+                <div class="btn-register">
+                    <button class="register-btn" @click="register('userForm')">注册</button>
+                </div>
+            </el-form>
+      </div>
+    </div>
+  </div>
+    <!-- <div id="login">
         <el-card class="box-card">
             <el-form :model="userForm" :rules="rules" ref="userForm">
                 <div class="title">
@@ -42,7 +95,7 @@
                 </div>
             </el-form>
         </el-card>
-    </div>
+    </div> -->
 </template>
 
 <script>

@@ -1,33 +1,43 @@
 <template>
-    <!-- 登录 -->
-    <div id="login">
-        <el-card class="box-card">
-            <div class="title">
-                <span>对虾养殖可视化平台</span>
+<!-- 登录 -->
+ <div class="login-container">
+    <div class="login-box">
+      <!-- logo区域 -->
+      <div class="avatar-box left">
+        <img src="@/assets/img/logo.png" alt="logo"/>
+        <p class="account-copyright">2022 © shrimp culture by lzj</p>
+      </div>
+      <div class="right">
+        <div class="title">
+          <div class="outSide">
+            <div>
+                <img src="@/assets/img/logo2.png" alt="logo2">
+                <span>登录 </span>login
             </div>
-            <div class="tips">
-                <span>Shrimp visualization platform</span>
-            </div>
-            <div class="id">
-                <el-input v-model="form.accNumber" placeholder="邮箱"></el-input>
-            </div>
-            <div class="psw">
-                <el-input placeholder="密码" v-model="form.password" show-password></el-input>
-            </div>
-            <div class="vCode">
-                <el-input placeholder="验证码" v-model="form.vCode" maxlength="4" show-word-limit></el-input>
-                <span>{{vCode}}</span>
-                <button @click='refreshVcode'><i class="el-icon-refresh"></i></button>
-            </div>
-            <div class="btn-login">
-                <button class="login-btn" @click='login'>登录</button>
-            </div>
-            <div class="other">
-                <el-link :underline="false" class="left" @click="register">邮箱注册</el-link>|
-                <el-link :underline="false" class="right" @click="forgetpassword">忘记密码</el-link>
-            </div>
-        </el-card>
+            <span class="other">
+                <el-link :underline="false" class="otherLeft" @click="register">邮箱注册</el-link>|
+                <el-link :underline="false" class="otherRight" @click="forgetpassword">忘记密码</el-link>
+            </span>
+          </div>
+        </div>
+        <!-- 登录表单区域 -->
+        <div class="id">
+            <el-input v-model="form.accNumber" placeholder="邮箱"></el-input>
+        </div>
+        <div class="psw">
+            <el-input placeholder="密码" v-model="form.password" show-password></el-input>
+        </div>
+        <div class="vCode">
+            <el-input placeholder="验证码" v-model="form.vCode" maxlength="4" show-word-limit></el-input>
+            <span>{{vCode}}</span>
+            <button @click='refreshVcode'><i class="el-icon-refresh"></i></button>
+        </div>
+        <div class="btn-login">
+            <button class="login-btn" @click='login'>登录</button>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -39,6 +49,7 @@ export default {
     name:'login',
     data(){
         return {
+            labelPosition:'left',
             form: {
                 accNumber:'2568624492@qq.com',
                 password:'12345678',
