@@ -1,34 +1,36 @@
 <template>
     <!-- 系统页 -->
     <div id="home">
-        <el-container>
+        <div class="home-box">
+            <el-container>
             <!-- 侧边栏 -->
-            <el-aside width='280px'>
+            <el-aside width='240px'>
                 <div class="title">
-                    <span class='name'>YourPswLAss</span>
-                    <span class="tips">你的密码小助手</span>
+                    <!-- <span class='name'>YourPswLAss</span>
+                    <span class="tips">你的密码小助手</span> -->
+                    <img src="@/assets/img/logo.png" alt="">
                 </div>
                 <div class="option">
                     <div class="asd">
                         <div @click="navigation(1)"><i class="el-icon-monitor"></i><span>首页</span></div>
                     </div>
                     <div class="asd">
-                        <span>密码</span>
-                        <div @click="navigation(2)"><i class="el-icon-key"></i><span>密码箱</span></div>
-                        <div @click="navigation(3)"><i class="el-icon-delete"></i><span>回收站</span></div>
+                        <span>功能点一</span>
+                        <div @click="navigation(2)"><i class="el-icon-key"></i><span>xxx</span></div>
+                        <div @click="navigation(3)"><i class="el-icon-delete"></i><span>xxx</span></div>
                     </div>
                     <div class="asd">
-                        <span>备忘录</span>
-                        <div @click="navigation(4)"><i class="el-icon-coffee"></i><span>工作</span></div>
-                        <div @click="navigation(5)"><i class="el-icon-milk-tea"></i><span>生活</span></div>
+                        <span>功能点二</span>
+                        <div @click="navigation(4)"><i class="el-icon-coffee"></i><span>xxx</span></div>
+                        <div @click="navigation(5)"><i class="el-icon-milk-tea"></i><span>xxx</span></div>
                     </div>
                     <div class="asd">
-                        <span>回忆</span>
-                        <div @click="navigation(6)"><i class="el-icon-sugar"></i><span>甜蜜</span></div>
-                        <div @click="navigation(7)"><i class="el-icon-light-rain"></i><span>苦涩</span></div>
+                        <span>功能点三</span>
+                        <div @click="navigation(6)"><i class="el-icon-sugar"></i><span>xxx</span></div>
+                        <div @click="navigation(7)"><i class="el-icon-light-rain"></i><span>xxx</span></div>
                     </div>
                     <div class="asd">
-                        <span>用户</span>
+                        <span>功能点四</span>
                         <div @click="navigation(8)"><i class="el-icon-user-solid"></i><span>个人中心</span></div>
                         <div @click="navigation(9)"><i class="el-icon-view"></i><span>登录记录</span></div>
                     </div>
@@ -38,17 +40,26 @@
                 <!-- 头部 -->
                 <el-header height="80px">
                     <!-- 日期时间 -->
-                    <div class="time"></div>
+                    <div class="time">{{this.time}}</div>
+                    <div class="webName">
+                        对虾养殖可视化平台
+                    </div>
                     <!-- 右上角点击下拉菜单 -->
-                    <el-dropdown trigger="click" @command='handleCommand'>
-                        <span class="el-dropdown-link">
-                            <i class="el-icon-user-solid"></i> {{name}}<i class="el-icon-arrow-down el-icon--right"></i>
-                        </span>
-                        <el-dropdown-menu slot="dropdown" >
-                            <el-dropdown-item command='personalcenter' icon="el-icon-user-solid">个人中心</el-dropdown-item>
-                            <el-dropdown-item command='exit' icon="el-icon-error">登出系统</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
+                    <div>
+                        <el-dropdown trigger="click" @command='handleCommand'>
+                            <span class="el-dropdown-link">
+                                <i class="el-icon-user-solid"></i> {{name}}<i class="el-icon-arrow-down el-icon--right"></i>
+                            </span>
+                            <el-dropdown-menu slot="dropdown" >
+                                <el-dropdown-item command='personalcenter' icon="el-icon-user-solid">个人中心</el-dropdown-item>
+                                <el-dropdown-item command='exit' icon="el-icon-error">登出系统</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                        <!--logo2  -->
+                        <div class="logo">
+                            <img src="@/assets/img/logo2.png" alt="">
+                        </div>
+                    </div>
                 </el-header>
                 <!-- 主体 -->
                 <el-main>
@@ -56,17 +67,31 @@
                     <router-view />
                 </el-main>
                 <!-- 底部 -->
-                <el-footer height="80px">
-                    <div class='left'>
-                        <span>YourPswLAss v 0.1.0</span>
-                    </div>
-                    <div class='right'>
+                <el-footer height="28px">
+                    <div class='center'>
                         <i class="el-icon-check"></i>
-                        <span>你的密码小助手</span>
+                        <span>Shrimp culture visualization platform 对虾养殖可视化平台 2022 © shrimp culture by lzj</span>
                     </div>
                 </el-footer>
             </el-container>
         </el-container>
+        </div>
+        <div id="starry-box">
+            <vue-particles
+                color="#c93232"
+                :particleOpacity="0.7"
+                :particlesNumber="120"
+                shapeType="circle"
+                :particleSize="3"
+                linesColor="#fff"
+                :linesWidth="1"
+                :lineOpacity="0.4"
+                :linesDistance="80"
+                :moveSpeed="1"
+                :hoverEffect="false"
+                :clickEffect="false">
+            </vue-particles>
+        </div>
     </div>
 </template>
 

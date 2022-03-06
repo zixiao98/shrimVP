@@ -2,6 +2,8 @@
     height: 100%;
     width: 100%;
     position: relative; 
+    min-width: 950px;
+    min-height: 550px;
 }
 .main-box{
     width: 50vw;
@@ -18,10 +20,13 @@
     align-items: center;
     justify-content:center;
     border-radius: 15px;
+    z-index: 1000;
 }
   //星空背景
   #particles-js {
-    background: #343a40;
+    background: #2a3235;
     height: 100vh;
     width: 100vw;
+    min-width: 950px;
+    min-height: 550px;
 }

@@ -17,10 +17,10 @@ export default {
     },
     methods:{
         intChart(){
-            var myChart =  this.$echarts.init(document.querySelector('.lzj-chart'),'dark');
+            var myChart =  this.$echarts.init(document.querySelector('.lzj-chart'));
             myChart.setOption({
                 title: {
-                    text: 'ECharts 入门示例'
+                    text: '图一'
                 },
                 tooltip: {},
                 xAxis: {
@@ -41,6 +41,16 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.lzj-container{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+// charts
+.lzj-chart{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
 </style>

@@ -12,15 +12,11 @@
         :particleSize="3"
         linesColor="#fff"
         :linesWidth="1"
-        :lineLinked="true"
         :lineOpacity="0.4"
         :linesDistance="80"
-        :moveSpeed="2"
+        :moveSpeed="3"
         :hoverEffect="false"
-        hoverMode="grab"
-        :clickEffect="false"
-        clickMode="push"
-      >
+        :clickEffect="false">
       </vue-particles>
     </div>
   </div>

@@ -21,11 +21,11 @@
         </div>
         <!-- 表单区域 -->
         <el-form :model="userForm" :rules="rules" ref="userForm">
-                <div class="name">
+                <!-- <div class="name">
                     <el-form-item prop="name">
                         <el-input v-model="userForm.name" placeholder="昵称"></el-input>
                     </el-form-item>
-                </div>
+                </div> -->
                 <div class="id">
                     <el-form-item prop="accNumber">
                         <el-input v-model="userForm.accNumber" placeholder="邮箱"></el-input>
@@ -43,7 +43,7 @@
                 </div>
                 <div class="psw">
                     <el-form-item prop="psws">
-                        <el-input placeholder="密码" v-model="userForm.psws" show-password></el-input>
+                        <el-input placeholder="确认密码" v-model="userForm.psws" show-password></el-input>
                     </el-form-item>
                 </div>
                 <div class="btn-register">

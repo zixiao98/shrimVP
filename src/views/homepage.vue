@@ -1,32 +1,69 @@
 <template>
     <!-- 首页 -->
     <div id="homepage">
-        <div class="box">
-            <div class="chinese">
-                <div><span>你的密码</span></div>
-                <div><span>小助手</span></div>
+        <div class="page-box">
+            <div class="left">
+                <div class="leftTop">
+                    <div class="box">
+                        <span class="one"></span>
+                        <span class="two"></span>
+                        <span class="three"></span>
+                        <span class="four"></span>
+                        <test></test>
+                    </div>
+                </div>
+                <div class="leftBottom">
+                    <div class="box">
+                        <span class="one"></span>
+                        <span class="two"></span>
+                        <span class="three"></span>
+                        <span class="four"></span>
+                        <test></test>
+                    </div>
+                </div>
             </div>
-            <div class="english">
-                <div><span>Your</span></div>
-                <div><span>P</span>a<span>s</span>s<span>w</span>ord</div>
-                <div><span>L</span>ittle <span>Ass</span>istant</div>
+            <div class="center">
+                <div class="centerC">
+                    <div class="box">
+                        <span class="one"></span>
+                        <span class="two"></span>
+                        <span class="three"></span>
+                        <span class="four"></span>
+                    </div>
+                </div>
             </div>
-            <div class='hamal'>
-                <span>@{{userName}}</span>
-            </div>
-            <div class='tips'>
-                <span>不止于密码 / It's not just about passwords</span>
+            <div class="right">
+                <div class="rightTop">
+                    <div class="box">
+                        <span class="one"></span>
+                        <span class="two"></span>
+                        <span class="three"></span>
+                        <span class="four"></span>
+                    </div>
+                </div>
+                <div class="rightBottom">
+                    <div class="box">
+                        <span class="one"></span>
+                        <span class="two"></span>
+                        <span class="three"></span>
+                        <span class="four"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import test from '@/components/test.vue'
 export default {
     data(){
         return {
-            userName:''
+            
         }
+    },
+    components:{
+        Test:test,
     },
     name: "homepage",
     //生命周期函数
@@ -36,7 +73,7 @@ export default {
         node.style.color = '#fff';
         node.style.backgroundColor = '#303133';
         //获取user
-        this.userName = window.localStorage.getItem('userName');
+        // this.userName = window.localStorage.getItem('userName');
     },
     beforeDestroy(){
         //让侧边栏功能'取消'固化hover的效果
