@@ -1,43 +1,40 @@
 <template>
   <div class="lzj-container">
-      <div class="lzj-chart" ref='myTest'></div>
+      <div class="lzj-chart" ref='myLine'></div>
   </div>
 </template>
 
 <script>
 export default {
     data(){
-        return {
-            
+        return{
+
         }
     },
-    mounted()
-    {
-        this.intChart()
+    mounted(){
+        this.initChart()
         window.addEventListener('resize',this.adaptChart)
     },
     methods:{
         // 初始化echart
-        intChart(){
-            this.myChartsInstance =  this.$echarts.init(this.$refs.myTest);
-            this.myChartsInstance.setOption({
-                title: {
-                    text: '图一'
-                },
-                tooltip: {},
+        initChart(){
+            this.myChartsInstance = this.$echarts.init(this.$refs.myLine)//用获取实例来注册
+            const initOption= {
                 xAxis: {
-                    data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子','帽子']
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
                 },
-                yAxis: {},
+                yAxis: {
+                    type: 'value'
+                },
                 series: [
                     {
-                    name: '销量',
-                    type: 'bar',
-                    data: [5, 20, 36, 10, 10, 20,1]
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'line',
                     }
                 ]
-            })
-
+            };
+            this.myChartsInstance.setOption(initOption)
         },
         // 获取数据
         getData(){
@@ -52,8 +49,10 @@ export default {
             this.myChartsInstance.resize()//echarts实例图表自适应方法
         },
     }
+
 }
 </script>
 
 <style lang="scss" scoped>
+
 </style>

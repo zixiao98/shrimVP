@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import axios from 'axios'
 // 引入并使用粒子特效
 import VueParticles from 'vue-particles'
 // 引入全局样式
@@ -19,7 +20,7 @@ Vue.use(ElementUI);
 Vue.use(VueParticles)
 // 保存为全局变量
 Vue.prototype.$echarts = echart;
-
+Vue.prototype.$axios =axios;
 new Vue({
   router,
   store,

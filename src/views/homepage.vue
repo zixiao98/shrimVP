@@ -9,7 +9,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
-                        <test></test>
+                        <Test></Test>
                     </div>
                 </div>
                 <div class="leftBottom">
@@ -18,7 +18,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
-                        <test></test>
+                        <Pie></Pie>
                     </div>
                 </div>
             </div>
@@ -29,6 +29,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
+                        <Cmap></Cmap>
                     </div>
                 </div>
             </div>
@@ -39,6 +40,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
+                        <Lines></Lines>
                     </div>
                 </div>
                 <div class="rightBottom">
@@ -47,6 +49,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
+                        <Radar></Radar>
                     </div>
                 </div>
             </div>
@@ -55,7 +58,11 @@
 </template>
 
 <script>
-import test from '@/components/test.vue'
+import Test from '@/components/test.vue'
+import Cmap from '@/components/Cmap.vue'
+import Pie from '@/components/pie.vue'
+import Lines from '@/components/line.vue'//不能用Line,会报错：Do not use built-in or reserved HTML elements as component id: Line
+import Radar from '@/components/radar.vue'
 export default {
     data(){
         return {
@@ -63,7 +70,11 @@ export default {
         }
     },
     components:{
-        Test:test,
+        Test,
+        Cmap,
+        Pie,
+        Lines,
+        Radar,
     },
     name: "homepage",
     //生命周期函数
