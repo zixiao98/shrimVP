@@ -18,8 +18,12 @@ export default {
     },
     methods:{
         // 初始化echart
-        intChart(){
-            this.myChartsInstance =  this.$echarts.init(this.$refs.myTest);
+        async intChart(){
+            // 获取主题
+            let theme = await this.$axios.get('http://localhost:8088/static/theme/customed.json')
+            // 注册主题
+            this.$echarts.registerTheme('customed',theme.data)
+            this.myChartsInstance =  this.$echarts.init(this.$refs.myTest,'customed');
             this.myChartsInstance.setOption({
                 title: {
                     text: '图一'

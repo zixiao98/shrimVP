@@ -17,40 +17,44 @@ export default {
     },
     methods:{
         // 初始化echart
-        initChart(){
-            this.myChartsInstance = this.$echarts.init(this.$refs.myPie)//用获取实例来注册
+        async initChart(){
+            // 获取主题
+            let theme = await this.$axios.get('http://localhost:8088/static/theme/customed.json')
+            // 注册主题
+            this.$echarts.registerTheme('customed',theme.data)
+            this.myChartsInstance = this.$echarts.init(this.$refs.myPie,'customed')//用获取实例来注册
             this.myChartsInstance.setOption({
                 title: {
                     text: 'my pie',
                     subtext: 'Fake Data',
-                    left: 'center'
+                    left: 'center',
                 },
                 tooltip: {
                     trigger: 'item'
                 },
                 legend: {
                     orient: 'vertical',
-                    left: 'left'
+                    left: 'left',
                 },
                 series: [
                     {
-                    name: 'Access From',
-                    type: 'pie',
-                    radius: '50%',
-                    data: [
-                        { value: 1048, name: 'Search Engine' },
-                        { value: 735, name: 'Direct' },
-                        { value: 580, name: 'Email' },
-                        { value: 484, name: 'Union Ads' },
-                        { value: 300, name: 'Video Ads' }
-                    ],
-                    emphasis: {
-                        itemStyle: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        name: 'Access From',
+                        type: 'pie',
+                        radius: '50%',
+                        data: [
+                            { value: 1048, name: 'xx对虾1' },
+                            { value: 735, name: 'xx对虾2' },
+                            { value: 580, name: 'xx对虾3' },
+                            { value: 484, name: 'xx对虾4' },
+                            { value: 300, name: 'xx对虾5' }
+                        ],
+                        emphasis: {
+                            itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
                         }
-                    }
                     }
                 ]
             })

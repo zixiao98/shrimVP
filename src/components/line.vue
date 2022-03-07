@@ -17,8 +17,12 @@ export default {
     },
     methods:{
         // 初始化echart
-        initChart(){
-            this.myChartsInstance = this.$echarts.init(this.$refs.myLine)//用获取实例来注册
+        async initChart(){
+             // 获取主题
+            let theme = await this.$axios.get('http://localhost:8088/static/theme/customed.json')
+            // 注册主题
+            this.$echarts.registerTheme('customed',theme.data)
+            this.myChartsInstance = this.$echarts.init(this.$refs.myLine,'customed')//用获取实例来注册
             const initOption= {
                 xAxis: {
                     type: 'category',
