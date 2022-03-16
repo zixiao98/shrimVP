@@ -38,6 +38,11 @@ const routes = [
         name: 'homepage',
         component: () => import(/* webpackChunkName: "about" */ '../views/homepage.vue')
       },
+      {
+        path:'/magnifier',
+        name:'magnifier',
+        component:() => import(/* webpackChunkName: "about" */ '../views/magnifier.vue')
+      }
     ]
   },
 ]

@@ -25,36 +25,42 @@ export default {
             this.myChartsInstance = this.$echarts.init(this.$refs.myPie,'customed')//用获取实例来注册
             this.myChartsInstance.setOption({
                 title: {
-                    text: 'my pie',
-                    subtext: 'Fake Data',
+                    text: '海水养殖产量占比分布',
+                    subtext: '近5年数据',
                     left: 'center',
                 },
                 tooltip: {
-                    trigger: 'item'
+                    trigger: 'item',
                 },
                 legend: {
                     orient: 'vertical',
-                    left: 'left',
+                    bottom: 'bottom',
                 },
+                label:{
+                    color:'#fff',
+                    formatter:function(e){
+                        return `${e.data.name} ${e.data.value}%`
+                    }
+                },               
                 series: [
                     {
-                        name: 'Access From',
+                        name: '产量占比(%)',
                         type: 'pie',
                         radius: '50%',
                         data: [
-                            { value: 1048, name: 'xx对虾1' },
-                            { value: 735, name: 'xx对虾2' },
-                            { value: 580, name: 'xx对虾3' },
-                            { value: 484, name: 'xx对虾4' },
-                            { value: 300, name: 'xx对虾5' }
+                            { value: 35, name: '广东' },
+                            { value: 25, name: '广西' },
+                            { value: 18, name: '海南' },
+                            { value: 8, name: '山东' },
+                            { value: 12, name: '其他' }
                         ],
                         emphasis: {
                             itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
                             }
-                        }
+                        },
                     }
                 ]
             })

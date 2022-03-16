@@ -113,16 +113,21 @@ export default {
                         this.$router.push('/homepage')
                     }
                     break;
-                case 2://密码箱
-                    if(this.$router.history.current.name !== 'passwordbox'){//避免已经是当前页的情况
-                        this.$router.push('/passwordbox')
-                    }
-                    break;
-                case 3://回收站
-                    if(this.$router.history.current.name !== 'recyclebin'){//避免已经是当前页的情况
-                        this.$router.push('/recyclebin')
-                    }
-                    break;
+                // case 2://密码箱
+                //     if(this.$router.history.current.name !== 'passwordbox'){//避免已经是当前页的情况
+                //         this.$router.push('/passwordbox')
+                //     }
+                //     break;
+                // case 3://回收站
+                //     if(this.$router.history.current.name !== 'recyclebin'){//避免已经是当前页的情况
+                //         this.$router.push('/recyclebin')
+                //     }
+                //     break;
+                case 4://放大镜
+                if(this.$router.history.current.name !== 'magnifier'){//避免已经是当前页的情况
+                    this.$router.push('/magnifier')
+                }
+                break;
                 case 8://个人中心
                     if(this.$router.history.current.name !== 'personalcenter'){//避免已经是当前页的情况
                         this.$router.push('/personalcenter')

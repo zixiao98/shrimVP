@@ -76,7 +76,6 @@ export default {
         Lines,
         Radar,
     },
-    name: "homepage",
     //生命周期函数
     mounted(){
         //让侧边栏功能固化hover的效果

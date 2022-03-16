@@ -26,18 +26,19 @@ export default {
             this.myChartsInstance =  this.$echarts.init(this.$refs.myTest,'customed');
             this.myChartsInstance.setOption({
                 title: {
-                    text: '图一'
+                    text: '近年来年产量变化',
+                    left: 'center',
                 },
                 tooltip: {},
                 xAxis: {
-                    data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子','帽子']
+                    data: ['2016年', '2017年', '2018年', '2019年', '2020年','2021年']
                 },
                 yAxis: {},
                 series: [
                     {
-                    name: '销量',
+                    name: '销量(千万吨)',
                     type: 'bar',
-                    data: [5, 20, 36, 10, 10, 20,1]
+                    data: [49.24, 62.12, 71.23, 80.23,56.23,61.31]
                     }
                 ]
             })
@@ -53,6 +54,14 @@ export default {
         },
         // 图表自适应
         adaptChart(){
+            this.fontSize = this.$refs.myTest.offsetWidth /100 *3.6;
+            console.log(this.fontSize)
+            let option = {
+                label:{
+                   fontSize:this.fontSize
+                }
+            }
+            this.myChartsInstance.setOption(option)
             this.myChartsInstance.resize()//echarts实例图表自适应方法
         },
     },

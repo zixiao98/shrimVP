@@ -1,6 +1,7 @@
 #homepage{
     height: 100%;
     width: 100%;
+    position: relative;
     .page-box{
         height: 100%;
         width: 100%;
@@ -8,6 +9,7 @@
     .left,.center,.right{
         display: inline-block;
         height: 100%;
+        overflow: hidden;
     }
     .left{
         width: 26%;
@@ -18,7 +20,7 @@
                 height: 100%;
                 position: relative;
                 background: url('../assets/img/line.png');
-                background-color: rgba(101, 132, 226, 0.2);
+                background-color: #343a406c;
             }
         }
     }
@@ -31,7 +33,7 @@
                 height: 100%;
                 position: relative;
                 background: url('../assets/img/line.png');
-                background-color: rgba(101, 132, 226, 0.2);
+                background-color: #343a406c;
             }
         }
     }
@@ -44,7 +46,7 @@
                 height: 100%;
                 position: relative;
                 background: url('../assets/img/line.png');
-                background-color: rgba(101, 132, 226, 0.2);
+                background-color: #343a406c;
             }
         }
     }

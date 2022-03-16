@@ -8,16 +8,16 @@
 export default {
     data(){
         return{
-            dataMax : 60,
+            dataMax : 100,
             source :{
                 data: [43, 10, 28, 35, 50, 19],
                 indicator: [
-                    { name: '家政服务', max: this.dataMax},
-                    { name: '助餐服务', max: this.dataMax},
-                    { name: '助医服务', max: this.dataMax},
-                    { name: '待办服务', max: this.dataMax},
-                    { name: '交谈服务', max: this.dataMax},
-                    { name: '康复服务', max: this.dataMax},
+                    { name: '水质', max: this.dataMax},
+                    { name: '温度', max: this.dataMax},
+                    { name: '酸碱度', max: this.dataMax},
+                    { name: '含氧量', max: this.dataMax},
+                    { name: '密度', max: this.dataMax},
+                    { name: '饲料', max: this.dataMax},
                 ]
             },
             fontSize:null,
@@ -68,10 +68,14 @@ export default {
             this.$echarts.registerTheme('customed',theme.data)
             this.myChartsInstance = this.$echarts.init(this.$refs.myRadar,'customed')//用获取实例来注册
             const initOption = {
+                title: {
+                    text: '养殖各项指标',
+                    left: 'left',
+                },
                 tooltip: {},
                 radar: {
                 // shape: 'circle',
-                splitNumber: 7,
+                splitNumber: 5,
                 splitArea: {
                     show: true,
                     areaStyle: {

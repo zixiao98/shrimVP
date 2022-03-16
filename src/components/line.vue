@@ -52,6 +52,10 @@ export default {
         adaptChart(){
             this.myChartsInstance.resize()//echarts实例图表自适应方法
         },
+    },
+    beforeDestroy(){
+         // 解绑事件
+        window.removeEventListener('resize',this.adaptChart)
     }
 
 }
