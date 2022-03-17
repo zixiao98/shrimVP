@@ -70,8 +70,9 @@ export default {
 
         },
         // 更新数据
-        updateChart(){
-
+        updateChart(data){
+            let option ={ series: [ { data: data.pieII.series.data } ] }
+            this.myChartsInstance.setOption(option)
         },
         // 图表自适应
         adaptChart(){

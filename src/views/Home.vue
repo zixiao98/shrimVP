@@ -21,7 +21,7 @@
                     </div>
                     <div class="asd">
                         <span>功能点二</span>
-                        <div @click="navigation(4)"><i class="el-icon-coffee"></i><span>xxx</span></div>
+                        <div @click="navigation(4)"><i class="el-icon-coffee"></i><span>对虾资料</span></div>
                         <div @click="navigation(5)"><i class="el-icon-milk-tea"></i><span>xxx</span></div>
                     </div>
                     <div class="asd">

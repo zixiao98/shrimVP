@@ -8,16 +8,14 @@
 export default {
     data(){
         return{
-            dataMax : 100,
             source :{
-                data: [43, 10, 28, 35, 50, 19],
                 indicator: [
-                    { name: '水质', max: this.dataMax},
-                    { name: '温度', max: this.dataMax},
-                    { name: '酸碱度', max: this.dataMax},
-                    { name: '含氧量', max: this.dataMax},
-                    { name: '密度', max: this.dataMax},
-                    { name: '饲料', max: this.dataMax},
+                    { name: '水质', max: 100},
+                    { name: '温度', max: 100},
+                    { name: '酸碱度', max: 100},
+                    { name: '含氧量', max: 100},
+                    { name: '密度', max: 100},
+                    { name: '饲料', max: 100},
                 ]
             },
             fontSize:null,
@@ -28,38 +26,6 @@ export default {
         window.addEventListener('resize',this.adaptChart)
     },
     methods:{
-        // 处理数据
-        buildSeries(data){
-            const helper = data.map((item, index) => {
-                const arr = new Array(data.length);
-                arr.splice(index, 1, item);
-                return arr;
-            })
-
-            return [data, ...helper].map((item, index) => {
-                return {
-                    type: 'radar',
-                    itemStyle: {
-                        color: '#31e586'
-                    },
-                    lineStyle: {
-                        color: index === 0 ? '#31e586' : 'transparent'
-                    },
-                    areaStyle: {
-                        color: index === 0 ? '#31e586' : 'transparent',
-                        opacity: 0.3
-                    },
-                    tooltip: {
-                        show: index === 0 ? false : true,
-                        formatter: function() {
-                            return this.source.indicator[index - 1].name + '不满意度：' + this.source.data[index - 1]+'%';
-                        }
-                    },
-                    z: index === 0 ? 1 : 2,
-                    data: [item]
-                }
-            })
-        },
         // 初始化echart
         async initChart(){
             // 获取主题
@@ -69,33 +35,57 @@ export default {
             this.myChartsInstance = this.$echarts.init(this.$refs.myRadar,'customed')//用获取实例来注册
             const initOption = {
                 title: {
-                    text: '养殖各项指标',
+                    text: '养殖各项需求指标',
                     left: 'left',
                 },
+                color: '#73c0de',
                 tooltip: {},
                 radar: {
-                // shape: 'circle',
-                splitNumber: 5,
-                splitArea: {
-                    show: true,
-                    areaStyle: {
-                        color: ['rgba(12,62,129,0)','rgba(12,62,129,0.3)','rgba(12,62,129,0)','#c93232']
+                    // shape: 'circle',
+                    splitNumber: 5,
+                    axisLine: {
+                        lineStyle: {
+                            color: '#fff',
+                            opacity: .8
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: '#fff',
+                            opacity: .8
+                        }
+                    },
+                    splitArea: {
+                        areaStyle: {
+                            color: 'rgba(127,95,132,.3)',
+                            opacity: 1,
+                            shadowBlur: 45,
+                            shadowColor: 'rgba(0,0,0,.5)',
+                            shadowOffsetX: 0,
+                            shadowOffsetY: 15,
+                        }
+                    },
+                    indicator: this.source.indicator,
+                },
+                series: [
+                    {
+                        type: 'radar',
+                        symbolSize: 0,
+                        areaStyle: {
+                            shadowBlur: 13,
+                            shadowColor: 'rgba(0,0,0,.2)',
+                            shadowOffsetX: 0,
+                            shadowOffsetY: 10,
+                            opacity: .9
+                        },
+                        data: [
+                            {
+                            value: [42, 60, 77, 35, 50, 78],
+                            name: '各项指标(100封顶)'
+                            },
+                        ]
                     }
-                },
-                splitLine: {
-                    lineStyle: {
-                        color: '#fff'
-                    }
-                },
-                axisLine: {
-                    lineStyle: {
-                        color: '#fff'
-                    }
-                },
-                indicator: this.source.indicator,
-                
-                },
-                series: this.buildSeries(this.source.data)      
+                ]     
             };
             this.myChartsInstance.setOption(initOption)
         },
@@ -104,8 +94,15 @@ export default {
 
         },
         // 更新数据
-        updateChart(){
-
+        updateChart(data){
+            console.log(this.myChartsInstance)
+            let value = data.radarII.series.data.value;
+            let option ={
+                series: [
+                    { data:[{value: value,name: '各项指标(100封顶)'},] }
+                ]     
+            }
+            this.myChartsInstance.setOption(option)
         },
         // 图表自适应
         adaptChart(){

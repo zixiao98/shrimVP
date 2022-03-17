@@ -29,17 +29,44 @@ export default {
                     text: '近年来年产量变化',
                     left: 'center',
                 },
-                tooltip: {},
-                xAxis: {
-                    data: ['2016年', '2017年', '2018年', '2019年', '2020年','2021年']
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                    type: 'shadow'
+                    }
                 },
-                yAxis: {},
+                xAxis: {
+                    name:'年',
+                    data: ['2016', '2017', '2018', '2019', '2020','2021'],
+                    nameTextStyle:{
+                        color:'#fff'
+                    },
+                    axisLabel:{//坐标轴刻度
+                        color:'#ccc',
+                    },
+                },
+                yAxis: {
+                    name:'千万吨',
+                    nameTextStyle:{
+                        color:'#fff'
+                    },
+                    axisLabel:{//坐标轴刻度
+                        color:'#ccc',
+                    },
+                    splitLine:{//分割横线
+                        lineStyle:{
+                            color:'#ccc',
+                            type:'dashed'
+                        }
+                    },
+                },
                 series: [
                     {
-                    name: '销量(千万吨)',
-                    type: 'bar',
-                    data: [49.24, 62.12, 71.23, 80.23,56.23,61.31]
-                    }
+                        name: '产量(千万吨)',
+                        type: 'bar',
+                        data: [49.24, 62.12, 71.23, 80.23,56.23,61.31],
+                    },
+                    
                 ]
             })
 
@@ -49,8 +76,19 @@ export default {
 
         },
         // 更新数据
-        updateChart(){
-
+        updateChart(data){
+            let option ={
+                xAxis: {
+                    data: data.barII.xAxis.data,
+                },
+                series: [
+                    {
+                        data:data.barII.series.data,
+                    },
+                    
+                ]
+            }
+            this.myChartsInstance.setOption(option)
         },
         // 图表自适应
         adaptChart(){
