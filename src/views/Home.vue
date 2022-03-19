@@ -6,8 +6,6 @@
             <!-- 侧边栏 -->
             <el-aside width='240px'>
                 <div class="title">
-                    <!-- <span class='name'>YourPswLAss</span>
-                    <span class="tips">你的密码小助手</span> -->
                     <img src="@/assets/img/logo.png" alt="">
                 </div>
                 <div class="option">
@@ -113,16 +111,7 @@ export default {
                         this.$router.push('/homepage')
                     }
                     break;
-                // case 2://密码箱
-                //     if(this.$router.history.current.name !== 'passwordbox'){//避免已经是当前页的情况
-                //         this.$router.push('/passwordbox')
-                //     }
-                //     break;
-                // case 3://回收站
-                //     if(this.$router.history.current.name !== 'recyclebin'){//避免已经是当前页的情况
-                //         this.$router.push('/recyclebin')
-                //     }
-                //     break;
+                
                 case 4://放大镜
                 if(this.$router.history.current.name !== 'magnifier'){//避免已经是当前页的情况
                     this.$router.push('/magnifier')
