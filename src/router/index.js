@@ -38,6 +38,11 @@ const routes = [
         name: 'homepage',
         component: () => import(/* webpackChunkName: "about" */ '../views/homepage.vue')
       },
+      {
+        path:'/shrimpPond',
+        name:'shrimpPond',
+        component:() => import(/* webpackChunkName: "about" */ '../views/shrimpPond.vue')
+      },
       {//对虾资料
         path:'/magnifier',
         name:'magnifier',

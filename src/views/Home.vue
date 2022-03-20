@@ -14,7 +14,7 @@
                     </div>
                     <div class="asd">
                         <span>功能点一</span>
-                        <div @click="navigation(2)"><i class="el-icon-key"></i><span>xxx</span></div>
+                        <div @click="navigation(2)"><i class="el-icon-key"></i><span>虾塘管理</span></div>
                         <div @click="navigation(3)"><i class="el-icon-delete"></i><span>xxx</span></div>
                     </div>
                     <div class="asd">
@@ -111,12 +111,16 @@ export default {
                         this.$router.push('/homepage')
                     }
                     break;
-                
+                case 2://虾塘管理
+                    if(this.$router.history.current.name !== 'shrimpPond'){//避免已经是当前页的情况
+                        this.$router.push('/shrimpPond')
+                    }
+                     break;
                 case 4://放大镜
-                if(this.$router.history.current.name !== 'magnifier'){//避免已经是当前页的情况
-                    this.$router.push('/magnifier')
-                }
-                break;
+                    if(this.$router.history.current.name !== 'magnifier'){//避免已经是当前页的情况
+                        this.$router.push('/magnifier')
+                    }
+                    break;
                 case 8://个人中心
                     if(this.$router.history.current.name !== 'personalcenter'){//避免已经是当前页的情况
                         this.$router.push('/personalcenter')

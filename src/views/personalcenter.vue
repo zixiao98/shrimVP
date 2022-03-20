@@ -1,42 +1,6 @@
 <template>
     <div id="homepage" ref="homepage">
         <div class="page-box">
-            <div class="center">
-                <div class="centerC">
-                    <div class="box">
-                        <span class="one"></span>
-                        <span class="two"></span>
-                        <span class="three"></span>
-                        <span class="four"></span>
-                        <div class="mainBox">
-                            <div class="mainDiv">
-                                <div class="top">
-                                    <div class="topDiv">
-                                        <div class="topLeft">
-                                            <div class="img">
-                                                <img src="@/assets/img/logo.png" alt="个人中心的头像" ref="myPhoto">
-                                            </div>
-                                            <div class="btn">
-                                                <button class="photo" @click="dialogVisible = true">拍照</button>
-                                                <button class="up" @click="dialogVisibleII = true">上传</button>
-                                                <button class="down">下载</button>
-                                            </div>
-                                        </div>
-                                        <div class="topRight">
-                                            <div class="name">
-                                                <i>名称：</i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bottom">
-                                    <div class="bottomDiv"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="left">
                 <div class="leftTop">
                     <div class="box">
@@ -70,6 +34,42 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="center">
+                <div class="centerC">
+                    <div class="box">
+                        <span class="one"></span>
+                        <span class="two"></span>
+                        <span class="three"></span>
+                        <span class="four"></span>
+                        <div class="mainBox">
+                            <div class="mainDiv">
+                                <div class="top">
+                                    <div class="topDiv">
+                                        <div class="topLeft">
+                                            <div class="img">
+                                                <img src="@/assets/img/logo.png" alt="个人中心的头像" ref="myPhoto">
+                                            </div>
+                                            <div class="btn">
+                                                <button class="photo" @click="dialogVisible = true">拍照</button>
+                                                <button class="up" @click="dialogVisibleII = true">上传</button>
+                                                <button class="down">下载</button>
+                                            </div>
+                                        </div>
+                                        <div class="topRight">
+                                            <div class="name">
+                                                <i>名称：</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bottom">
+                                    <div class="bottomDiv"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -108,9 +108,10 @@
                 <div>预览</div>
             </div>
             <div class="upPhoto">
-                <img src="" alt="" id="upImg">
+                <img src="#" alt="请上传图片" id="upImg">
             </div>
             <div class="upInput">
+                
                 <input type="file" accept="image/png, image/jpeg" id="inputFile" @change="inputChange">
             </div>
             <div slot="footer" class="dialog-footer">
@@ -425,11 +426,13 @@ export default {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            background-color: #343a40a4;
         }
     }
     .upInput{
         margin: 10px 5px;
         box-sizing: border-box;
+        
     }
     
 </style>

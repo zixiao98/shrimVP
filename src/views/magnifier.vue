@@ -2,7 +2,7 @@
     <div id="homepage" ref="homepage">
         <div class="page-box">
             <div class="left">
-                <div class="leftTop">
+                <div class="leftTop" ref="leftTop">
                     <div class="box" ref="box">
                         <span class="one"></span>
                         <span class="two"></span>
@@ -311,10 +311,10 @@ export default {
         //获取user
         // this.userName = window.localStorage.getItem('userName');
         // 获取原先展示图片的div，并绑定鼠标事件，并在之后卸载时解绑
-        const leftTop = document.querySelector('.leftTop')
-        leftTop.addEventListener('mouseenter',this.showMagnifier)
-        leftTop.addEventListener('mouseleave',this.hiddenMagnifier)
-        leftTop.addEventListener('mousemove',this.moveMagnifier)
+        // const leftTop = document.querySelector('.leftTop')
+        this.$refs.leftTop.addEventListener('mouseenter',this.showMagnifier)
+        this.$refs.leftTop.addEventListener('mouseleave',this.hiddenMagnifier)
+        this.$refs.leftTop.addEventListener('mousemove',this.moveMagnifier)
         window.addEventListener('resize',this.resize)
     },
     beforeDestroy(){
@@ -327,11 +327,11 @@ export default {
             //console.log(err)
             //在退出登录时候，此处有一个报错
         }
-        const leftTop = document.querySelector('.leftTop')
+        // const leftTop = document.querySelector('.leftTop') **这里不能使用document.querySelector('.leftTop')，因为在跳转之后获取不到这个元素
         // 事件解绑
-        leftTop.removeEventListener('mouseenter',this.showMagnifier)
-        leftTop.removeEventListener('mouseleave',this.hiddenMagnifier)
-        leftTop.removeEventListener('mousemove',this.moveMagnifier)
+        this.$refs.leftTop.removeEventListener('mouseenter',this.showMagnifier)
+        this.$refs.leftTop.removeEventListener('mouseleave',this.hiddenMagnifier)
+        this.$refs.leftTop.removeEventListener('mousemove',this.moveMagnifier)
         window.removeEventListener('resize',this.resize)
     },
     methods:{
