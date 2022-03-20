@@ -74,6 +74,7 @@
                 </div>
             </div>
         </div>
+        <!-- 拍照对话框 -->
         <el-dialog
             title="进行拍照操作"
             :visible.sync="dialogVisible"
@@ -99,6 +100,7 @@
                 <el-button type="primary" @click="this.putPhoto">确 定</el-button>
             </div>
         </el-dialog>
+        <!-- 上传照片对话框 -->
         <el-dialog
             title="进行上传操作"
             :visible.sync="dialogVisibleII"
