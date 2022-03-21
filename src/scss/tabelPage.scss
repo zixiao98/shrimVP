@@ -1,4 +1,4 @@
-#shrimpPondPage{
+#tabelPage{
     height: 100%;
     width: 100%;
     position: relative;
@@ -107,18 +107,27 @@
                             border-radius: 0;
                             border-bottom: 2px solid #343a40;
                         }
+                        /deep/.el-pagination .btn-next, 
+                        /deep/.el-pagination .btn-prev,
                         /deep/.el-pagination button:disabled{
                             background-color: transparent;
                         }
                         /deep/.el-pager li{
                             background-color: transparent;
                         }
-                        /deep/.el-pager li.active {
-                            color: #c93232;
+                        /deep/.el-pager li:hover{
+                            color: #fff;
                             cursor: pointer;
                         }
+                        /deep/.el-pager li.active {
+                            background-color: #c93232;
+                            color: #fff;
+                            cursor: pointer;
+                            border-radius: 10%;
+                        }
+                        
                         /deep/.el-pagination__total,/deep/.el-pagination__jump{
-                            color: #343a40;
+                            color: #ccc;
                         }
                     }
                 }

@@ -38,10 +38,20 @@ const routes = [
         name: 'homepage',
         component: () => import(/* webpackChunkName: "about" */ '../views/homepage.vue')
       },
-      {
+      {//基地管理
+        path:'/breedingBase',
+        name:'breedingBase',
+        component:() => import(/* webpackChunkName: "about" */ '../views/breedingBase.vue')
+      },
+      {//虾塘管理
         path:'/shrimpPond',
         name:'shrimpPond',
         component:() => import(/* webpackChunkName: "about" */ '../views/shrimpPond.vue')
+      },
+      {//设备管理
+        path:'/breedingEquipment',
+        name:'breedingEquipment',
+        component:() => import(/* webpackChunkName: "about" */ '../views/breedingEquipment.vue')
       },
       {//对虾资料
         path:'/magnifier',

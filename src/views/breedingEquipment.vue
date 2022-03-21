@@ -23,10 +23,10 @@
                                 </div>
                                 <el-table :data="tableData" style="width: 100%">
                                     <el-table-column prop="createDate" label="创建日期" align="center" width="150"></el-table-column>
-                                    <el-table-column prop="pondName" label="虾塘名称" align="center" ></el-table-column>
-                                    <el-table-column prop="pondType" label="虾塘类型" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="pondVolume" label="虾塘面积/m²" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="depth" label="虾塘深度/m" align="center" width="100"></el-table-column>
+                                    <el-table-column prop="pondName" label="设备名称" align="center" ></el-table-column>
+                                    <el-table-column prop="pondType" label="设备类型" align="center" width="100"></el-table-column>
+                                    <el-table-column prop="pondVolume" label="设备面积/m²" align="center" width="100"></el-table-column>
+                                    <el-table-column prop="depth" label="设备深度/m" align="center" width="100"></el-table-column>
                                     <el-table-column prop="species" label="投放类型" align="center" width="100"></el-table-column>
                                     <el-table-column prop="inputNum" label="投放尾数" align="center" width="100"></el-table-column>
                                     <el-table-column prop="deliveryStatus" label="投放状态" align="center" width="100"></el-table-column>
@@ -53,28 +53,28 @@
             </div>
         </div>
         <el-dialog
-            title="添加虾塘"
+            title="添加设备"
             :visible.sync="dialogVisible"
             width="50%"
             >
             <div class="dialogDiv">
                 <el-form :model="addForm" ref="addForm" label-width="100px">
-                <el-form-item label="虾塘名称">
+                <el-form-item label="设备名称">
                     <el-input v-model="addForm.pondName"></el-input>
                 </el-form-item>
                 <el-row>
                     <el-col :span="8">
-                        <el-form-item label="虾塘类型">
+                        <el-form-item label="设备类型">
                             <el-input v-model="addForm.pondType"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item label="虾塘面积">
+                        <el-form-item label="设备面积">
                             <el-input v-model="addForm.pondVolume"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item label="虾塘深度">
+                        <el-form-item label="设备深度">
                             <el-input v-model="addForm.depth"></el-input>
                         </el-form-item>
                     </el-col>
@@ -120,28 +120,28 @@
             </div>
         </el-dialog>
         <el-dialog
-            title="修改虾塘信息"
+            title="修改设备信息"
             :visible.sync="dialogVisibleII"
             width="50%"
             >
             <div class="dialogDiv">
                 <el-form :model="updateForm" ref="updateForm" label-width="100px">
-                <el-form-item label="虾塘名称">
+                <el-form-item label="设备名称">
                     <el-input v-model="updateForm.pondName"></el-input>
                 </el-form-item>
                 <el-row>
                     <el-col :span="8">
-                        <el-form-item label="虾塘类型">
+                        <el-form-item label="设备类型">
                             <el-input v-model="updateForm.pondType"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item label="虾塘面积">
+                        <el-form-item label="设备面积">
                             <el-input v-model="updateForm.pondVolume"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item label="虾塘深度">
+                        <el-form-item label="设备深度">
                             <el-input v-model="updateForm.depth"></el-input>
                         </el-form-item>
                     </el-col>
@@ -203,15 +203,15 @@ export default {
                     value:1,
                 },
                 {
-                    name:'虾塘名称',
+                    name:'设备名称',
                     value:2,
                 },
                 {
-                    name:'虾塘面积',
+                    name:'设备面积',
                     value:3,
                 },
                 {
-                    name:'虾塘深度',
+                    name:'设备深度',
                     value:4,
                 },
                 {
@@ -232,8 +232,8 @@ export default {
             tableData: [
                 {
                     createDate:'2016-05-02',//创建时间
-                    pondName:'穗-一号塘',//虾塘名称
-                    pondType:1,//虾塘类型
+                    pondName:'穗-一号塘',//设备名称
+                    pondType:1,//设备类型
                     pondVolume:'321',//面积
                     depth:'5',//深度
                     species:'中国对虾',//投放类型（虾种类）
@@ -244,8 +244,8 @@ export default {
                 },
                 {
                     createDate:'2016-05-02',//创建时间
-                    pondName:'穗-二号塘',//虾塘名称
-                    pondType:1,//虾塘类型
+                    pondName:'穗-二号塘',//设备名称
+                    pondType:1,//设备类型
                     pondVolume:'321',//面积
                     depth:'5',//深度
                     species:'中国对虾',//投放类型（虾种类）
@@ -256,8 +256,8 @@ export default {
                 },
                 {
                     createDate:'2016-05-02',//创建时间
-                    pondName:'穗-三号塘',//虾塘名称
-                    pondType:1,//虾塘类型
+                    pondName:'穗-三号塘',//设备名称
+                    pondType:1,//设备类型
                     pondVolume:'321',//面积
                     depth:'5',//深度
                     species:'中国对虾',//投放类型（虾种类）
@@ -268,8 +268,8 @@ export default {
                 },
                 {
                     createDate:'2016-05-02',//创建时间
-                    pondName:'穗-四号塘',//虾塘名称
-                    pondType:1,//虾塘类型
+                    pondName:'穗-四号塘',//设备名称
+                    pondType:1,//设备类型
                     pondVolume:'321',//面积
                     depth:'5',//深度
                     species:'中国对虾',//投放类型（虾种类）
@@ -280,8 +280,8 @@ export default {
                 },
                 {
                     createDate:'2016-05-02',//创建时间
-                    pondName:'穗-五号塘',//虾塘名称
-                    pondType:1,//虾塘类型
+                    pondName:'穗-五号塘',//设备名称
+                    pondType:1,//设备类型
                     pondVolume:'321',//面积
                     depth:'5',//深度
                     species:'中国对虾',//投放类型（虾种类）
@@ -292,8 +292,8 @@ export default {
                 },
                 {
                     createDate:'2016-05-02',//创建时间
-                    pondName:'穗-三号塘',//虾塘名称
-                    pondType:1,//虾塘类型
+                    pondName:'穗-六号塘',//设备名称
+                    pondType:1,//设备类型
                     pondVolume:'321',//面积
                     depth:'5',//深度
                     species:'中国对虾',//投放类型（虾种类）
@@ -304,8 +304,8 @@ export default {
                 },
                 {
                     createDate:'2016-05-02',//创建时间
-                    pondName:'穗-四号塘',//虾塘名称
-                    pondType:1,//虾塘类型
+                    pondName:'穗-七号塘',//设备名称
+                    pondType:1,//设备类型
                     pondVolume:'321',//面积
                     depth:'5',//深度
                     species:'中国对虾',//投放类型（虾种类）
@@ -316,8 +316,8 @@ export default {
                 },
                 {
                     createDate:'2016-05-02',//创建时间
-                    pondName:'穗-六号塘',//虾塘名称
-                    pondType:1,//虾塘类型
+                    pondName:'穗-八号塘',//设备名称
+                    pondType:1,//设备类型
                     pondVolume:'321',//面积
                     depth:'5',//深度
                     species:'中国对虾',//投放类型（虾种类）
@@ -328,8 +328,8 @@ export default {
                 },
                 {
                     createDate:'2016-05-02',//创建时间
-                    pondName:'穗-七号塘',//虾塘名称
-                    pondType:1,//虾塘类型
+                    pondName:'穗-九号塘',//设备名称
+                    pondType:1,//设备类型
                     pondVolume:'321',//面积
                     depth:'5',//深度
                     species:'中国对虾',//投放类型（虾种类）
@@ -340,32 +340,8 @@ export default {
                 },
                 {
                     createDate:'2016-05-02',//创建时间
-                    pondName:'穗-八号塘',//虾塘名称
-                    pondType:1,//虾塘类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
-                },
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-九号塘',//虾塘名称
-                    pondType:1,//虾塘类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
-                },
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-十号塘',//虾塘名称
-                    pondType:1,//虾塘类型
+                    pondName:'穗-十号塘',//设备名称
+                    pondType:1,//设备类型
                     pondVolume:'321',//面积
                     depth:'5',//深度
                     species:'中国对虾',//投放类型（虾种类）
@@ -377,8 +353,8 @@ export default {
             ],//表格展示数据
             addForm: {
                 createDate:'',//创建时间
-                pondName:'',//虾塘名称
-                pondType:1,//虾塘类型
+                pondName:'',//设备名称
+                pondType:1,//设备类型
                 pondVolume:0,//面积
                 depth:0,//深度
                 species:1,//投放类型（虾种类）
@@ -389,8 +365,8 @@ export default {
             },//添加信息数据
             updateForm:{
                 createDate:'',//创建时间
-                pondName:'',//虾塘名称
-                pondType:1,//虾塘类型
+                pondName:'',//设备名称
+                pondType:1,//设备类型
                 pondVolume:0,//面积
                 depth:0,//深度
                 species:1,//投放类型（虾种类）
@@ -404,7 +380,7 @@ export default {
     //生命周期函数
     mounted(){
         //让侧边栏功能固化hover的效果
-        let node = document.querySelectorAll('.asd div')[2];
+        let node = document.querySelectorAll('.asd div')[3];
         node.style.color = '#fff';
         node.style.backgroundColor = '#303133';
         //获取user
@@ -413,7 +389,7 @@ export default {
     beforeDestroy(){
         //让侧边栏功能'取消'固化hover的效果
         try {
-            let node = document.querySelectorAll('.asd div')[2];
+            let node = document.querySelectorAll('.asd div')[3];
             node.style.color = '';
             node.style.backgroundColor = '';
         } catch (error) {

@@ -305,7 +305,7 @@ export default {
             // this.$refs.pieII.updateChart(this.shrimpData.data)
             // this.$refs.radarII.updateChart(this.shrimpData.data)
         //让侧边栏功能固化hover的效果
-        let node = document.querySelectorAll('.asd div')[3];
+        let node = document.querySelectorAll('.asd div')[4];
         node.style.color = '#fff';
         node.style.backgroundColor = '#303133';
         //获取user
@@ -320,7 +320,7 @@ export default {
     beforeDestroy(){
         //让侧边栏功能'取消'固化hover的效果
         try {
-            let node = document.querySelectorAll('.asd div')[3];
+            let node = document.querySelectorAll('.asd div')[4];
             node.style.color = '';
             node.style.backgroundColor = '';
         } catch (error) {

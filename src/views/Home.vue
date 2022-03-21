@@ -13,14 +13,14 @@
                         <div @click="navigation(1)"><i class="el-icon-monitor"></i><span>首页</span></div>
                     </div>
                     <div class="asd">
-                        <span>功能点一</span>
+                        <span>管理模块</span>
                         <div @click="navigation(2)"><i class="el-icon-key"></i><span>基地管理</span></div>
                         <div @click="navigation(3)"><i class="el-icon-delete"></i><span>虾塘管理</span></div>
+                        <div @click="navigation(4)"><i class="el-icon-delete"></i><span>设备管理</span></div>
                     </div>
                     <div class="asd">
-                        <span>功能点二</span>
-                        <div @click="navigation(4)"><i class="el-icon-coffee"></i><span>对虾资料</span></div>
-                        <div @click="navigation(5)"><i class="el-icon-milk-tea"></i><span>xxx</span></div>
+                        <span>资料模块</span>
+                        <div @click="navigation(5)"><i class="el-icon-coffee"></i><span>对虾资料</span></div>
                     </div>
                     <div class="asd">
                         <span>功能点三</span>
@@ -28,7 +28,7 @@
                         <div @click="navigation(7)"><i class="el-icon-light-rain"></i><span>xxx</span></div>
                     </div>
                     <div class="asd">
-                        <span>功能点四</span>
+                        <span>个人模块</span>
                         <div @click="navigation(8)"><i class="el-icon-user-solid"></i><span>个人中心</span></div>
                         <div @click="navigation(9)"><i class="el-icon-view"></i><span>登录记录</span></div>
                     </div>
@@ -111,12 +111,22 @@ export default {
                         this.$router.push('/homepage')
                     }
                     break;
+                case 2://基地管理
+                    if(this.$router.history.current.name !== 'breedingBase'){//避免已经是当前页的情况
+                        this.$router.push('/breedingBase')
+                    }
+                     break;
                 case 3://虾塘管理
                     if(this.$router.history.current.name !== 'shrimpPond'){//避免已经是当前页的情况
                         this.$router.push('/shrimpPond')
                     }
                      break;
-                case 4://放大镜
+                 case 4://设备管理
+                    if(this.$router.history.current.name !== 'breedingEquipment'){//避免已经是当前页的情况
+                        this.$router.push('/breedingEquipment')
+                    }
+                     break;
+                case 5://放大镜
                     if(this.$router.history.current.name !== 'magnifier'){//避免已经是当前页的情况
                         this.$router.push('/magnifier')
                     }
