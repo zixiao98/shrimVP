@@ -29,7 +29,7 @@
                     </div>
                     <div class="asd">
                         <span>个人模块</span>
-                        <div @click="navigation(8)"><i class="el-icon-user-solid"></i><span>个人中心</span></div>
+                        <div @click="navigation(8)"><i class="el-icon-user-solid"></i><span>个人主页</span></div>
                         <div @click="navigation(9)"><i class="el-icon-view"></i><span>登录记录</span></div>
                     </div>
                 </div>

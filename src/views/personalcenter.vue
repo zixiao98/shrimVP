@@ -59,8 +59,30 @@
                                             </div>
                                         </div>
                                         <div class="topRight">
-                                            <div class="name">
-                                                <i>名称：</i>
+                                            <div class="informationItem">
+                                                <div>
+                                                    <i>名称：</i>
+                                                </div>
+                                            </div>
+                                            <div class="informationItem">
+                                               <div>
+                                                    <i>名称：</i>
+                                                </div>
+                                            </div>
+                                            <div class="informationItem">
+                                                <div>
+                                                    <i>名称：</i>
+                                                </div>
+                                            </div>
+                                            <div class="informationItem">
+                                                <div>
+                                                    <i>名称：</i>
+                                                </div>
+                                            </div>
+                                            <div class="informationItem">
+                                                <div>
+                                                    <i>名称：</i>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -273,168 +295,5 @@ export default {
 
 <style lang="scss" scoped>
     @import '@/scss/homepage.scss';
-    .center{
-        background-color: #343a40a4 !important;
-        .mainBox{
-            height:calc(100% - 20px);
-            padding: 10px;
-            .mainDiv{//个人资料主体div
-                height:100%;
-                .top{//个人资料上部
-                    height: calc(45% - 16px);;
-                    padding: 8px;
-                    .topDiv{
-                        height: 100%;
-                        border-radius: 8px;
-                        background-color: rgba(255, 255, 255, 0.507);
-                        display: flex;
-                        align-items: center;
-                        .topLeft{//个人资料上部-左-头像
-                            height: calc(100% - 56px);
-                            width: 43%;
-                            padding: 48px 0 8px 0;
-                            // background-color: #fff; 
-                            .img{//头像
-                                height: calc(70% - 10px);
-                                padding: 5px;
-                                img{
-                                    width: calc(100% - 4px);
-                                    height: calc(100% - 4px);
-                                    border:2px solid #ccc;
-                                    border-radius: 8px;
-                                    object-fit: contain;
-                                    background-color: #343a40a4;
-                                } 
-                            }
-                            .btn{
-                                height: calc(25% - 10px);
-                                padding: 5px;
-                                display: flex;
-                                justify-content: space-around;
-                                align-items: center;
-                                button{
-                                    width: 25%;
-                                    height: 50%;
-                                    border-radius: 5px;
-                                    border: none;
-                                    color: #fff;
-                                    font-weight: 700;
-                                    &:hover{
-                                        cursor: pointer;
-                                        box-shadow: 5px 5px 15px #292e33a4;
-                                    }
-                                }
-                                .photo{
-                                    background-color: #409EFF;
-                                }
-                                .up{
-                                    background-color: #E6A23C;
-                                }
-                                .down{
-                                    background-color: #67C23A;
-                                }
-                            } 
-                        }
-                        .topRight{//个人资料上部-右
-                            height: 95%;
-                            box-sizing: border-box;
-                            width: 57%;
-                            animation: rotate cubic-bezier(.48,.52,1,.2) forwards .3s;
-                            @keyframes rotate{
-                                0%{
-                                    border-left: 2px solid #343a40a4;
-                                }
-                                20%{
-                                    border-left: 2px solid rgb(206, 128, 128)232;
-                                }
-                                50%{
-                                    border-left: 2px solid rgb(182, 87, 87)232;
-                                }
-                                70%{
-                                    border-left: 2px solid rgb(180, 60, 60)232;
-                                }
-                                100%{
-                                    border-left: 2px solid #c93232;
-                                }
-                            }
-                        }
-                    }
-                }
-                .bottom{//个人资料下部
-                    height: calc(55% - 16px);;
-                    padding: 8px;
-                    .bottomDiv{
-                        height: 100%;
-                        border-radius: 8px;
-                        background-color: rgba(255, 255, 255, 0.507);
-                    }
-                }
-            }
-        }
-    }
-    #top{
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        font-size: 24px;
-        padding: 5px;
-    }
-    #photoDiv{
-        display: flex;
-        video {
-            width: calc(50% - 10px);
-            margin: 0 5px;
-            box-sizing: border-box;
-            border: 4px solid #ffaabb;
-        }
-        canvas {
-            width: calc(50% - 10px);
-            margin: 0 5px;
-            box-sizing: border-box;
-            border: 4px solid #aabbff;
-        }
-    }
-    .pBtn{
-        width: calc(50% - 20px);
-        display: flex;
-        justify-content: center;
-        padding: 10px;
-        button{
-            margin: 5px 15px;
-            width: 100px;
-            height: 40px;
-            border-radius: 5px;
-            border: none;
-            color: #fff;
-            font-weight: 700;
-            &:hover{
-                cursor: pointer;
-                box-shadow: 5px 5px 15px #4b545ca4;
-            }  
-        }
-        .open{
-            background-color: #409EFF;
-        }
-        .shot{
-            background-color: #67C23A;
-        }
-    }
-    .upPhoto{
-        height: 28vh;
-        margin: 0 5px;
-        box-sizing: border-box;
-        border: 4px solid #aabbff;
-        #upImg{
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background-color: #343a40a4;
-        }
-    }
-    .upInput{
-        margin: 10px 5px;
-        box-sizing: border-box;
-        
-    }
-    
+    @import '@/scss/personalcenter.scss';
 </style>

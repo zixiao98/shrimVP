@@ -1,0 +1,148 @@
+//个人中心的样式
+#personalcenter{//最外层div
+    height:100%;
+    // background-color: red;
+    .box{//第二层div
+        margin-left: 200px;
+        margin-right: 200px;
+        // background-color: #fff;
+        .title{//标题区
+            padding-top: 10px;
+            min-width: 150px;
+            display: flex;
+            justify-content:space-between;
+            span{
+                font-size: 30px;
+                cursor: pointer;
+                
+            }
+            .left,.right{
+                height:30px;
+                width: 80px;
+                margin-right: 5px;
+                background-color: #606266;
+                color: #fff;
+                cursor:pointer;
+                border-radius: 5px;
+                border:0px;
+                &:hover{
+                    background-color: #c93232;
+                    color: #fff;
+                } 
+                
+            }
+            //对话框相关样式
+            .vCode{//验证码框
+                display: flex;
+                // align-items: center;
+                justify-content: space-between;
+                .el-input{
+                    width: 60%;
+                }
+                span{
+                    font-size: 30px;
+                    margin-left: 10px;
+                    padding: 3px 10px;
+                    border-radius:5px;
+                    font-weight: bold;
+                    // background-color: #c93232;
+                    color: #c93232;
+                }
+                button{
+                    height:36px;
+                    width: 36px;
+                    border: 1px solid transparent;
+                    border-radius: 50%;
+                    background-color: #343a40;
+                    i{
+                        color: #fff;
+                        transition: transform 0.6s;
+                    }
+                    &:hover{
+                        background-color: #c93232;
+                        i{
+                            transform:rotateZ(360deg)
+                        }
+                    }
+                }
+            }
+            .dialog-footer button{
+                height:40px;
+                width: 80px;
+                margin: 5px;
+                cursor:pointer;
+                border-radius: 5px;
+                border:0px;
+                &:hover{
+                    background-color: #c93232;
+                    color: #fff;
+                } 
+            }
+            .dialog-footer .left{
+                background-color: #DCDFE6;
+            }
+            .dialog-footer .right{
+                background-color: #8cc2f8;
+            }
+        }
+        .content{//内容区
+            .box-card{//卡片区
+                min-width: 600px;//防止视窗缩小对布局造成影响
+                margin-top:15px;
+                div{//资料行
+                    cursor: pointer;
+                    padding:11px;
+                    .left{//左边的key
+                        color:#606266;
+                        font-size: 18px;
+                        font-weight: bold;
+                    }
+                    .el-icon-male{//男生图标
+                        color: #409EFF;
+                        font-weight: bold;
+                    }
+                    .el-icon-female{//女生图标
+                        color: #FF4D4F;
+                        font-weight: bold;
+                    }
+                    .input{//修改资料的输入框
+                        display: inline-block;
+                        width: 60%;
+                        height:30px;
+                        padding:0 5px;//取消预设的内边距
+                        outline: none;
+                        border:1px solid #606266;
+                        border-radius:5px;
+                        &:focus{
+                            outline: none;
+                            border:2px solid #c93232;
+                            background-color: #E9EEF3;
+                        }
+                        
+                    }
+                    .sex{
+                        // height:10px;
+                        padding:0;//取消预设的内边距
+                    }
+                }
+            }
+            .switch{//开关区
+                text-align:right;
+                margin-top: 15px;
+                margin-right: 5px;
+                min-width: 600px;
+                span{//开关的标题
+                    cursor: pointer;
+                    font-size: 14px;
+                    margin-right: 3px;
+                    font-weight: bold;
+                    color: #606266;
+                }
+            }
+            .submit{//提交按钮区
+                text-align:right;
+                padding: 10px;
+            }
+        }
+    }
+}
