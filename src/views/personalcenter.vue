@@ -55,35 +55,17 @@
                                             <div class="btn">
                                                 <button class="photo" @click="dialogVisible = true">拍照</button>
                                                 <button class="up" @click="dialogVisibleII = true">上传</button>
-                                                <button class="down">下载</button>
+                                                <button class="down" @click="downloadImg">下载</button>
                                             </div>
                                         </div>
                                         <div class="topRight">
-                                            <div class="informationItem">
-                                                <div>
-                                                    <i>名称：</i>
+                                            <div v-for="(key,index) in personalInfoKey" :key="index" class="informationItem">
+                                                <div class="iItemDiv">
+                                                    <div class="key">{{key}}:</div>
+                                                    <div class="val">xxxxxxxxxxxxxxxxxdahhdjahsdjxxxxxxxx</div>
                                                 </div>
                                             </div>
-                                            <div class="informationItem">
-                                               <div>
-                                                    <i>名称：</i>
-                                                </div>
-                                            </div>
-                                            <div class="informationItem">
-                                                <div>
-                                                    <i>名称：</i>
-                                                </div>
-                                            </div>
-                                            <div class="informationItem">
-                                                <div>
-                                                    <i>名称：</i>
-                                                </div>
-                                            </div>
-                                            <div class="informationItem">
-                                                <div>
-                                                    <i>名称：</i>
-                                                </div>
-                                            </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -101,7 +83,7 @@
             title="进行拍照操作"
             :visible.sync="dialogVisible"
             width="50%"
-            @close = 'this.closeDialog'
+            @close = 'closeDialog'
             >
             <div id="top">
                 <div>相机</div>
@@ -114,12 +96,12 @@
                 </canvas>
             </div>
             <div class="pBtn">
-                <button @click="this.openCamera" class="open">打开摄像头</button>
-                <button class="shot" @click="this.takePhoto" >拍照</button>
+                <button @click="openCamera" class="open">打开摄像头</button>
+                <button class="shot" @click="takePhoto" >拍照</button>
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="this.cancelPhoto">取 消</el-button>
-                <el-button type="primary" @click="this.putPhoto">确 定</el-button>
+                <el-button type="primary" @click="putPhoto">确 定</el-button>
             </div>
         </el-dialog>
         <!-- 上传照片对话框 -->
@@ -127,20 +109,20 @@
             title="进行上传操作"
             :visible.sync="dialogVisibleII"
             width="30%"
+             @close = 'closeUPimgDialog'
             >
             <div id="top">
                 <div>预览</div>
             </div>
-            <div class="upPhoto">
-                <img src="#" alt="请上传图片" id="upImg">
+            <div class="upPhoto" v-show="upPhoto" @click="chooseImg">
+                <img :src="imgSrc" alt="" ref="upImg" id="upImg">
             </div>
-            <div class="upInput">
-                
-                <input type="file" accept="image/png, image/jpeg" id="inputFile" @change="inputChange">
+            <div class="upInput" v-show="!upPhoto" @click="chooseImg">
+                <input ref="upInput" type="file" accept="image/png, image/jpeg" @change="inputChange">
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleII = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisibleII = false">确 定</el-button>
+                <el-button type="primary" @click="putImg">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -152,8 +134,13 @@ export default {
         return {
             dialogVisible:false,//拍照对话框
             photoFlag:false,//是否有拍摄好的拍照的标志
+            imgFlag:false,//是否有上传好的图片的标志
             dialogVisibleII:false,//上传照片对话框
             fileList:[],//上传照片list
+            upPhoto:false,//控制上传照片显示隐藏的字段
+            imgSrc:'#',//图片url
+            imgType:["image/png","image/jpeg"],//图片类型接收范围
+            personalInfoKey:["名称","名称","名称","名称","名称"]
         }
     },
     //生命周期函数
@@ -277,17 +264,79 @@ export default {
             this.closeCamera()
             this.clearPhoto()
         },
+        //关闭对话框--上传图片
+        closeUPimgDialog(){
+            this.upPhoto = false;
+            this.imgSrc  = "#";
+        },
+        //点击上传图片
+        chooseImg(){
+            this.$refs.upInput.click()
+        },
+        //使用上传好的图片
+        putImg(){
+            this.dialogVisibleII = false;
+            if(!this.imgFlag){return false}
+            window.localStorage.setItem('personnalPhoto',this.imgSrc)
+            this.$refs.myPhoto.src = window.localStorage.getItem('personnalPhoto')
+            this.imgFlag = false;
+        },
+        //input-file变化
         inputChange(){
+            let self = this;
             //获取文件引用
-            let files =document.getElementById('inputFile').files[0];
+            let files =this.$refs.upInput.files[0];
+            //创建文件阅读器
             let reader = new FileReader();
+            //文件阅读器的回调函数
             reader.onload = function(e){
                 let dataBase64 = e.target.result;
-                document.getElementById('upImg').src  = dataBase64;
+                self.upPhoto = true;
+                //获取异步更新后的dom
+                self.$nextTick(function(){
+                    self.imgSrc  = dataBase64;
+                    self.imgFlag = true;
+                })
             }
-            reader.readAsDataURL(files)
-            console.log(files)
-            
+            reader.onerror = function(e){
+                console.log(e)
+            }
+            reader.onloadend = function(e){
+                console.log(e)
+            }
+            //判断是否在文件选择器中选择了文件
+            if(files){
+                //判断选中的文件类型是不是在范围中
+                if(this.imgType.includes(files.type)){
+                    //判断文件大小是不是超过1m
+                    if(files.size>1024*1024){
+                        this.$message({
+                            message:"请选择大小 1m 以下的图片",
+                            type:'warning',
+                            duration:"3000"
+                        })
+                        return;
+                    }
+                    //使用文件阅读器阅读文件
+                    reader.readAsDataURL(files);
+                }else{
+                    this.$message({
+                        message:"请选择 .png 或 .jpeg/.jpg 类型后缀的图片",
+                        type:'warning',
+                        duration:"3000"
+                    })
+                }
+            }
+        },
+        //下载图片
+        downloadImg(){
+            //模拟a标签下载(js下载图片常用方式之一)
+            let aLink = document.createElement('a');
+            //download属性，h5新增,指将下载url资源，而不是导航到它，如果download有值，这个值是下载时候的文件名
+            aLink.download = '对虾养殖可视化平台_个人中心_头像';
+            aLink.href = this.$refs.myPhoto.src;
+            aLink.click();
+            aLink.remove();
         }
     },
 }
