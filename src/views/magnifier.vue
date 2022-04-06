@@ -50,7 +50,7 @@
                         <span class="three"></span>
                         <span class="four"></span>
                         <div class="text">
-                            <div class="swith">
+                            <div class="switch">
                                 <i class="tips">/*以下资料来自于互联网*/</i>
                                 <el-dropdown trigger="click" @command='this.dropdownClick' >
                                     <p>其他对虾资料<i class="el-icon-arrow-down el-icon--right"></i></p>
@@ -468,7 +468,7 @@ export default {
         width: 100%;
         height: 100%;
         background-color: #343a40a4;
-        .swith{
+        .switch{
             height: 3%;
             padding: 10px 20px 0 20px;
             display: flex;

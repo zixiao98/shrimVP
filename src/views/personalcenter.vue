@@ -8,6 +8,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
+                        <BarIII></BarIII>
                     </div>
                 </div>
                 <div class="leftBottom">
@@ -16,6 +17,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
+                        <PieIII></PieIII>
                     </div>
                 </div>
             </div>
@@ -26,6 +28,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
+                        <Circles :circleDate="myEchart_circleDate"></Circles>
                     </div>
                 </div>
                 <div class="rightBottom">
@@ -65,12 +68,20 @@
                                                     <div class="val">xxxxxxxxxxxxxxxxxdahhdjahsdjxxxxxxxx</div>
                                                 </div>
                                             </div>
-                                            
                                         </div>
                                     </div>
                                 </div>
                                 <div class="bottom">
-                                    <div class="bottomDiv"></div>
+                                    <div class="bottomDiv">
+                                        <div v-for="(key,index) in personalInfoKeyII" :key="index" class="informationItems">
+                                                <div class="iItemDivs">
+                                                    <div v-for="(keys,indexs) in key" :key="indexs" class="iItemBox">
+                                                        <div class="keys">{{keys}}:</div>
+                                                        <div class="vals">xxxxxxxxxxxxxxxxxdahhdjahsdjxxxxxxxx</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -129,6 +140,9 @@
 </template>
 
 <script>
+import PieIII from '../components/personalcenter/pieIII.vue'
+import BarIII from '../components/personalcenter/barIII.vue'
+import Circles from '../components/personalcenter/circle.vue'
 export default {
     data(){
         return {
@@ -140,8 +154,21 @@ export default {
             upPhoto:false,//控制上传照片显示隐藏的字段
             imgSrc:'#',//图片url
             imgType:["image/png","image/jpeg"],//图片类型接收范围
-            personalInfoKey:["名称","名称","名称","名称","名称"]
+            personalInfoKey:["姓名","性别","年龄","地区","地址"],//个人资料key
+            personalInfoKeyII:[["拥有基地","拥有虾塘","拥有设备",],["虾苗投入","收获对虾","产投比",],["注册日期","近期登录","登录地区",],["手机","邮箱",]],
+            myEchart_circleDate:[
+                {name:'中国对虾',data:0.18},
+                {name:'斑节对虾',data:0.34},
+                {name:'日本对虾',data:0.56},
+                {name:'墨吉对虾',data:0.68},
+                {name:'长毛对虾',data:0.81},
+            ]
         }
+    },
+    components:{
+        PieIII,
+        BarIII,
+        Circles,
     },
     //生命周期函数
     mounted(){
