@@ -36,8 +36,8 @@ export default {
                     }
                 },
                 xAxis: {
-                    name:'年',
-                    data: ['2016', '2017', '2018', '2019', '2020','2021'],
+                    name:'月',
+                    data: ['1', '2', '3', '4', '5','6'],
                     nameTextStyle:{
                         color:'#fff'
                     },

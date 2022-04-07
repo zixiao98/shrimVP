@@ -173,9 +173,9 @@ export default {
     padding: 10px 20px 0 20px;
     p{
         width: 100%;
-        font-size: 18px;
+        font-size: 16px;
         margin:0;
-        color: #fff;
+        color: #5dc3ea;
         cursor: pointer;
     }
 }

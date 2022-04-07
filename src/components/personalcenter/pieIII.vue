@@ -23,47 +23,48 @@ export default {
             // 注册主题
             this.$echarts.registerTheme('customed',theme.data)
             this.myChartsInstance = this.$echarts.init(this.$refs.myPie,'customed')//用获取实例来注册
-            this.myChartsInstance.setOption({
+            let option = {
                 title: {
                     text: '对虾种类养殖数量占比分布',
                     subtext: '近5年数据',
                     left: 'center',
                 },
+                 legend: {
+                    orient: 'vertical',
+                    left: '0',
+                    bottom:'0'
+                },
                 tooltip: {
                     trigger: 'item',
-                },
-                legend: {
-                    orient: 'vertical',
-                    bottom: 'bottom',
+                    formatter: '{a} <br/>{b} : {d}%'
                 },
                 label:{
                     color:'#fff',
                     formatter:function(e){
                         return `${e.data.name}`
                     }
-                },               
+                },  
                 series: [
                     {
-                        name: '产量占比(%)',
+                        name: '对虾养殖占比',
                         type: 'pie',
-                        radius: '50%',
-                        data: [
-                            { value: 35, name: '中国对虾' },
-                            { value: 25, name: '班节对虾' },
-                            { value: 18, name: '墨吉对虾' },
-                            { value: 8, name: '日本对虾' },
-                            { value: 12, name: '长毛对虾' }
-                        ],
-                        emphasis: {
-                            itemStyle: {
-                                shadowBlur: 10,
-                                shadowOffsetX: 0,
-                                shadowColor: 'rgba(0, 0, 0, 0.5)'
-                            }
+                        radius: [20, 120],
+                        center: ['50%', '50%'],
+                        roseType: 'area',
+                        itemStyle: {
+                            borderRadius: 5
                         },
+                        data: [
+                            { value: 135, name: '中国对虾' },
+                            { value: 125, name: '班节对虾' },
+                            { value: 118, name: '墨吉对虾' },
+                            { value: 48, name: '日本对虾' },
+                            { value: 82, name: '长毛对虾' }
+                        ]
                     }
                 ]
-            })
+                };
+            this.myChartsInstance.setOption(option)
         },
         // 获取数据
         getData(){

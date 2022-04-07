@@ -132,13 +132,13 @@ export default {
                     }
                     break;
                 case 8://个人中心
-                    if(this.$router.history.current.name !== 'personalcenter'){//避免已经是当前页的情况
-                        this.$router.push('/personalcenter')
+                    if(this.$router.history.current.name !== 'personalCenter'){//避免已经是当前页的情况
+                        this.$router.push('/personalCenter')
                     }
                     break;
                 case 9://登录记录
-                    if(this.$router.history.current.name !== 'loginrecord'){//避免已经是当前页的情况
-                        this.$router.push('/loginrecord')
+                    if(this.$router.history.current.name !== 'loginRecord'){//避免已经是当前页的情况
+                        this.$router.push('/loginRecord')
                     }
                     break;
                 default:

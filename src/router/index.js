@@ -58,10 +58,15 @@ const routes = [
         name:'magnifier',
         component:() => import(/* webpackChunkName: "about" */ '../views/magnifier.vue')
       },
-      {//个人中心
-        path:'/personalcenter',
-        name:'personalcenter',
-        component:() => import(/* webpackChunkName: "about" */ '../views/personalcenter.vue')
+      {//个人主页
+        path:'/personalCenter',
+        name:'personalCenter',
+        component:() => import(/* webpackChunkName: "about" */ '../views/personalCenter.vue')
+      },
+      {//登录记录
+        path:'/loginRecord',
+        name:'/loginRecord',
+        component:() => import(/* webpackChunkName: "about" */ '../views/loginRecord.vue')
       },
     ]
   },

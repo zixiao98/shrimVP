@@ -1,24 +1,121 @@
 //登录记录的样式
-#loginrecord{//最外层div
-    height:100%;
-    .box{//
-        margin: 0 200px;
-        .title{//标题区
-            padding-top: 10px;
-            min-width: 150px;
-            span{
-                font-size: 30px;
-                cursor: pointer;
-                
+#homepage{//最外层div
+    .center{
+        width: 74%;
+        .box{
+            .boxContent{
+                height: calc(100% - 10px);
+                width: calc(100% - 10px);
+                padding: 5px;
+                .trueContent{
+                    height: calc(100% - 10px);
+                    width: calc(100% - 10px);
+                    padding: 5px;
+                    border-radius: 8px;
+                    background-color: rgba(255, 255, 255, 0.281);
+                    .tool{
+                        height: calc(10% - 10px);
+                        width: calc(100% - 10px);;
+                        padding: 5px;
+                        border-bottom: 2px solid #343a40;
+                        display: flex;
+                        align-items: center;
+                        .add{
+                            background-color: #c93232;
+                            color: #ccc;
+                            border: none;
+                            &:hover{
+                                cursor: pointer;
+                                color: #fff;
+                                box-shadow: 5px 5px 5px #343a40;
+                            }
+                        }
+                        .search{
+                            width: calc(40% - 100px);
+                            padding: 0 50px;
+                            display: flex;
+                            align-items: center;
+                            i{
+                                margin-left: 10px;
+                                font-size: 24px;
+                                color: #ccc;
+                                transition: transform .2s;
+                                &:hover{
+                                    cursor: pointer;
+                                    color: #fff;
+                                    transform: scale(1.1);
+                                }
+                            }
+                        }
+                    }
+                    // 以下修改elementui的table默认样式
+                    /deep/ .el-table, .el-table__expanded-cell {
+                        background-color: transparent;
+                        border: none;
+                    }
+                    /deep/.el-table .el-table--enable-row-transition .el-table__body td, .el-table .cell{
+                        background-color: transparent;
+                        border: none;
+                    }
+                    /deep/.el-table td.el-table__cell, .el-table th.el-table__cell.is-leaf{
+                        border-bottom: 1px solid #ccc;
+                    }
+                    /deep/.el-table .el-table__cell{
+                        padding: 10px 0;
+                    }
+                    /deep/.el-table th,
+                    /deep/.el-table tr{/*表中数据的颜色及背景等*/
+                        background-color: transparent;
+                        color: #fff;
+                    }
+                    /deep/.el-table tr {
+                        border: 0;
+                    }
+                    /deep/.el-table--border tr,td{/*去每一行记录下的横线*/
+                        border: none;
+                    }
+                    /deep/.el-table::before{/*去最下面的横线*/
+                        height:0;
+                    }
+                    /deep/.el-table tbody tr:hover>td {/*table内的高亮*/
+                        background-color:rgba(255, 255, 255, 0.281);
+                    }
+                    // 以下修改分页器默认样式
+                    .el-pagination{
+                        text-align: right;
+                        padding: 5px;
+                    }
+                    /deep/.el-input__inner{
+                        background-color: transparent ;
+                        color:#ccc ;
+                        border:none ;
+                        border-radius: 0;
+                        border-bottom: 2px solid #343a40;
+                    }
+                    /deep/.el-pagination .btn-next, 
+                    /deep/.el-pagination .btn-prev,
+                    /deep/.el-pagination button:disabled{
+                        background-color: transparent;
+                    }
+                    /deep/.el-pager li{
+                        background-color: transparent;
+                    }
+                    /deep/.el-pager li:hover{
+                        color: #fff;
+                        cursor: pointer;
+                    }
+                    /deep/.el-pager li.active {
+                        background-color: #c93232;
+                        color: #fff;
+                        cursor: pointer;
+                        border-radius: 10%;
+                    }
+                    
+                    /deep/.el-pagination__total,/deep/.el-pagination__jump{
+                        color: #ccc;
+                    }
+                }
             }
-        }
-        .content{//内容区
-            margin-top: 10px;
-            min-width: 800px;
-        }
-        .footer{
-            margin-top: 30px;
-            text-align: center;
         }
     }
 

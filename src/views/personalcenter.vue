@@ -37,6 +37,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
+                        <PolarGraph></PolarGraph>
                     </div>
                 </div>
             </div>
@@ -143,6 +144,7 @@
 import PieIII from '../components/personalcenter/pieIII.vue'
 import BarIII from '../components/personalcenter/barIII.vue'
 import Circles from '../components/personalcenter/circle.vue'
+import PolarGraph from '../components/personalcenter/polarGraph.vue'
 export default {
     data(){
         return {
@@ -169,6 +171,7 @@ export default {
         PieIII,
         BarIII,
         Circles,
+        PolarGraph,
     },
     //生命周期函数
     mounted(){
