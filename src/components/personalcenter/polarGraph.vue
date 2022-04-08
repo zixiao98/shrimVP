@@ -50,11 +50,9 @@ export default {
                         }
                     },
                      axisLabel: {
-                        textStyle: {
-                            fontSize: 11,
-                            color: '#61d9fb',
-                            fontFamily: 'Microsoft YaHei'
-                        }
+                        fontSize: 11,
+                        color: '#61d9fb',
+                        fontFamily: 'Microsoft YaHei'
                     },
                 },
                 angleAxis: {
@@ -77,7 +75,7 @@ export default {
                         color: function(params){
                             return that.colors[params.dataIndex];
                         },
-                        // opacity:0.85,
+                        opacity:0.9,
                     }
                 },
             };

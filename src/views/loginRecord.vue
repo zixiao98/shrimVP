@@ -11,7 +11,6 @@
                          <div class="boxContent">
                             <div class="trueContent">
                                 <div class="tool">
-                                    <el-button size="small" icon="el-icon-plus" class="add" @click="addContent">添加</el-button>
                                     <div class="search">
                                         <el-select v-model="select" slot="prepend" placeholder="请选择查询依据">
                                             <el-option v-for="item in optionValue" :key="item.value" :label="item.name" :value="item.value"></el-option>
@@ -21,15 +20,13 @@
                                     </div>
                                 </div>
                                 <el-table :data="tableData" style="width: 100%">
-                                    <el-table-column prop="createDate" label="创建日期" align="center" width="150"></el-table-column>
-                                    <el-table-column prop="inputNum" label="投放尾数" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="deliveryStatus" label="投放状态" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="launchDate" label="投放时间" align="center" width="150"></el-table-column>
-                                    <el-table-column prop="harvestDate" label="捕获时间" align="center" width="150"></el-table-column>
-                                    <el-table-column label="操作" width="230" align="center" fixed="right">
+                                    <el-table-column prop="createDate" label="登录账号" align="center" width="200"></el-table-column>
+                                    <el-table-column prop="deliveryStatus" label="登录状态" align="center" width="150"></el-table-column>
+                                    <el-table-column prop="launchDate" label="登录地区" align="center" width="200"></el-table-column>
+                                    <el-table-column prop="harvestDate" label="登录时间" align="center"></el-table-column>
+                                    <el-table-column label="操作" width="230" align="center">
                                          <template slot-scope="scope">
-                                            <el-button size="small" type="primary" icon="el-icon-edit" @click="handleClick(scope.row)">编辑</el-button>
-                                            <el-button size="small" type="danger" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+                                            <el-button size="small" type="primary" icon="el-icon-view" @click="handleDetails(scope.row)">查看</el-button>
                                         </template>
                                     </el-table-column> 
                                 </el-table>
@@ -52,6 +49,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
+                        <LineII></LineII>
                     </div>
                 </div>
                 <div class="rightBottom">
@@ -70,6 +68,7 @@
 </template>
 
 <script>
+import LineII from '../components/loginrecord/lineII.vue'
 import PolarGraphII from '../components/loginrecord/polarGraphII.vue'
 export default {
     data(){
@@ -171,6 +170,66 @@ export default {
                     launchDate:'2016-08-02',//投放时间
                     harvestDate:'2016-08-02',//捕获时间（预计）
                 },
+                {
+                    createDate:'2016-05-02',//创建时间
+                    pondName:'穗-五号塘',//基地名称
+                    pondType:1,//基地类型
+                    pondVolume:'321',//面积
+                    depth:'5',//深度
+                    species:'中国对虾',//投放类型（虾种类）
+                    inputNum:12312,//投放尾数
+                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
+                    launchDate:'2016-08-02',//投放时间
+                    harvestDate:'2016-08-02',//捕获时间（预计）
+                },
+                {
+                    createDate:'2016-05-02',//创建时间
+                    pondName:'穗-五号塘',//基地名称
+                    pondType:1,//基地类型
+                    pondVolume:'321',//面积
+                    depth:'5',//深度
+                    species:'中国对虾',//投放类型（虾种类）
+                    inputNum:12312,//投放尾数
+                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
+                    launchDate:'2016-08-02',//投放时间
+                    harvestDate:'2016-08-02',//捕获时间（预计）
+                },
+                {
+                    createDate:'2016-05-02',//创建时间
+                    pondName:'穗-五号塘',//基地名称
+                    pondType:1,//基地类型
+                    pondVolume:'321',//面积
+                    depth:'5',//深度
+                    species:'中国对虾',//投放类型（虾种类）
+                    inputNum:12312,//投放尾数
+                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
+                    launchDate:'2016-08-02',//投放时间
+                    harvestDate:'2016-08-02',//捕获时间（预计）
+                },
+                {
+                    createDate:'2016-05-02',//创建时间
+                    pondName:'穗-五号塘',//基地名称
+                    pondType:1,//基地类型
+                    pondVolume:'321',//面积
+                    depth:'5',//深度
+                    species:'中国对虾',//投放类型（虾种类）
+                    inputNum:12312,//投放尾数
+                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
+                    launchDate:'2016-08-02',//投放时间
+                    harvestDate:'2016-08-02',//捕获时间（预计）
+                },
+                {
+                    createDate:'2016-05-02',//创建时间
+                    pondName:'穗-五号塘',//基地名称
+                    pondType:1,//基地类型
+                    pondVolume:'321',//面积
+                    depth:'5',//深度
+                    species:'中国对虾',//投放类型（虾种类）
+                    inputNum:12312,//投放尾数
+                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
+                    launchDate:'2016-08-02',//投放时间
+                    harvestDate:'2016-08-02',//捕获时间（预计）
+                },
                 
             ],//表格展示数据
             addForm: {
@@ -200,6 +259,7 @@ export default {
         }
     },
     components:{
+        LineII,
         PolarGraphII,
     },
     //生命周期函数

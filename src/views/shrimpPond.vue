@@ -338,30 +338,7 @@ export default {
                     launchDate:'2016-08-02',//投放时间
                     harvestDate:'2016-08-02',//捕获时间（预计）
                 },
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-八号塘',//虾塘名称
-                    pondType:1,//虾塘类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
-                },
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-九号塘',//虾塘名称
-                    pondType:1,//虾塘类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
-                },
+               
                 {
                     createDate:'2016-05-02',//创建时间
                     pondName:'穗-十号塘',//虾塘名称

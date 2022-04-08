@@ -18,7 +18,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
-                        <PieII ref="pieII"></PieII>
+                        <PieII ref="pieII" :pieIIDate="myEchart_pieIIDate"></PieII>
                     </div>
                 </div>
             </div>
@@ -287,6 +287,40 @@ export default {
                     }
                 },
             ],
+
+            //
+            myEchart_pieIIDate:[
+                 {name:'2021年',data:[{name:'广东',value: 135,},
+                {name:'广西',value: 125,},
+                {name:'海南',value: 118,},
+                {name:'山东',value: 48,},
+                {name:'其他',value: 82,},],},
+                {name:'2020年',data:[{name:'广东',value: 125,},
+                {name:'广西',value: 135,},
+                {name:'海南',value: 118,},
+                {name:'山东',value: 82,},
+                {name:'其他',value: 48,},],},
+                {name:'2019年',data:[{name:'广东',value: 118,},
+                {name:'广西',value: 123,},
+                {name:'海南',value: 48,},
+                {name:'山东',value: 135,},
+                {name:'其他',value: 82,},],},
+                {name:'2018年',data:[{name:'广东',value: 125,},
+                {name:'广西',value: 122,},
+                {name:'海南',value: 62,},
+                {name:'山东',value: 82,},
+                {name:'其他',value: 102,},],},
+                {name:'2017年',data:[{name:'广东',value: 82,},
+                {name:'广西',value: 112,},
+                {name:'海南',value: 48,},
+                {name:'山东',value: 89,},
+                {name:'其他',value: 135,},],},
+                {name:'2016年',data:[{name:'广东',value: 102,},
+                {name:'广西',value: 62,},
+                {name:'海南',value: 32,},
+                {name:'山东',value: 92,},
+                {name:'其他',value: 112,},],},
+            ]
         }
     },
     components:{
@@ -347,7 +381,7 @@ export default {
             this.textArr = this.shrimpData.textString.split('。')
             // 更新echart图表信息
             this.$refs.barII.updateChart(this.shrimpData.data)
-            this.$refs.pieII.updateChart(this.shrimpData.data)
+            // this.$refs.pieII.updateChart(this.shrimpData.data)
             this.$refs.radarII.updateChart(this.shrimpData.data)
         },
         //鼠标移入显示放大镜

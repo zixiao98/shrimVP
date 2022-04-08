@@ -8,7 +8,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
-                        <BarIII></BarIII>
+                        <BarIII :barIIIDate="myEchart_barIIIDate"></BarIII>
                     </div>
                 </div>
                 <div class="leftBottom">
@@ -17,7 +17,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
-                        <PieIII></PieIII>
+                        <PieIII :pieIIIDate="myEchart_pieIIIDate"></PieIII>
                     </div>
                 </div>
             </div>
@@ -164,7 +164,47 @@ export default {
                 {name:'日本对虾',data:0.56},
                 {name:'墨吉对虾',data:0.68},
                 {name:'长毛对虾',data:0.81},
-            ]
+            ],
+            myEchart_barIIIDate:[
+                {name:'2022-上半年',data:[49.24, 62.12, 71.23, 80.23,56.23,61.31],},
+                {name:'2021-下半年',data:[49.24, 80.23,62.12, 71.23,61.31 ,56.23],},
+                {name:'2021-上半年',data:[39.24, 22.12, 71.23, 80.23,56.23,71.31],},
+                {name:'2020-下半年',data:[49.24, 32.12, 61.23, 80.23,56.23,81.31],},
+                {name:'2020-上半年',data:[49.24, 42.12, 71.23, 70.23,46.23,41.31],},
+                {name:'2019-下半年',data:[29.24, 52.12, 71.23, 56.23,56.23,43.31],},
+            ],
+            myEchart_pieIIIDate:[
+                {name:'2022-上半年',data:[{name:'中国对虾',value: 135,},
+                {name:'斑节对虾',value: 125,},
+                {name:'日本对虾',value: 118,},
+                {name:'墨吉对虾',value: 48,},
+                {name:'长毛对虾',value: 82,},],},
+                {name:'2021-下半年',data:[{name:'中国对虾',value: 125,},
+                {name:'斑节对虾',value: 135,},
+                {name:'日本对虾',value: 118,},
+                {name:'墨吉对虾',value: 82,},
+                {name:'长毛对虾',value: 48,},],},
+                {name:'2021-上半年',data:[{name:'中国对虾',value: 118,},
+                {name:'斑节对虾',value: 123,},
+                {name:'日本对虾',value: 48,},
+                {name:'墨吉对虾',value: 135,},
+                {name:'长毛对虾',value: 82,},],},
+                {name:'2020-下半年',data:[{name:'中国对虾',value: 125,},
+                {name:'斑节对虾',value: 122,},
+                {name:'日本对虾',value: 62,},
+                {name:'墨吉对虾',value: 82,},
+                {name:'长毛对虾',value: 102,},],},
+                {name:'2020-上半年',data:[{name:'中国对虾',value: 82,},
+                {name:'斑节对虾',value: 112,},
+                {name:'日本对虾',value: 48,},
+                {name:'墨吉对虾',value: 89,},
+                {name:'长毛对虾',value: 135,},],},
+                {name:'2019-下半年',data:[{name:'中国对虾',value: 102,},
+                {name:'斑节对虾',value: 62,},
+                {name:'日本对虾',value: 32,},
+                {name:'墨吉对虾',value: 92,},
+                {name:'长毛对虾',value: 112,},],},
+            ],
         }
     },
     components:{

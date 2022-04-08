@@ -1,20 +1,15 @@
 <template>
-  <div class="lzj-container">
+    <div class="lzj-container">
         <div class="switch">
             <el-dropdown trigger="click" @command='this.dropdownClick' >
                 <p>其他对虾<i class="el-icon-arrow-down el-icon--right"></i></p>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item v-for="(item,index) in this.circleDate" :key="index" :command='index' >{{item.name}}</el-dropdown-item>
-                    <!-- <el-dropdown-item command='1' >中国对虾</el-dropdown-item>
-                    <el-dropdown-item command='2'>斑节对虾</el-dropdown-item>
-                    <el-dropdown-item command='3'>日本对虾</el-dropdown-item>
-                    <el-dropdown-item command='4'>墨吉对虾</el-dropdown-item>
-                    <el-dropdown-item command='5' divided>长毛对虾</el-dropdown-item> -->
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
         <div class="lzj-chart" ref='myCircle'></div>
-  </div>
+    </div>
 </template>
 
 <script>

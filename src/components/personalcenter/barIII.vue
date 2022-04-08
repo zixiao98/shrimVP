@@ -1,32 +1,55 @@
 <template>
-  <div class="lzj-container">
-      <div class="lzj-chart" ref='myTest'></div>
-  </div>
+    <div class="lzj-container">
+      <div class="switch">
+            <el-dropdown trigger="click" @command='this.dropdownClick' >
+                <p>选择时间段<i class="el-icon-arrow-down el-icon--right"></i></p>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item v-for="(item,index) in this.barIIIDate" :key="index" :command='index' >{{item.name}}</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
+      </div>
+      <div class="lzj-chart" ref='myBarIII'></div>
+    </div>
 </template>
 
 <script>
 export default {
     data(){
         return {
-            
+            monthArrI:['1', '2', '3', '4', '5','6'],
+            monthArrII:['7', '8', '9', '10', '11','12'],
         }
     },
+    props:["barIIIDate"],
     mounted()
     {
         this.intChart()
         window.addEventListener('resize',this.adaptChart)
     },
     methods:{
+        // 下拉菜单回调函数
+        async dropdownClick(c){
+            let {name,data} =await this.barIIIDate[c];
+            let monthArr = this.getMonthArr(name)
+            console.log(name,data,monthArr)
+            this.updateChart(name,data,monthArr)
+        },
+        //判断月份
+        getMonthArr(name){
+            let arr = Array.from(name);//转成数组
+            return arr.includes('上') ? this.monthArrI : this.monthArrII;
+        },
         // 初始化echart
         async intChart(){
             // 获取主题
             let theme = await this.$axios.get('http://localhost:8088/static/theme/customed.json')
             // 注册主题
             this.$echarts.registerTheme('customed',theme.data)
-            this.myChartsInstance =  this.$echarts.init(this.$refs.myTest,'customed');
+            this.myChartsInstance =  this.$echarts.init(this.$refs.myBarIII,'customed');
             this.myChartsInstance.setOption({
                 title: {
-                    text: '近年来年产量变化',
+                    text: `${this.barIIIDate[0].name} 对虾产量变化`,
+                    subtext: '可查看近3年数据',
                     left: 'center',
                 },
                 tooltip: {
@@ -37,6 +60,7 @@ export default {
                 },
                 xAxis: {
                     name:'月',
+                    offset:2,
                     data: ['1', '2', '3', '4', '5','6'],
                     nameTextStyle:{
                         color:'#fff'
@@ -47,6 +71,7 @@ export default {
                 },
                 yAxis: {
                     name:'千万吨',
+                    offset:2,
                     nameTextStyle:{
                         color:'#fff'
                     },
@@ -76,14 +101,18 @@ export default {
 
         },
         // 更新数据
-        updateChart(data){
+        updateChart(name,data,monthArr){
+            console.log(name)
             let option ={
+                title: {
+                    text: `${name} 对虾产量变化`,
+                },
                 xAxis: {
-                    data: data.barII.xAxis.data,
+                    data: monthArr,
                 },
                 series: [
                     {
-                        data:data.barII.series.data,
+                        data:data,
                     },
                     
                 ]
@@ -92,7 +121,7 @@ export default {
         },
         // 图表自适应
         adaptChart(){
-            this.fontSize = this.$refs.myTest.offsetWidth /100 *3.6;
+            this.fontSize = this.$refs.myBarIII.offsetWidth /100 *3.6;
             console.log(this.fontSize)
             let option = {
                 label:{
@@ -111,4 +140,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.switch{
+    z-index: 1000;
+    height: 25px;
+    padding: 10px 20px 0 20px;
+    p{
+        width: 100%;
+        font-size: 16px;
+        margin:0;
+        color: #5dc3ea;
+        cursor: pointer;
+    }
+}
+/deep/.el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover {
+            background-color: #5dc3ea;
+            color:#fff;
+        }
 </style>
