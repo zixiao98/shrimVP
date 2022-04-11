@@ -45,7 +45,7 @@ export default {
                     splitNumber: 5,
                     axisLine: {
                         lineStyle: {
-                            color: '#fff',
+                            color: '#e9eef3',
                             opacity: .8
                         }
                     },

@@ -26,18 +26,48 @@ export default {
             this.myChartsInstance =  this.$echarts.init(this.$refs.myTest,'customed');
             this.myChartsInstance.setOption({
                 title: {
-                    text: '图一'
+                    text: '2021年对虾种类产量',
+                    left: 'center',
                 },
-                tooltip: {},
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                    type: 'shadow'
+                    }
+                },
                 xAxis: {
-                    data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子','帽子']
+                    name:'种类',
+                    data: ['中国对虾', '斑节对虾', '日本对虾', '墨吉对虾', '长毛对虾'],
+                    offset:5,
+                    nameTextStyle:{
+                        color:'#fff',
+                        align:'center',
+                    },
+                    axisLabel: {
+                        color: '#e9eef3',
+                        fontSize: 12
+                    }
                 },
-                yAxis: {},
+                yAxis: {
+                    name:'千万吨',
+                    nameTextStyle:{
+                        color:'#fff'
+                    },
+                    axisLabel:{//坐标轴刻度
+                        color:'#ccc',
+                    },
+                    splitLine:{//分割横线
+                        lineStyle:{
+                            color:'#ccc',
+                            type:'dashed'
+                        }
+                    },
+                },
                 series: [
                     {
-                    name: '销量',
+                    name: '产量(千万吨)',
                     type: 'bar',
-                    data: [5, 20, 36, 10, 10, 20,1]
+                    data: [262.12, 171.23, 80.23,156.23,221.31]
                     }
                 ]
             })

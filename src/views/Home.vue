@@ -23,9 +23,9 @@
                         <div @click="navigation(5)"><i class="el-icon-coffee"></i><span>对虾资料</span></div>
                     </div>
                     <div class="asd">
-                        <span>功能点三</span>
-                        <div @click="navigation(6)"><i class="el-icon-sugar"></i><span>xxx</span></div>
-                        <div @click="navigation(7)"><i class="el-icon-light-rain"></i><span>xxx</span></div>
+                        <span>监测模块</span>
+                        <div @click="navigation(6)"><i class="el-icon-sugar"></i><span>环境监测</span></div>
+                        <!-- <div @click="navigation(7)"><i class="el-icon-light-rain"></i><span>xxx</span></div> -->
                     </div>
                     <div class="asd">
                         <span>个人模块</span>
@@ -46,7 +46,9 @@
                     <div>
                         <el-dropdown trigger="click" @command='handleCommand'>
                             <span class="el-dropdown-link">
-                                <i class="el-icon-user-solid"></i> {{name}}<i class="el-icon-arrow-down el-icon--right"></i>
+                                <i class="el-icon-user-solid"></i>
+                                 <span class="userName">{{name}}</span>
+                                <i class="el-icon-arrow-down el-icon--right"></i>
                             </span>
                             <el-dropdown-menu slot="dropdown" >
                                 <el-dropdown-item command='personalcenter' icon="el-icon-user-solid">个人中心</el-dropdown-item>
@@ -97,7 +99,7 @@
 export default {
     data(){
         return{
-            name:'',//用户名
+            name:'2568624492@qq.com1241112312312341231111111111111111111111',//用户名
             time:'',//时间
             timer:null,//定时器
         }
@@ -129,6 +131,11 @@ export default {
                 case 5://放大镜
                     if(this.$router.history.current.name !== 'magnifier'){//避免已经是当前页的情况
                         this.$router.push('/magnifier')
+                    }
+                    break;
+                case 6://环境监测
+                    if(this.$router.history.current.name !== 'monitor'){//避免已经是当前页的情况
+                        this.$router.push('/monitor')
                     }
                     break;
                 case 8://个人中心
@@ -188,7 +195,7 @@ export default {
     //生命周期函数
     mounted(){
         //获取用户
-        this.name= window.localStorage.getItem('user');
+        // this.name= window.localStorage.getItem('user');
         //让时间第一时间显示出来
         this.time = (new Date()).toLocaleString();
         this.timer =setInterval(() => {

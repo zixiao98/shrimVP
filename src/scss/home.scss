@@ -29,11 +29,13 @@
                 cursor: pointer;
                 letter-spacing:1px;
                 min-width: 200px;
+                color: #e9eef3;
                 font-size: 18px;
                 font-family: '微软雅黑';
                 font-weight: 600;
             }
             .webName{
+                color: #e9eef3;
                 font-size: 36px;
                 font-family: '微软雅黑';
                 font-weight: 700;
@@ -44,11 +46,20 @@
                 align-items: center;
                 .el-dropdown{//个人账户下拉菜单
                     padding: 10px;
-                    border:1px solid #fff;
-                    border-radius: 5px;
                     cursor: pointer;
-                    min-width: 170px;
+                    .userName{
+                        display: inline-block;
+                        color:#e9eef3;
+                        min-width: 170px;
+                        max-width: 200px;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
                     i{
+                        position: relative;
+                        top:-2px;
+                        font-size: 16px;
                         color: #fff;
                     }
                 }

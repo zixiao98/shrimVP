@@ -1,0 +1,148 @@
+.center{
+    background-color: #343a40a4 !important;
+    .mainBox{
+        height:calc(100% - 10px);
+        padding: 5px;
+        .mainDiv{//环境监测主体div
+            height:100%;
+            .top{//环境监测上部
+                height: calc(45% - 16px);;
+                padding: 8px;
+                .topDiv{
+                    height: 100%;
+                    border-radius: 8px;
+                    background-color: rgba(255, 255, 255, 0.507);
+                    display: flex;
+                    align-items: center;
+                    .topLeft{//环境监测上部-左-头像
+                        height:100%;
+                        width: 43%;
+                        .switch{
+                            z-index: 1000;
+                            height: 25px;
+                            padding: 10px 20px 0 20px;
+                            p{
+                                width: 100%;
+                                font-size: 16px;
+                                margin:0;
+                                color: #333;
+                                cursor: pointer;
+                            }
+                        }
+                        /deep/.el-dropdown-menu__item:focus, .el-dropdown-menu__item:not(.is-disabled):hover {
+                                    background-color: #c93232;
+                                    color:#fff;
+                                }
+                        .img{//头像
+                            height: calc(70% - 10px);
+                            padding: 5px;
+                            img{
+                                width: calc(100% - 4px);
+                                height: calc(100% - 4px);
+                                border:2px solid #ccc;
+                                border-radius: 8px;
+                                object-fit: contain;
+                                background-color: #343a40a4;
+                            } 
+                        }
+                        .btn{
+                            height: calc(15% - 10px);
+                            padding: 5px;
+                            display: flex;
+                            justify-content: space-around;
+                            align-items: center;
+                            button{
+                                width: 25%;
+                                height: 50%;
+                                border-radius: 5px;
+                                border: none;
+                                color: #fff;
+                                font-weight: 700;
+                                &:hover{
+                                    cursor: pointer;
+                                    box-shadow: 5px 5px 15px #292e33a4;
+                                }
+                            }
+                            .photo{
+                                background-color: #409EFF;
+                            }
+                            .up{
+                                background-color: #E6A23C;
+                            }
+                            .down{
+                                background-color: #67C23A;
+                            }
+                        } 
+                    }
+                    .topRight{//环境监测上部-右
+                        height: 95%;
+                        box-sizing: border-box;
+                        width: 57%;
+                        animation: rotate cubic-bezier(.48,.52,1,.2) forwards .3s;
+                        @keyframes rotate{
+                            0%{
+                                border-left: 2px solid #343a40a4;
+                            }
+                            20%{
+                                border-left: 2px solid rgb(206, 128, 128) 232;
+                            }
+                            50%{
+                                border-left: 2px solid rgb(182, 87, 87) 232;
+                            }
+                            70%{
+                                border-left: 2px solid rgb(180, 60, 60) 232;
+                            }
+                            100%{
+                                border-left: 2px solid #c93232;
+                            }
+                        }
+                        .informationItem{
+                            height: calc(20% - 20px);
+                            padding: 10px;
+                            .iItemDiv{
+                                display: flex;
+                                align-items:center;
+                                height: 100%;
+                                // width: 100%;
+                                // border: 1px solid #ccc;
+                                border-radius: 8px;
+                                background-color: #ccc;
+                                .key{
+                                    width: 80px;
+                                    box-sizing: border-box;
+                                    padding: 0 5px;
+                                    text-align: center;
+                                    color:#336699;
+                                    font-weight: bolder;
+                                }
+                                .val{
+                                    width: calc(100% - 80px);
+                                    box-sizing: border-box;
+                                    padding: 0 5px;
+                                    // 单行文本溢出显示为省略号
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow:ellipsis;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .bottom{//环境监测下部
+                height: calc(55% - 16px);;
+                padding: 8px;
+                .bottomDiv{
+                    height: calc(100% - 10px);
+                    padding: 5px;
+                    .box{
+                        height: 100%;
+                        position: relative;
+                        background: url('../assets/img/line.png');
+                        background-color: #343a406c;
+                    }
+                }
+            }
+        }
+    }
+}

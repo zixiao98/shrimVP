@@ -12,18 +12,23 @@
                             <div class="trueContent">
                                 <div class="tool">
                                     <div class="search">
-                                        <el-select v-model="select" slot="prepend" placeholder="请选择查询依据">
+                                        <el-select v-model="select" slot="prepend" placeholder="请选择查询依据" @change='this.SelectClick'>
                                             <el-option v-for="item in optionValue" :key="item.value" :label="item.name" :value="item.value"></el-option>
                                         </el-select>
                                         <el-input placeholder="请输入内容" v-model="searchInput" class="input-with-select"></el-input>
-                                        <i class="el-icon-search"></i>
+                                        <i class="el-icon-search" @click.stop="lookUp"></i>
+                                        <i class="el-icon-refresh-left" @click.stop="lookBack"></i>
                                     </div>
                                 </div>
                                 <el-table :data="tableData" style="width: 100%">
-                                    <el-table-column prop="createDate" label="登录账号" align="center" width="200"></el-table-column>
-                                    <el-table-column prop="deliveryStatus" label="登录状态" align="center" width="150"></el-table-column>
-                                    <el-table-column prop="launchDate" label="登录地区" align="center" width="200"></el-table-column>
-                                    <el-table-column prop="harvestDate" label="登录时间" align="center"></el-table-column>
+                                    <el-table-column prop="loginId" label="登录账号" align="center" width="200"></el-table-column>
+                                    <el-table-column label="登录状态" align="center" width="150">
+                                        <template slot-scope="scope">
+                                            {{scope.row.loginStatus ? '成功' :'失败'}}
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column prop="loginRegion" label="登录地区" align="center" width="200"></el-table-column>
+                                    <el-table-column prop="createDate" label="登录时间" align="center"></el-table-column>
                                     <el-table-column label="操作" width="230" align="center">
                                          <template slot-scope="scope">
                                             <el-button size="small" type="primary" icon="el-icon-view" @click="handleDetails(scope.row)">查看</el-button>
@@ -35,7 +40,7 @@
                                     :page-sizes="pss"
                                     :page-size="ps"
                                     layout="sizes,total, prev, pager, next, jumper"
-                                    :total="123"
+                                    :total="tableData.length"
                                 ></el-pagination>
                             </div>
                         </div>
@@ -63,7 +68,32 @@
                 </div>
             </div>
         </div>
-
+         <el-dialog
+            title="修改基地信息"
+            :visible.sync="dialogVisible"
+            width="50%"
+            >
+            <div class="dialogDiv">
+                <el-form :model="showForm" ref="showForm" label-width="100px">
+                    <el-form-item label="登录账号">
+                        <el-input v-model="showForm.loginId" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="登录地区">
+                        <el-input v-model="showForm.loginRegion" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item label="登录时间">
+                        <el-input v-model="showForm.createDate" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <!-- <el-button @click="resetForm('addForm')">重置</el-button> -->
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -73,189 +103,98 @@ import PolarGraphII from '../components/loginrecord/polarGraphII.vue'
 export default {
     data(){
         return {
-            pss:[5,10],//分页尺寸数组
+            pss:[10],//分页尺寸数组
             ps:10,//当前分页尺寸
             dialogVisible:false,//添加信息对话框
             dialogVisibleII:false,//修改信息对话框
             optionValue:[
                 {
-                    name:'创建时间',
-                    value:1,
+                    name:'登录账号',
+                    value:'loginId',
                 },
                 {
-                    name:'基地名称',
-                    value:2,
+                    name:'登录地区',
+                    value:'loginRegion',
                 },
                 {
-                    name:'基地面积',
-                    value:3,
+                    name:'登录时间',
+                    value:'createDate',
                 },
-                {
-                    name:'基地深度',
-                    value:4,
-                },
-                {
-                    name:'投放尾数',
-                    value:5,
-                },
-                {
-                    name:'投放时间',
-                    value:6,
-                },
-                {
-                    name:'捕获时间',
-                    value:7,
-                }
             ],//查询条件数组
             select:null,//选中的查询条件
             searchInput:'',//搜索关键词
             tableData: [
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-一号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'129',//登录记录id
+                    createDate:'2022/03/11 01:16:12',//登录时间
+                    loginId:'2568624492@qq.com',//登录账号
+                    loginStatus:1,//登录状态
+                    loginRegion:'广东广州',//登录地区
                 },
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-二号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'128',//登录记录id
+                    createDate:'2022/04/10 19:22:35',//登录时间
+                    loginId:'2568624492@qq.com',//登录账号
+                    loginStatus:1,//登录状态
+                    loginRegion:'广东广州',//登录地区
                 },
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-三号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'127',//登录记录id
+                    createDate:'2022/03/26 22:31:14',//登录时间
+                    loginId:'2568624492@qq.com',//登录账号
+                    loginStatus:1,//登录状态
+                    loginRegion:'广东广州',//登录地区
                 },
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-四号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'126',//登录记录id
+                    createDate:'2022/03/25 21:46:38',//登录时间
+                    loginId:'2568624492@qq.com',//登录账号
+                    loginStatus:1,//登录状态
+                    loginRegion:'广东广州',//登录地区
                 },
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-五号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'125',//登录记录id
+                    createDate:'2022/03/24 16:31:14',//登录时间
+                    loginId:'2568624492@qq.com',//登录账号
+                    loginStatus:1,//登录状态
+                    loginRegion:'广东广州',//登录地区
                 },
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-五号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'125',//登录记录id
+                    createDate:'2022/03/22 20:19:25',//登录时间
+                    loginId:'2568624492@qq.com',//登录账号
+                    loginStatus:1,//登录状态
+                    loginRegion:'广东广州',//登录地区
                 },
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-五号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'124',//登录记录id
+                    createDate:'2022/03/17 16:16:23',//登录时间
+                    loginId:'2568624492@qq.com',//登录账号
+                    loginStatus:1,//登录状态
+                    loginRegion:'广东广州',//登录地区
                 },
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-五号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'123',//登录记录id
+                    createDate:'2022/03/16 21:12:33',//登录时间
+                    loginId:'2568624492@qq.com',//登录账号
+                    loginStatus:1,//登录状态
+                    loginRegion:'广东广州',//登录地区
                 },
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-五号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
-                },
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-五号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
-                },
-                
             ],//表格展示数据
             addForm: {
-                createDate:'',//创建时间
-                pondName:'',//基地名称
-                pondType:1,//基地类型
-                pondVolume:0,//面积
-                depth:0,//深度
-                species:1,//投放类型（虾种类）
-                inputNum:0,//投放尾数
-                deliveryStatus:0,//投放状态 0-未投放 1-已投放
-                launchDate:'',//投放时间
-                harvestDate:'',//捕获时间（预计）
-            },//添加信息数据
-            updateForm:{
-                createDate:'',//创建时间
-                pondName:'',//基地名称
-                pondType:1,//基地类型
-                pondVolume:0,//面积
-                depth:0,//深度
-                species:1,//投放类型（虾种类）
-                inputNum:0,//投放尾数
-                deliveryStatus:0,//投放状态 0-未投放 1-已投放
-                launchDate:'',//投放时间
-                harvestDate:'',//捕获时间（预计）
-            },//修改信息数据
+                id:'',//登录记录id
+                createDate:'',//登录时间
+                loginId:'',//登录账号
+                loginStatus:1,//登录状态
+                loginRegion:0,//登录地区
+            },
+            showForm: {
+                id:'',//登录记录id
+                createDate:'',//登录时间
+                loginId:'',//登录账号
+                loginStatus:1,//登录状态
+                loginRegion:0,//登录地区
+            },
         }
     },
     components:{
@@ -265,14 +204,14 @@ export default {
     //生命周期函数
     mounted(){
         //让侧边栏功能固化hover的效果
-        let node = document.querySelectorAll('.asd div')[8];
+        let node = document.querySelectorAll('.asd div')[7];
         node.style.color = '#fff';
         node.style.backgroundColor = '#303133';
     },
     beforeDestroy(){
         //让侧边栏功能'取消'固化hover的效果
         try {
-            let node = document.querySelectorAll('.asd div')[8];
+            let node = document.querySelectorAll('.asd div')[7];
             node.style.color = '';
             node.style.backgroundColor = '';
         } catch (error) {
@@ -281,44 +220,55 @@ export default {
         }
     },
     methods:{
-        // 跳转到添加页面
-        addContent(){
-            this.dialogVisible = true;
+        SelectClick(c){
+            console.log(c)
         },
-        submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
-            if (valid) {
-                alert('submit!');
-            } else {
-                console.log('error submit!!');
-                return false;
+        lookUp(){
+            console.log(this.select,this.searchInput)
+            if(this.select.length ===0){
+                this.$notify({
+                        type: 'warning',
+                        title: '警告!!!',
+                        message: '请选择查找条件',
+                        offset:68,
+                        duration:1500
+                    });
+                return;
             }
-            });
-        },
-        resetForm(formName) {
-            this.$refs[formName].resetFields();
-        },
-        handleClick(row){
-            this.updateForm = row;
-            this.dialogVisibleII = true;
-        },
-        handleDelete(row){
-            console.log(row)
-             this.$confirm('是否删除该组数据?', '提示', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                            this.$message({
-                                type: 'success',
-                                message: '删除成功!'
-                            });
-                        }).catch(() => {
-                                this.$message({
-                                    type: 'info',
-                                    message: '已取消操作'
-                            });          
+            if(this.searchInput.length ===0){
+                 this.$notify({
+                        type: 'warning',
+                        title: '警告!!!',
+                        message: '请输入查找内容',
+                        offset:68,
+                        duration:1500
+                    });
+                return;
+            }
+            this.tableDatas = JSON.parse(JSON.stringify(this.tableData));
+            this.tableData=this.tableData.filter(item=>{
+                return String(item[this.select]).includes(this.searchInput)
+            })
+            if(this.tableData.length){
+                this.$message({
+                    type: 'success',
+                    message: '查找成功!'
                 });
+            }else{
+                this.$message({
+                    message: '无匹配数据!'
+                });
+            }
+            
+        },
+        lookBack(){
+            this.tableData = JSON.parse(JSON.stringify(this.tableDatas));
+            this.select ='';
+            this.searchInput='';
+        },
+        handleDetails(row){
+            this.showForm = row;
+            this.dialogVisible = true;
         }
     },
 }

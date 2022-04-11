@@ -24,16 +24,50 @@ export default {
             this.$echarts.registerTheme('customed',theme.data)
             this.myChartsInstance = this.$echarts.init(this.$refs.myLine,'customed')//用获取实例来注册
             const initOption= {
+                title: {
+                    text: '近年对虾养殖户增长率',
+                    left: 'center',
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                    type: 'shadow'
+                    }
+                },
                 xAxis: {
+                    name:'年份',
                     type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    data: ['2015', '2016', '2017', '2018', '2019', '2020', '2021'],
+                    offset:5,
+                    nameTextStyle:{
+                        color:'#fff',
+                        align:'center',
+                    },
+                    axisLabel: {
+                        color: '#e9eef3',
+                        fontSize: 12
+                    }
+                    
                 },
                 yAxis: {
-                    type: 'value'
+                    type: 'value',
+                    name:'增长率%',
+                    nameTextStyle:{
+                        color:'#fff'
+                    },
+                    axisLabel:{//坐标轴刻度
+                        color:'#ccc',
+                    },
+                    splitLine:{//分割横线
+                        lineStyle:{
+                            color:'#ccc',
+                            type:'dashed'
+                        }
+                    },
                 },
                 series: [
                     {
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    data: [1.29, 1.33, 1.32,0.82, 0.93, 0.61, 0.98, ],
                     type: 'line',
                     }
                 ]

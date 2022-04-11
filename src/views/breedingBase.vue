@@ -14,24 +14,21 @@
                                 <div class="tool">
                                     <el-button size="small" icon="el-icon-plus" class="add" @click="addContent">添加</el-button>
                                     <div class="search">
-                                        <el-select v-model="select" slot="prepend" placeholder="请选择查询依据">
+                                        <el-select v-model="select" slot="prepend" placeholder="选择查询条件" @change='this.SelectClick'>
                                             <el-option v-for="item in optionValue" :key="item.value" :label="item.name" :value="item.value"></el-option>
                                         </el-select>
                                         <el-input placeholder="请输入内容" v-model="searchInput" class="input-with-select"></el-input>
-                                        <i class="el-icon-search"></i>
+                                        <i class="el-icon-search" @click.stop="lookUp"></i>
+                                        <i class="el-icon-refresh-left" @click.stop="lookBack"></i>
                                     </div>
                                 </div>
                                 <el-table :data="tableData" style="width: 100%">
-                                    <el-table-column prop="createDate" label="创建日期" align="center" width="150"></el-table-column>
-                                    <el-table-column prop="pondName" label="基地名称" align="center" ></el-table-column>
-                                    <el-table-column prop="pondType" label="基地类型" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="pondVolume" label="基地面积/m²" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="depth" label="基地深度/m" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="species" label="投放类型" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="inputNum" label="投放尾数" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="deliveryStatus" label="投放状态" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="launchDate" label="投放时间" align="center" width="150"></el-table-column>
-                                    <el-table-column prop="harvestDate" label="捕获时间" align="center" width="150"></el-table-column>
+                                    <el-table-column prop="createDate" label="创建日期" align="center" width="200"></el-table-column>
+                                    <el-table-column prop="baseName" label="基地名称" align="center" width="200"></el-table-column>
+                                    <el-table-column prop="hasPond" label="拥有虾塘数量" align="center" width="120"></el-table-column>
+                                    <el-table-column prop="hasBE" label="拥有设备数量" align="center" width="120"></el-table-column>
+                                    <el-table-column prop="baseRegion" label="基地地区" align="center" width="160"></el-table-column>
+                                    <el-table-column prop="baseAddr" label="基地详细地址" align="center"></el-table-column>
                                     <el-table-column label="操作" width="230" align="center">
                                          <template slot-scope="scope">
                                             <el-button size="small" type="primary" icon="el-icon-edit" @click="handleClick(scope.row)">编辑</el-button>
@@ -44,7 +41,7 @@
                                     :page-sizes="pss"
                                     :page-size="ps"
                                     layout="sizes,total, prev, pager, next, jumper"
-                                    :total="123"
+                                    :total="tableData.length"
                                 ></el-pagination>
                             </div>
                         </div>
@@ -59,64 +56,23 @@
             >
             <div class="dialogDiv">
                 <el-form :model="addForm" ref="addForm" label-width="100px">
-                <el-form-item label="基地名称">
-                    <el-input v-model="addForm.pondName"></el-input>
-                </el-form-item>
-                <el-row>
-                    <el-col :span="8">
-                        <el-form-item label="基地类型">
-                            <el-input v-model="addForm.pondType"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="基地面积">
-                            <el-input v-model="addForm.pondVolume"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="基地深度">
-                            <el-input v-model="addForm.depth"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <el-form-item label="投放类型">
-                            <el-input v-model="addForm.species"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="投放尾数">
-                            <el-input v-model="addForm.inputNum"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="投放状态">
-                            <el-input v-model="addForm.deliveryStatus"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                 <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="投放时间">
-                            <el-date-picker v-model="addForm.launchDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                         <el-form-item label="捕获时间">
-                            <el-date-picker v-model="addForm.harvestDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('addForm')">立即创建</el-button>
-                    <el-button @click="resetForm('addForm')">重置</el-button>
-                </el-form-item>
+                    <el-form-item label="基地名称">
+                        <el-input v-model="addForm.baseName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="基地地区">
+                        <el-input v-model="addForm.baseRegion"></el-input>
+                    </el-form-item>
+                    <el-form-item label="基地详细地址">
+                        <el-input v-model="addForm.baseAddr"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <!-- <el-button @click="resetForm('addForm')">重置</el-button> -->
+                    </el-form-item>
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary"  @click="submitForm">确 定</el-button>
             </div>
         </el-dialog>
         <el-dialog
@@ -126,64 +82,23 @@
             >
             <div class="dialogDiv">
                 <el-form :model="updateForm" ref="updateForm" label-width="100px">
-                <el-form-item label="基地名称">
-                    <el-input v-model="updateForm.pondName"></el-input>
-                </el-form-item>
-                <el-row>
-                    <el-col :span="8">
-                        <el-form-item label="基地类型">
-                            <el-input v-model="updateForm.pondType"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="基地面积">
-                            <el-input v-model="updateForm.pondVolume"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="基地深度">
-                            <el-input v-model="updateForm.depth"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="8">
-                        <el-form-item label="投放类型">
-                            <el-input v-model="updateForm.species"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="投放尾数">
-                            <el-input v-model="updateForm.inputNum"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="投放状态">
-                            <el-input v-model="updateForm.deliveryStatus"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                 <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="投放时间">
-                            <el-date-picker v-model="updateForm.launchDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                         <el-form-item label="捕获时间">
-                            <el-date-picker v-model="updateForm.harvestDate" type="datetime" placeholder="选择日期时间"></el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm('addForm')">立即创建</el-button>
-                    <el-button @click="resetForm('addForm')">重置</el-button>
-                </el-form-item>
+                    <el-form-item label="基地名称">
+                        <el-input v-model="updateForm.baseName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="基地地区">
+                        <el-input v-model="updateForm.baseRegion"></el-input>
+                    </el-form-item>
+                    <el-form-item label="基地详细地址">
+                        <el-input v-model="updateForm.baseAddr"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <!-- <el-button @click="resetForm('addForm')">重置</el-button> -->
+                    </el-form-item>
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleII = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisibleII = false">确 定</el-button>
+                <el-button type="primary" @click="submitChangeForm">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -193,188 +108,112 @@
 export default {
     data(){
         return {
-            pss:[5,10],//分页尺寸数组
+            pss:[10],//分页尺寸数组
             ps:10,//当前分页尺寸
             dialogVisible:false,//添加信息对话框
             dialogVisibleII:false,//修改信息对话框
             optionValue:[
                 {
                     name:'创建时间',
-                    value:1,
+                    value:'createDate',
                 },
                 {
                     name:'基地名称',
-                    value:2,
+                    value:'baseName',
                 },
                 {
-                    name:'基地面积',
-                    value:3,
+                    name:'基地地区',
+                    value:'baseRegion',
                 },
                 {
-                    name:'基地深度',
-                    value:4,
+                    name:'基地详细地址',
+                    value:'baseAddr',
                 },
                 {
-                    name:'投放尾数',
-                    value:5,
+                    name:'拥有虾塘数量',
+                    value:'hasPond',
                 },
                 {
-                    name:'投放时间',
-                    value:6,
+                    name:'拥有设备数量',
+                    value:'hasBE',
                 },
-                {
-                    name:'捕获时间',
-                    value:7,
-                }
             ],//查询条件数组
-            select:null,//选中的查询条件
+            select:'',//选中的查询条件
             searchInput:'',//搜索关键词
             tableData: [
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-一号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                 {
+                    id:'127',//基地id
+                    createDate:'2022/03/15 09:37:53',//创建时间
+                    baseName:'粤-五号基地',//基地名称
+                    basePic:'',//基地图片
+                    baseRegion:'广东-广州',//基地地区
+                    baseAddr:'海珠区仲恺路500号12312',//基地详细地址
+                    hasPond:0,//拥有虾塘数量
+                    hasBE:0,//拥有设备数量
                 },
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-二号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'126',//基地id
+                    createDate:'2022/03/13 20:27:31',//创建时间
+                    baseName:'粤-四号基地',//基地名称
+                    basePic:'',//基地图片
+                    baseRegion:'广东-广州',//基地地区
+                    baseAddr:'海珠区仲恺路500号122',//基地详细地址
+                    hasPond:0,//拥有虾塘数量
+                    hasBE:0,//拥有设备数量
                 },
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-三号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'125',//基地id
+                    createDate:'2022/03/12 14:37:33',//创建时间
+                    baseName:'粤-三号基地',//基地名称
+                    basePic:'',//基地图片
+                    baseRegion:'广东-广州',//基地地区
+                    baseAddr:'海珠区仲恺路500号33123',//基地详细地址
+                    hasPond:0,//拥有虾塘数量
+                    hasBE:0,//拥有设备数量
                 },
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-四号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'124',//基地id
+                    createDate:'2022/03/11 13:17:46',//创建时间
+                    baseName:'粤-二号基地',//基地名称
+                    basePic:'',//基地图片
+                    baseRegion:'广东-广州',//基地地区
+                    baseAddr:'海珠区仲恺路500号123123',//基地详细地址
+                    hasPond:0,//拥有虾塘数量
+                    hasBE:0,//拥有设备数量
                 },
                 {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-五号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
+                    id:'123',//基地id
+                    createDate:'2022/03/11 13:15:46',//创建时间
+                    baseName:'粤-一号基地',//基地名称
+                    basePic:'',//基地图片
+                    baseRegion:'广东-广州',//基地地区
+                    baseAddr:'海珠区仲恺路500号',//基地详细地址
+                    hasPond:0,//拥有虾塘数量
+                    hasBE:0,//拥有设备数量
                 },
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-六号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
-                },
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-七号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
-                },
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-八号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
-                },
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-九号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
-                },
-                {
-                    createDate:'2016-05-02',//创建时间
-                    pondName:'穗-十号塘',//基地名称
-                    pondType:1,//基地类型
-                    pondVolume:'321',//面积
-                    depth:'5',//深度
-                    species:'中国对虾',//投放类型（虾种类）
-                    inputNum:12312,//投放尾数
-                    deliveryStatus:1,//投放状态 0-未投放 1-已投放
-                    launchDate:'2016-08-02',//投放时间
-                    harvestDate:'2016-08-02',//捕获时间（预计）
-                },
+                
             ],//表格展示数据
             addForm: {
+                id:'',//基地id
                 createDate:'',//创建时间
-                pondName:'',//基地名称
-                pondType:1,//基地类型
-                pondVolume:0,//面积
-                depth:0,//深度
-                species:1,//投放类型（虾种类）
-                inputNum:0,//投放尾数
-                deliveryStatus:0,//投放状态 0-未投放 1-已投放
-                launchDate:'',//投放时间
-                harvestDate:'',//捕获时间（预计）
+                baseName:'',//基地名称
+                basePic:'',//基地图片
+                baseRegion:'',//基地地区
+                baseAddr:'',//基地详细地址
+                hasPond:0,//拥有虾塘数量
+                hasBE:0,//拥有设备数量
             },//添加信息数据
             updateForm:{
+                id:'',//基地id
                 createDate:'',//创建时间
-                pondName:'',//基地名称
-                pondType:1,//基地类型
-                pondVolume:0,//面积
-                depth:0,//深度
-                species:1,//投放类型（虾种类）
-                inputNum:0,//投放尾数
-                deliveryStatus:0,//投放状态 0-未投放 1-已投放
-                launchDate:'',//投放时间
-                harvestDate:'',//捕获时间（预计）
+                baseName:'',//基地名称
+                basePic:'',//基地图片
+                baseRegion:'',//基地地区
+                baseAddr:'',//基地详细地址
+                hasPond:0,//拥有虾塘数量
+                hasBE:0,//拥有设备数量
             },//修改信息数据
+            tableDatas:[],
         }
     },
     //生命周期函数
@@ -399,19 +238,87 @@ export default {
         
     },
     methods:{
+        SelectClick(c){
+            console.log(c)
+        },
+        lookUp(){
+            console.log(this.select,this.searchInput)
+            if(this.select.length ===0){
+                this.$notify({
+                        type: 'warning',
+                        title: '警告!!!',
+                        message: '请选择查找条件',
+                        offset:68,
+                        duration:1500
+                    });
+                return;
+            }
+            if(this.searchInput.length ===0){
+                 this.$notify({
+                        type: 'warning',
+                        title: '警告!!!',
+                        message: '请输入查找内容',
+                        offset:68,
+                        duration:1500
+                    });
+                return;
+            }
+            this.tableDatas = JSON.parse(JSON.stringify(this.tableData));
+            this.tableData=this.tableData.filter(item=>{
+                return String(item[this.select]).includes(this.searchInput)
+            })
+            if(this.tableData.length){
+                this.$message({
+                    type: 'success',
+                    message: '查找成功!'
+                });
+            }else{
+                this.$message({
+                    message: '无匹配数据!'
+                });
+            }
+            
+        },
+        lookBack(){
+            this.tableData = JSON.parse(JSON.stringify(this.tableDatas));
+            this.select ='';
+            this.searchInput='';
+        },
         // 跳转到添加页面
         addContent(){
             this.dialogVisible = true;
         },
-        submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
-            if (valid) {
-                alert('submit!');
-            } else {
-                console.log('error submit!!');
-                return false;
-            }
-            });
+        submitForm() {
+            // this.$refs[formName].validate((valid) => {
+            // if (valid) {
+            //     alert('submit!');
+            // } else {
+            //     console.log('error submit!!');
+            //     return false;
+            // }
+            // });
+            this.$confirm('是否添加该组数据?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                            //添加
+                            let time = new Date();
+                            this.addForm.id = time.getTime();
+                            this.addForm.createDate = time.toLocaleString();
+                            console.log(this.addForm)
+                            this.tableData.unshift(this.addForm)
+                            this.dialogVisible = false;
+                            this.$message({
+                                type: 'success',
+                                message: '添加成功!'
+                            });
+                        }).catch(() => {
+                                this.$message({
+                                    type: 'info',
+                                    message: '已取消操作'
+                            });          
+                });  
         },
         resetForm(formName) {
             this.$refs[formName].resetFields();
@@ -420,13 +327,40 @@ export default {
             this.updateForm = row;
             this.dialogVisibleII = true;
         },
+        submitChangeForm(){
+            console.log(this.updateForm)
+            this.$confirm('是否修改该组数据?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                            //修改
+                            this.tableData.filter((item)=>{
+                                if(item.id === this.updateForm.id){
+                                    item = this.updateForm
+                                }
+                            })
+                            this.dialogVisibleII = false;
+                            this.$message({
+                                type: 'success',
+                                message: '修改成功!'
+                            });
+                        }).catch(() => {
+                                this.$message({
+                                    type: 'info',
+                                    message: '已取消操作'
+                            });          
+                });
+            
+        },
         handleDelete(row){
-            console.log(row)
              this.$confirm('是否删除该组数据?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
+                            //删除
+                            this.tableData = this.tableData.filter((item)=>item.id !== row.id)
                             this.$message({
                                 type: 'success',
                                 message: '删除成功!'

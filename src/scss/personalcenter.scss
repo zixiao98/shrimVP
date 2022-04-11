@@ -90,19 +90,21 @@
                                 align-items:center;
                                 height: 100%;
                                 // width: 100%;
-                                // border: 1px solid #ccc;
-                                border-radius: 8px;
-                                background-color: #ccc;
+                                border-bottom: 2px solid #ccc;
+                                // border-radius: 8px;
+                                // background-color: #ccc;
                                 .key{
                                     width: 80px;
                                     box-sizing: border-box;
                                     padding: 0 5px;
                                     text-align: center;
-                                    color:#336699;
+                                    color:#333;
                                     font-weight: bolder;
                                 }
                                 .val{
                                     width: calc(100% - 80px);
+                                    color:#fff;
+                                    font-weight: bolder;
                                     box-sizing: border-box;
                                     padding: 0 5px;
                                     // 单行文本溢出显示为省略号
@@ -141,12 +143,14 @@
                                     box-sizing: border-box;
                                     padding: 0 5px;
                                     text-align: center;
-                                    color:#003333;
+                                    color:#333;
                                     font-weight: bolder;
                                 }
                                 .vals{
                                     width: calc(100% - 120px);
-                                    text-align: center;
+                                    color: #fff;
+                                    font-weight: bolder;
+                                    text-align: left;
                                     white-space: nowrap;
                                     overflow: hidden;
                                     text-overflow: ellipsis;

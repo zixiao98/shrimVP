@@ -58,6 +58,11 @@ const routes = [
         name:'magnifier',
         component:() => import(/* webpackChunkName: "about" */ '../views/magnifier.vue')
       },
+      {//环境监测
+        path:'/monitor',
+        name:'monitor',
+        component:() => import(/* webpackChunkName: "about" */ '../views/monitor.vue')
+      },
       {//个人主页
         path:'/personalCenter',
         name:'personalCenter',

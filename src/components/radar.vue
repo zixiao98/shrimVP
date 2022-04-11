@@ -12,12 +12,12 @@ export default {
             source :{
                 data: [43, 10, 28, 35, 50, 19],
                 indicator: [
-                    { name: '家政服务', max: this.dataMax},
-                    { name: '助餐服务', max: this.dataMax},
-                    { name: '助医服务', max: this.dataMax},
-                    { name: '待办服务', max: this.dataMax},
-                    { name: '交谈服务', max: this.dataMax},
-                    { name: '康复服务', max: this.dataMax},
+                    { name: '学生饭堂', max: this.dataMax},
+                    { name: '网购', max: this.dataMax},
+                    { name: '零售', max: this.dataMax},
+                    { name: '酒店收购', max: this.dataMax},
+                    { name: '出口海外', max: this.dataMax},
+                    { name: '企业收购', max: this.dataMax},
                 ]
             },
             fontSize:null,
@@ -68,6 +68,10 @@ export default {
             this.$echarts.registerTheme('customed',theme.data)
             this.myChartsInstance = this.$echarts.init(this.$refs.myRadar,'customed')//用获取实例来注册
             const initOption = {
+                title: {
+                    text: '2021年对虾销售方向',
+                    left: 'center',
+                },
                 tooltip: {},
                 radar: {
                 // shape: 'circle',

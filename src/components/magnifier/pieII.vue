@@ -56,7 +56,7 @@ export default {
                     }
                 },
                 label:{
-                    color:'#fff',
+                    color:'#e9eef3',
                     formatter:function(e){
                         return `${e.data.name}${e.percent}%`
                     }

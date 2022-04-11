@@ -25,28 +25,38 @@ export default {
             this.myChartsInstance = this.$echarts.init(this.$refs.myPie,'customed')//用获取实例来注册
             this.myChartsInstance.setOption({
                 title: {
-                    text: 'my pie',
-                    subtext: 'Fake Data',
+                    text: '2021年国内对虾种类养殖占比',
                     left: 'center',
                 },
                 tooltip: {
-                    trigger: 'item'
+                    trigger: 'item',
+                    formatter: '{a} <br/>{b} : {d}%'
                 },
                 legend: {
                     orient: 'vertical',
-                    left: 'left',
+                    left: '0',
+                    bottom:'0',
+                    textStyle:{
+                        color:'#5dc3ea'
+                    }
                 },
+                label:{
+                    color:'#e9eef3',
+                    formatter:function(e){
+                        return `${e.data.name}`
+                    }
+                },  
                 series: [
                     {
-                        name: 'Access From',
+                        name: '养殖占比(%)',
                         type: 'pie',
                         radius: '50%',
                         data: [
-                            { value: 1048, name: 'xx对虾1' },
-                            { value: 735, name: 'xx对虾2' },
-                            { value: 580, name: 'xx对虾3' },
-                            { value: 484, name: 'xx对虾4' },
-                            { value: 300, name: 'xx对虾5' }
+                            { value: 1048, name: '中国对虾' },
+                            { value: 735, name: '斑节对虾' },
+                            { value: 380, name: '日本对虾' },
+                            { value: 584, name: '墨吉对虾' },
+                            { value: 810, name: '长毛对虾' }
                         ],
                         emphasis: {
                             itemStyle: {

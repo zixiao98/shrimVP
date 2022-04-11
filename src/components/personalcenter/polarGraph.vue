@@ -62,7 +62,7 @@ export default {
                     axisLabel: {
                         interval: 0,
                         fontSize: 14,
-                        color: '#fff',
+                        color: '#e9eef3',
                         fontFamily: 'Microsoft YaHei',
                     },
                 },

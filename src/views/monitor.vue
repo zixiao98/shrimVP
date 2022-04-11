@@ -1,46 +1,6 @@
 <template>
     <div id="homepage" ref="homepage">
         <div class="page-box">
-            <div class="left">
-                <div class="leftTop">
-                    <div class="box">
-                        <span class="one"></span>
-                        <span class="two"></span>
-                        <span class="three"></span>
-                        <span class="four"></span>
-                        <BarIII :barIIIDate="myEchart_barIIIDate"></BarIII>
-                    </div>
-                </div>
-                <div class="leftBottom">
-                    <div class="box">
-                        <span class="one"></span>
-                        <span class="two"></span>
-                        <span class="three"></span>
-                        <span class="four"></span>
-                        <PieIII :pieIIIDate="myEchart_pieIIIDate"></PieIII>
-                    </div>
-                </div>
-            </div>
-            <div class="right">
-                <div class="rightTop">
-                    <div class="box">
-                        <span class="one"></span>
-                        <span class="two"></span>
-                        <span class="three"></span>
-                        <span class="four"></span>
-                        <Circles :circleDate="myEchart_circleDate"></Circles>
-                    </div>
-                </div>
-                <div class="rightBottom">
-                    <div class="box">
-                        <span class="one"></span>
-                        <span class="two"></span>
-                        <span class="three"></span>
-                        <span class="four"></span>
-                        <PolarGraph></PolarGraph>
-                    </div>
-                </div>
-            </div>
             <div class="center">
                 <div class="centerC">
                     <div class="box">
@@ -53,6 +13,14 @@
                                 <div class="top">
                                     <div class="topDiv">
                                         <div class="topLeft">
+                                            <div class="switch">
+                                                    <el-dropdown trigger="click" >
+                                                        <p>选择其他基地<i class="el-icon-arrow-down el-icon--right"></i></p>
+                                                        <el-dropdown-menu slot="dropdown">
+                                                            <el-dropdown-item v-for="(item,index) in this.myEchart_barIIIDate" :key="index" :command='index' >{{item.name}}</el-dropdown-item>
+                                                        </el-dropdown-menu>
+                                                    </el-dropdown>
+                                            </div>
                                             <div class="img">
                                                 <img src="@/assets/img/logo.png" alt="个人中心的头像" ref="myPhoto">
                                             </div>
@@ -66,22 +34,21 @@
                                             <div v-for="(key,index) in personalInfoKey" :key="index" class="informationItem">
                                                 <div class="iItemDiv">
                                                     <div class="key">{{key}}:</div>
-                                                    <div class="val">{{personalInfoKeyValue[index]}}</div>
+                                                    <div class="val">xxxxxxxxxxxxxxxxxdahhdjahsdjxxxxxxxx</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="bottom">
-                                    <div class="bottomDiv">
-                                        <div v-for="(key,index) in personalInfoKeyII" :key="index" class="informationItems">
-                                                <div class="iItemDivs">
-                                                    <div v-for="(keys,indexs) in key" :key="indexs" class="iItemBox">
-                                                        <div class="keys">{{keys}}:</div>
-                                                        <div class="vals">{{personalInfoKeyIIValue[index][indexs]}}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                     <div class="bottomDiv">
+                                        <div class="box">
+                                            <span class="one"></span>
+                                            <span class="two"></span>
+                                            <span class="three"></span>
+                                            <span class="four"></span>
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -89,62 +56,56 @@
                     </div>
                 </div>
             </div>
+            <div class="left">
+                <div class="leftTop">
+                    <div class="box">
+                        <span class="one"></span>
+                        <span class="two"></span>
+                        <span class="three"></span>
+                        <span class="four"></span>
+                        <Temperature :pieIIIDate="myEchart_pieIIIDate"></Temperature>
+                    </div>
+                </div>
+                <div class="leftBottom">
+                    <div class="box">
+                        <span class="one"></span>
+                        <span class="two"></span>
+                        <span class="three"></span>
+                        <span class="four"></span>
+                        <Ph></Ph>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="rightTop">
+                    <div class="box">
+                        <span class="one"></span>
+                        <span class="two"></span>
+                        <span class="three"></span>
+                        <span class="four"></span>
+                        <Density></Density>
+                    </div>
+                </div>
+                <div class="rightBottom">
+                    <div class="box">
+                        <span class="one"></span>
+                        <span class="two"></span>
+                        <span class="three"></span>
+                        <span class="four"></span>
+                         <OxygenContent :circleDate="myEchart_circleDate"></OxygenContent>
+                    </div>
+                </div>
+            </div>
+            
         </div>
-        <!-- 拍照对话框 -->
-        <el-dialog
-            title="进行拍照操作"
-            :visible.sync="dialogVisible"
-            width="50%"
-            @close = 'closeDialog'
-            >
-            <div id="top">
-                <div>相机</div>
-                <div>样张</div>
-            </div>
-            <div id="photoDiv">
-                <video ref="video" id="video">浏览器不支持 Video</video>
-                <canvas ref="canvas" id="canvas">
-                    <img ref="photo" alt="拍照后的照片">
-                </canvas>
-            </div>
-            <div class="pBtn">
-                <button @click="openCamera" class="open">打开摄像头</button>
-                <button class="shot" @click="takePhoto" >拍照</button>
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="this.cancelPhoto">取 消</el-button>
-                <el-button type="primary" @click="putPhoto">确 定</el-button>
-            </div>
-        </el-dialog>
-        <!-- 上传照片对话框 -->
-        <el-dialog
-            title="进行上传操作"
-            :visible.sync="dialogVisibleII"
-            width="30%"
-             @close = 'closeUPimgDialog'
-            >
-            <div id="top">
-                <div>预览</div>
-            </div>
-            <div class="upPhoto" v-show="upPhoto" @click="chooseImg">
-                <img :src="imgSrc" alt="" ref="upImg" id="upImg">
-            </div>
-            <div class="upInput" v-show="!upPhoto" @click="chooseImg">
-                <input ref="upInput" type="file" accept="image/png, image/jpeg" @change="inputChange">
-            </div>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisibleII = false">取 消</el-button>
-                <el-button type="primary" @click="putImg">确 定</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
 <script>
-import PieIII from '../components/personalcenter/pieIII.vue'
-import BarIII from '../components/personalcenter/barIII.vue'
-import Circles from '../components/personalcenter/circle.vue'
-import PolarGraph from '../components/personalcenter/polarGraph.vue'
+import Temperature from '../components/monitor/temperature.vue';
+import Ph from '../components/monitor/ph.vue';
+import OxygenContent from '../components/monitor/oxygenContent.vue';
+import Density from '../components/monitor/density.vue'
 export default {
     data(){
         return {
@@ -156,10 +117,8 @@ export default {
             upPhoto:false,//控制上传照片显示隐藏的字段
             imgSrc:'#',//图片url
             imgType:["image/png","image/jpeg"],//图片类型接收范围
-            personalInfoKey:["姓名","性别","年龄","地区","地址"],//个人资料key
-            personalInfoKeyValue:['子箫','男',18,'广东','广州市海珠区仲恺路500号'],
+            personalInfoKey:["基地类型","基地类型","基地面积","地区","地址"],//个人资料key
             personalInfoKeyII:[["拥有基地","拥有虾塘","拥有设备",],["虾苗投入","收获对虾","产投比",],["注册日期","近期登录","登录地区",],["手机","邮箱",]],
-            personalInfoKeyIIValue:[[4,12,34],[1200,342399,23.2],['2022-03-14','2022-04-11','广东广州'],['18206640187','2568624492@qq.com']],
             myEchart_circleDate:[
                 {name:'中国对虾',data:0.18},
                 {name:'斑节对虾',data:0.34},
@@ -210,22 +169,22 @@ export default {
         }
     },
     components:{
-        PieIII,
-        BarIII,
-        Circles,
-        PolarGraph,
+        Temperature,
+        Ph,
+        OxygenContent,
+        Density,
     },
     //生命周期函数
     mounted(){
         //让侧边栏功能固化hover的效果
-        let node = document.querySelectorAll('.asd div')[6];
+        let node = document.querySelectorAll('.asd div')[5];
         node.style.color = '#fff';
         node.style.backgroundColor = '#303133';
     },
     beforeDestroy(){
         //让侧边栏功能'取消'固化hover的效果
         try {
-            let node = document.querySelectorAll('.asd div')[6];
+            let node = document.querySelectorAll('.asd div')[5];
             node.style.color = '';
             node.style.backgroundColor = '';
         } catch (error) {
@@ -416,5 +375,5 @@ export default {
 
 <style lang="scss" scoped>
     @import '@/scss/homepage.scss';
-    @import '@/scss/personalcenter.scss';
+    @import '@/scss/monitor.scss';
 </style>
