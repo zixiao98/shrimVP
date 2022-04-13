@@ -24,6 +24,7 @@
             align-items: center;
             box-sizing: border-box;
             border-bottom: 2px solid transparent;
+            position: relative;
             .time{//
                 margin-left: 50px;
                 cursor: pointer;
@@ -41,11 +42,20 @@
                 font-weight: 700;
                 letter-spacing: 8px;
             }
+            .asideName{
+                position:absolute;
+                left:300px;
+                font-size: 18px;
+                font-family: '微软雅黑';
+                font-weight: 600;
+                padding-bottom: 2px;
+                border-bottom:2px solid #c93232;
+            }
             div{
                 display:flex;
                 align-items: center;
                 .el-dropdown{//个人账户下拉菜单
-                    padding: 10px;
+                    padding: 10px 50px 10px 10px;
                     cursor: pointer;
                     .userName{
                         display: inline-block;
@@ -63,16 +73,16 @@
                         color: #fff;
                     }
                 }
-                .logo{
-                    width: 70px;
-                    margin:0 5px;
-                    border-bottom:2px solid #c93232;
-                    display: flex;
-                    justify-content: center;
-                    img{
-                        width: 60px;
-                    }
-                }
+                // .logo{
+                //     width: 70px;
+                //     margin:0 5px;
+                //     border-bottom:2px solid #c93232;
+                //     display: flex;
+                //     justify-content: center;
+                //     img{
+                //         width: 60px;
+                //     }
+                // }
             }
         }
         .el-footer{//底部
@@ -97,15 +107,25 @@
                 height: 80px;
                 background-color: #343a40;
                 display: flex;
-                justify-content: center;
+                flex-direction: column;
+                justify-content:space-around;
                 align-items: center;
                 background-clip: padding-box;
                 border-bottom: 2px solid transparent;
                 border-right: 2px solid transparent;
                 border-radius: 0 0 5px 0 ;
-                color:#CCC;
+                color:#E9EEF3;
                 img{
-                    width: 220px;
+                    width: 80px;
+                    position: relative;
+                    top:15px;
+                }
+                .account-copyright{
+                    font-size: 12px;
+                    font-weight: bolder;
+                    position: relative;
+                    top:-15px;
+                    letter-spacing: 2px;
                 }
             }
             .option{//侧边栏功能块

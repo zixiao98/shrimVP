@@ -4,14 +4,14 @@
     <div class="login-box">
       <!-- logo区域 -->
       <div class="avatar-box left">
-        <img src="@/assets/img/logo.png" alt="logo"/>
+        <img src="@/assets/img/logo/logo_transparent.png"  alt="logo_transparent.png"/>
         <p class="account-copyright">2022 © shrimp culture by lzj</p>
       </div>
       <div class="right">
         <div class="title">
           <div class="outSide">
             <div>
-                <img src="@/assets/img/logo2.png" alt="logo2">
+                <img src="@/assets/img/logo/logo_transparent2.png" alt="logo_transparent2.png">
                 <span>登录 </span>login
             </div>
             <span class="other">

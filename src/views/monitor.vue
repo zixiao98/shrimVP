@@ -47,6 +47,37 @@
                                             <span class="two"></span>
                                             <span class="three"></span>
                                             <span class="four"></span>
+                                            <div class="header">
+                                                <div class="weatherTitle">基地气象信息（{{weather.obsTime}}）</div>
+                                                <div class="shrimpPound">
+                                                    <el-select v-model="value" placeholder="请选择">
+                                                        <el-option
+                                                        v-for="item in options"
+                                                        :key="item.value"
+                                                        :label="item.label"
+                                                        :value="item.value">
+                                                        </el-option>
+                                                    </el-select>
+                                                    虾塘监测信息(右侧)
+                                                </div>
+                                            </div>
+                                            <div class="weather">
+                                                <div class="weatherInfo">
+                                                    <div>天气：{{weather.text}}</div>
+                                                    <div>实时温度：{{weather.temp}}℃</div>
+                                                    <div>体感温度：{{weather.feelsLike}}℃</div>
+                                                    <div>相对湿度：{{weather.humidity}}%</div>
+                                                    <div>露点温度：{{weather.dew}}℃</div>
+                                                    <div>风向：{{weather.windDir}}</div>
+                                                    <div>风力等级：{{weather.windScale}}</div>
+                                                    <div>风速：{{weather.windSpeed}}公里/小时</div>
+                                                    <div>大气压强：{{weather.pressure}}百帕</div>
+                                                    <div>云量：{{weather.cloud}}%</div>
+                                                </div>
+                                                <div class="weatherChart">
+                                                    <Density></Density>
+                                                </div>
+                                            </div>
                                             
                                         </div>
                                     </div>
@@ -109,6 +140,27 @@ import Density from '../components/monitor/density.vue'
 export default {
     data(){
         return {
+             options: [{
+                value: '选项1',
+                label: '黄金糕'
+                }, {
+                value: '选项2',
+                label: '双皮奶'
+                }, {
+                value: '选项3',
+                label: '蚵仔煎'
+                }, {
+                value: '选项4',
+                label: '龙须面'
+                }, {
+                value: '选项5',
+                label: '北京烤鸭'
+                }],
+            value: '选项1',
+            weather:{},
+            //以上是测试数据
+
+
             dialogVisible:false,//拍照对话框
             photoFlag:false,//是否有拍摄好的拍照的标志
             imgFlag:false,//是否有上传好的图片的标志
@@ -180,6 +232,30 @@ export default {
         let node = document.querySelectorAll('.asd div')[5];
         node.style.color = '#fff';
         node.style.backgroundColor = '#303133';
+        
+        this.$axios.get('https://geoapi.qweather.com/v2/city/lookup',{
+            params:{
+                location :'海珠',
+                key :'1f4c41416a1a49d5aedf98c7601424c1',
+            }
+        }).then(res=>{
+            console.log(res.data.location[0].id)
+            this.$axios.get('https://devapi.qweather.com/v7/weather/now',{
+                params:{
+                location :res.data.location[0].id,
+                key :'1f4c41416a1a49d5aedf98c7601424c1',
+            }
+            }).then(res=>{
+                console.log(res.data.now)
+                this.weather = res.data.now;
+            }).catch(err=>{
+                console.log(err)
+            })
+            
+        }).catch(err=>{
+            console.log(err)
+
+        })
     },
     beforeDestroy(){
         //让侧边栏功能'取消'固化hover的效果

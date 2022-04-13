@@ -140,6 +140,29 @@
                         position: relative;
                         background: url('../assets/img/line.png');
                         background-color: #343a406c;
+                        .header{
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            height: 40px;
+                            .weatherTitle{
+                                padding-left: 10px;
+                            }
+                            .shrimpPound{
+                                padding-right: 10px;
+                            }
+                        }
+                        .weather{
+                            height: calc(100% - 40px);
+                            // background-color: #fff;
+                            display: flex;
+                            .weatherInfo{
+                                width: 180px;
+                            }
+                            .weatherChart{
+                                width: calc(100% - 180px);
+                            }
+                        }
                     }
                 }
             }

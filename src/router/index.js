@@ -35,42 +35,42 @@ const routes = [
     children:[
       {//首页
         path: '/homepage',
-        name: 'homepage',
+        name: '首页',
         component: () => import(/* webpackChunkName: "about" */ '../views/homepage.vue')
       },
       {//基地管理
         path:'/breedingBase',
-        name:'breedingBase',
+        name:'基地管理',
         component:() => import(/* webpackChunkName: "about" */ '../views/breedingBase.vue')
       },
       {//虾塘管理
         path:'/shrimpPond',
-        name:'shrimpPond',
+        name:'虾塘管理',
         component:() => import(/* webpackChunkName: "about" */ '../views/shrimpPond.vue')
       },
       {//设备管理
         path:'/breedingEquipment',
-        name:'breedingEquipment',
+        name:'设备管理',
         component:() => import(/* webpackChunkName: "about" */ '../views/breedingEquipment.vue')
       },
       {//对虾资料
         path:'/magnifier',
-        name:'magnifier',
+        name:'对虾资料',
         component:() => import(/* webpackChunkName: "about" */ '../views/magnifier.vue')
       },
       {//环境监测
         path:'/monitor',
-        name:'monitor',
+        name:'环境监测',
         component:() => import(/* webpackChunkName: "about" */ '../views/monitor.vue')
       },
       {//个人主页
         path:'/personalCenter',
-        name:'personalCenter',
+        name:'个人主页',
         component:() => import(/* webpackChunkName: "about" */ '../views/personalCenter.vue')
       },
       {//登录记录
         path:'/loginRecord',
-        name:'/loginRecord',
+        name:'登录记录',
         component:() => import(/* webpackChunkName: "about" */ '../views/loginRecord.vue')
       },
     ]

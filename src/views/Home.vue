@@ -6,7 +6,8 @@
             <!-- 侧边栏 -->
             <el-aside width='240px'>
                 <div class="title">
-                    <img src="@/assets/img/logo.png" alt="">
+                    <img src="@/assets/img/logo/logo_transparent2.png" alt="logo_transparent2.png">
+                    <p class="account-copyright">对虾精准养殖管理可视化平台</p>
                 </div>
                 <div class="option">
                     <div class="asd">
@@ -40,8 +41,9 @@
                     <!-- 日期时间 -->
                     <div class="time">{{this.time}}</div>
                     <div class="webName">
-                        对虾养殖可视化平台
+                        对虾精准养殖管理可视化平台
                     </div>
+                    <div class="asideName">{{header_title}}</div>
                     <!-- 右上角点击下拉菜单 -->
                     <div>
                         <el-dropdown trigger="click" @command='handleCommand'>
@@ -56,9 +58,9 @@
                             </el-dropdown-menu>
                         </el-dropdown>
                         <!--logo2  -->
-                        <div class="logo">
+                        <!-- <div class="logo">
                             <img src="@/assets/img/logo2.png" alt="">
-                        </div>
+                        </div> -->
                     </div>
                 </el-header>
                 <!-- 主体 -->
@@ -99,52 +101,60 @@
 export default {
     data(){
         return{
+            // header_title:'首页',
             name:'2568624492@qq.com1241112312312341231111111111111111111111',//用户名
             time:'',//时间
             timer:null,//定时器
         }
     },
+    computed:{
+        'header_title':function(){
+             return this.$route.name
+        }
+    },
     methods:{
         //侧边栏功能导航函数
         navigation(i){
+            console.log(this.$router.history.current.name)
             switch(i){//使用switch开关语句
                 case 1://首页
-                    if(this.$router.history.current.name !== 'homepage'){//避免已经是当前页的情况
+                    if(this.$router.history.current.name !== '首页'){//避免已经是当前页的情况
                         this.$router.push('/homepage')
+                        console.log('123')
                     }
                     break;
                 case 2://基地管理
-                    if(this.$router.history.current.name !== 'breedingBase'){//避免已经是当前页的情况
+                    if(this.$router.history.current.name !== '基地管理'){//避免已经是当前页的情况
                         this.$router.push('/breedingBase')
                     }
                      break;
                 case 3://虾塘管理
-                    if(this.$router.history.current.name !== 'shrimpPond'){//避免已经是当前页的情况
+                    if(this.$router.history.current.name !== '虾塘管理'){//避免已经是当前页的情况
                         this.$router.push('/shrimpPond')
                     }
                      break;
                  case 4://设备管理
-                    if(this.$router.history.current.name !== 'breedingEquipment'){//避免已经是当前页的情况
+                    if(this.$router.history.current.name !== '设备管理'){//避免已经是当前页的情况
                         this.$router.push('/breedingEquipment')
                     }
                      break;
-                case 5://放大镜
-                    if(this.$router.history.current.name !== 'magnifier'){//避免已经是当前页的情况
+                case 5://对虾资料
+                    if(this.$router.history.current.name !== '对虾资料'){//避免已经是当前页的情况
                         this.$router.push('/magnifier')
                     }
                     break;
                 case 6://环境监测
-                    if(this.$router.history.current.name !== 'monitor'){//避免已经是当前页的情况
+                    if(this.$router.history.current.name !== '环境监测'){//避免已经是当前页的情况
                         this.$router.push('/monitor')
                     }
                     break;
-                case 8://个人中心
-                    if(this.$router.history.current.name !== 'personalCenter'){//避免已经是当前页的情况
+                case 8://个人主页
+                    if(this.$router.history.current.name !== '个人主页'){//避免已经是当前页的情况
                         this.$router.push('/personalCenter')
                     }
                     break;
                 case 9://登录记录
-                    if(this.$router.history.current.name !== 'loginRecord'){//避免已经是当前页的情况
+                    if(this.$router.history.current.name !== '登录记录'){//避免已经是当前页的情况
                         this.$router.push('/loginRecord')
                     }
                     break;
@@ -196,6 +206,7 @@ export default {
     mounted(){
         //获取用户
         // this.name= window.localStorage.getItem('user');
+        console.log()
         //让时间第一时间显示出来
         this.time = (new Date()).toLocaleString();
         this.timer =setInterval(() => {

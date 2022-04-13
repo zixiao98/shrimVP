@@ -6,7 +6,7 @@
 }
   
 .register-box {
-    min-width: 850px;
+    min-width: 900px;
     min-height: 450px;
     background-color: transparent;
     position: absolute;
@@ -26,30 +26,32 @@
     .left{
         width: 45%;
         img{
-            width: 310px;
-            height: 80.5px;
+            width: 360px;
+            height: 360px;
         }
         .account-copyright{
             color: #343a40;
             font-family: '微软雅黑';
             font-size: 12px;
+            position: relative;
+            top:-70px;
         }
     }
     .right{
-        width: 60%;
+        width: 55%;
         animation: rotate cubic-bezier(.48,.52,1,.2) forwards .3s;
         @keyframes rotate{
             0%{
                 border-left: 2px solid #fff;
             }
             20%{
-                border-left: 2px solid rgb(206, 128, 128)232;
+                border-left: 2px solid rgb(206, 128, 128);
             }
             50%{
-                border-left: 2px solid rgb(182, 87, 87)232;
+                border-left: 2px solid rgb(182, 87, 87);
             }
             70%{
-                border-left: 2px solid rgb(180, 60, 60)232;
+                border-left: 2px solid rgb(180, 60, 60);
             }
             100%{
                 border-left: 2px solid #c93232;
