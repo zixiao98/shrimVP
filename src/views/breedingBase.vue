@@ -60,7 +60,13 @@
                         <el-input v-model="addForm.baseName"></el-input>
                     </el-form-item>
                     <el-form-item label="基地地区">
-                        <el-input v-model="addForm.baseRegion"></el-input>
+                        <!-- <el-input v-model="addForm.baseRegion"></el-input> -->
+                        <el-cascader
+                            size="large"
+                            :options="options"
+                            v-model="selectedOptions"
+                            @change="handleChange">
+                        </el-cascader>
                     </el-form-item>
                     <el-form-item label="基地详细地址">
                         <el-input v-model="addForm.baseAddr"></el-input>
@@ -86,7 +92,13 @@
                         <el-input v-model="updateForm.baseName"></el-input>
                     </el-form-item>
                     <el-form-item label="基地地区">
-                        <el-input v-model="updateForm.baseRegion"></el-input>
+                        <!-- <el-input v-model="updateForm.baseRegion"></el-input> -->
+                        <el-cascader
+                            size="large"
+                            :options="options"
+                            v-model="selectedOptionsChange"
+                            @change="handleChange">
+                        </el-cascader>
                     </el-form-item>
                     <el-form-item label="基地详细地址">
                         <el-input v-model="updateForm.baseAddr"></el-input>
@@ -105,6 +117,7 @@
 </template>
 
 <script>
+import { regionData,CodeToText,TextToCode  } from 'element-china-area-data';
 export default {
     data(){
         return {
@@ -146,7 +159,7 @@ export default {
                     createDate:'2022/03/15 09:37:53',//创建时间
                     baseName:'粤-五号基地',//基地名称
                     basePic:'',//基地图片
-                    baseRegion:'广东-广州',//基地地区
+                    baseRegion:'广东/广州',//基地地区
                     baseAddr:'海珠区仲恺路500号12312',//基地详细地址
                     hasPond:0,//拥有虾塘数量
                     hasBE:0,//拥有设备数量
@@ -156,7 +169,7 @@ export default {
                     createDate:'2022/03/13 20:27:31',//创建时间
                     baseName:'粤-四号基地',//基地名称
                     basePic:'',//基地图片
-                    baseRegion:'广东-广州',//基地地区
+                    baseRegion:'广东/广州',//基地地区
                     baseAddr:'海珠区仲恺路500号122',//基地详细地址
                     hasPond:0,//拥有虾塘数量
                     hasBE:0,//拥有设备数量
@@ -166,7 +179,7 @@ export default {
                     createDate:'2022/03/12 14:37:33',//创建时间
                     baseName:'粤-三号基地',//基地名称
                     basePic:'',//基地图片
-                    baseRegion:'广东-广州',//基地地区
+                    baseRegion:'广东/广州',//基地地区
                     baseAddr:'海珠区仲恺路500号33123',//基地详细地址
                     hasPond:0,//拥有虾塘数量
                     hasBE:0,//拥有设备数量
@@ -176,7 +189,7 @@ export default {
                     createDate:'2022/03/11 13:17:46',//创建时间
                     baseName:'粤-二号基地',//基地名称
                     basePic:'',//基地图片
-                    baseRegion:'广东-广州',//基地地区
+                    baseRegion:'广东/广州',//基地地区
                     baseAddr:'海珠区仲恺路500号123123',//基地详细地址
                     hasPond:0,//拥有虾塘数量
                     hasBE:0,//拥有设备数量
@@ -186,7 +199,7 @@ export default {
                     createDate:'2022/03/11 13:15:46',//创建时间
                     baseName:'粤-一号基地',//基地名称
                     basePic:'',//基地图片
-                    baseRegion:'广东-广州',//基地地区
+                    baseRegion:'广东/广州',//基地地区
                     baseAddr:'海珠区仲恺路500号',//基地详细地址
                     hasPond:0,//拥有虾塘数量
                     hasBE:0,//拥有设备数量
@@ -214,6 +227,10 @@ export default {
                 hasBE:0,//拥有设备数量
             },//修改信息数据
             tableDatas:[],
+            //省市区联动
+            options: regionData,
+            selectedOptions: [],
+            selectedOptionsChange:['130000', '130400', '130404'],
         }
     },
     //生命周期函数
@@ -238,6 +255,12 @@ export default {
         
     },
     methods:{
+        //省市区联动
+        handleChange () {
+            console.log(this.selectedOptions);
+            let s = this.selectedOptions;
+            this.addForm.baseRegion = `${CodeToText[s[0]]}/${CodeToText[s[1]]}/${CodeToText[s[2]]}`
+        },
         SelectClick(c){
             console.log(c)
         },
@@ -325,6 +348,10 @@ export default {
         },
         handleClick(row){
             this.updateForm = row;
+            console.log(TextToCode)
+            let s = this.updateForm.baseRegion.split('/');
+            this.selectedOptionsChange = [TextToCode[s[0]].code,TextToCode[s[0]][s[1]].code,TextToCode[s[0]][s[1]][s[2]].code]
+            console.log(this.selectedOptionsChange)
             this.dialogVisibleII = true;
         },
         submitChangeForm(){

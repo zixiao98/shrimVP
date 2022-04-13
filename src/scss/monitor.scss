@@ -157,10 +157,22 @@
                             // background-color: #fff;
                             display: flex;
                             .weatherInfo{
-                                width: 180px;
+                                width: 200px;
+                                .item{
+                                    display: flex;
+                                    div{
+                                        width: 70px;
+                                        color:#E9EEF3;
+                                        margin-left: 18px;
+                                        padding-top: 1px;
+                                        text-align: justify;
+                                        text-justify: distribute-all-lines;
+                                        text-align-last: justify;
+                                    }
+                                }
                             }
                             .weatherChart{
-                                width: calc(100% - 180px);
+                                width: calc(100% - 200px);
                             }
                         }
                     }

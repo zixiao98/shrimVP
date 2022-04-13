@@ -43,22 +43,18 @@ export default {
                         x: "center",
                         y: "90%",
                         text: '更新时间：一分钟前',
-                        textStyle: {
                             fontSize: 14,
                             fontWeight: 'bolder',
                             color: changeColor
-                        }
                     },
                     {
                         show: true,
                         left: 10,
                         top: 10,
                         text: '虾塘水温',
-                        textStyle: {
                             // fontSize: 24,
                             fontWeight: 'bolder',
                             color: changeColor
-                        }
                     }
                 ],
                 tooltip: {
@@ -67,10 +63,8 @@ export default {
                     backgroundColor: changeColor,
                     borderColor: changeColor,
                     borderWidth: '1px',
-                    textStyle: {
-                        fontWeight: 'bolder',
-                        color: '#E9EEF3'
-                    }
+                    fontWeight: 'bolder',
+                    color: '#E9EEF3'
                 },
                 series: [{
                     name: '水温',
@@ -107,10 +101,8 @@ export default {
                     },
                     axisLabel: {
                         distance: 12,
-                        textStyle: {
-                            color: "#E9EEF3",
-                            fontSize: 18,
-                        },
+                        color: "#E9EEF3",
+                        fontSize: 18,
                         formatter: function(e) {
                             return e;
                         }
@@ -127,19 +119,15 @@ export default {
                         },
                         show: true,
                         offsetCenter: [0, 40],
-                        textStyle: {
-                            fontSize: 26,
-                            color: changeColor
-                        },
+                        fontSize: 26,
+                        color: changeColor
 
                     },
                    title: {
-                        textStyle: {
-                            fontSize: 30,
-                            fontWeight: 'bolder',
-                            fontStyle: 'normal',
-                            color: changeColor
-                        },
+                        fontSize: 30,
+                        fontWeight: 'bolder',
+                        fontStyle: 'normal',
+                        color: changeColor,
                         offsetCenter: [0, 15]
                     },
                     data: [{

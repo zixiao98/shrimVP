@@ -1,6 +1,6 @@
 <template>
   <div class="lzj-container">
-      <div class="lzj-chart" ref='myTemperature'></div>
+      <div class="lzj-chart" ref='myPh'></div>
   </div>
 </template>
 
@@ -23,7 +23,7 @@ export default {
             let theme = await this.$axios.get('http://localhost:8088/static/theme/customed.json')
             // 注册主题
             this.$echarts.registerTheme('customed',theme.data)
-            this.myChartsInstance =  this.$echarts.init(this.$refs.myTemperature,'customed');
+            this.myChartsInstance =  this.$echarts.init(this.$refs.myPh,'customed');
             var data = [2, 3, 4, 5, 6, 7,];
             var data1 = [14, 14, 14, 14, 14, 14,];
             var xdata = ['过去24h', '过去20h', '过去16h', '过去12h', '过去8h', '过去4h'];
@@ -105,11 +105,9 @@ export default {
                             show: false
                         },
                         itemStyle: {
-                            normal: {
                             color: '#ccc',
                             opacity: .3,
-                            barBorderRadius: [100, 100, 100, 100]
-                        }
+                            borderRadius : [100, 100, 100, 100]
                         },
                         zlevel: 11
                     },
@@ -117,7 +115,6 @@ export default {
                         type: 'bar',
                         barWidth: 15,
                         itemStyle: {
-                            normal: {
                                 color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
                                 offset: 0,
                                 color: '#CC0033' // 0% 处的颜色  
@@ -129,8 +126,7 @@ export default {
                                 offset: 1,
                                 color: '#663366' // 100% 处的颜色
                             }], false),
-                                barBorderRadius: [100, 100, 100, 100],
-                            }
+                                borderRadius : [100, 100, 100, 100],
                         },
                         barGap:'-100%',
                         barCategoryGap:'40%',
@@ -176,7 +172,7 @@ export default {
         },
         // 图表自适应
         adaptChart(){
-            this.fontSize = this.$refs.myTemperature.offsetWidth /100 *3.6;
+            this.fontSize = this.$refs.myPh.offsetWidth /100 *3.6;
             console.log(this.fontSize)
             let option = {
                 label:{

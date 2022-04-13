@@ -48,9 +48,9 @@
                                             <span class="three"></span>
                                             <span class="four"></span>
                                             <div class="header">
-                                                <div class="weatherTitle">基地气象信息（{{weather.obsTime}}）</div>
+                                                <div class="weatherTitle">基地气象信息（{{weather.obsTime ? weather.obsTime.replace('T',' ').replace('+08:00',' 更新') :''}}）</div>
                                                 <div class="shrimpPound">
-                                                    <el-select v-model="value" placeholder="请选择">
+                                                    <el-select v-model="value" placeholder="请选择" size="small">
                                                         <el-option
                                                         v-for="item in options"
                                                         :key="item.value"
@@ -61,21 +61,30 @@
                                                     虾塘监测信息(右侧)
                                                 </div>
                                             </div>
-                                            <div class="weather">
+                                            <div class="weather"
+                                                v-loading="weatherChartLoading" 
+                                                element-loading-text="拼命加载中"
+                                                element-loading-spinner="el-icon-loading"
+                                                element-loading-background="rgba(20,20,20,.4)">
                                                 <div class="weatherInfo">
-                                                    <div>天气：{{weather.text}}</div>
-                                                    <div>实时温度：{{weather.temp}}℃</div>
-                                                    <div>体感温度：{{weather.feelsLike}}℃</div>
-                                                    <div>相对湿度：{{weather.humidity}}%</div>
-                                                    <div>露点温度：{{weather.dew}}℃</div>
-                                                    <div>风向：{{weather.windDir}}</div>
-                                                    <div>风力等级：{{weather.windScale}}</div>
-                                                    <div>风速：{{weather.windSpeed}}公里/小时</div>
-                                                    <div>大气压强：{{weather.pressure}}百帕</div>
-                                                    <div>云量：{{weather.cloud}}%</div>
+                                                    <div style="text-align:center;height:100px;">
+                                                        <i :class="icon" style="font-size:88px;"></i>
+                                                    </div>                                                    
+                                                    <div class="item"><div>天气</div>：{{weather.text}}</div>
+                                                    <div class="item"><div>降雨量</div>：{{weather.precip}}mm/h</div>
+                                                    <div class="item"><div>实时温度</div>：{{weather.temp}}℃</div>
+                                                    <div class="item"><div>体感温度</div>：{{weather.feelsLike}}℃</div>
+                                                    <div class="item"><div>露点温度</div>：{{weather.dew}}℃</div>
+                                                    <div class="item"><div>相对湿度</div>：{{weather.humidity}}%</div>
+                                                    <div class="item"><div>风向</div>：{{weather.windDir}}</div>
+                                                    <div class="item"><div>风力等级</div>：{{weather.windScale}}级</div>
+                                                    <div class="item"><div>风速</div>：{{weather.windSpeed}}km/h</div>
+                                                    <div class="item"><div>能见度</div>：{{weather.vis}}km</div>
+                                                    <div class="item"><div>大气压强</div>：{{weather.pressure}}hPa</div>
+                                                    <div class="item"><div>云量</div>：{{weather.cloud}}%</div>
                                                 </div>
                                                 <div class="weatherChart">
-                                                    <Density></Density>
+                                                    <TemperatureVc :TemperatureVcData="myEchart_TemperatureVcData"></TemperatureVc>
                                                 </div>
                                             </div>
                                             
@@ -133,14 +142,15 @@
 </template>
 
 <script>
+import TemperatureVc from '../components/monitor/TemperatureVc.vue';
 import Temperature from '../components/monitor/temperature.vue';
 import Ph from '../components/monitor/ph.vue';
 import OxygenContent from '../components/monitor/oxygenContent.vue';
-import Density from '../components/monitor/density.vue'
+import Density from '../components/monitor/density.vue';
 export default {
     data(){
         return {
-             options: [{
+            options: [{
                 value: '选项1',
                 label: '黄金糕'
                 }, {
@@ -157,8 +167,11 @@ export default {
                 label: '北京烤鸭'
                 }],
             value: '选项1',
-            weather:{},
+            
             //以上是测试数据
+            weather:{},
+            icon:'',
+            weatherChartLoading:true,
 
 
             dialogVisible:false,//拍照对话框
@@ -218,9 +231,11 @@ export default {
                 {name:'墨吉对虾',value: 92,},
                 {name:'长毛对虾',value: 112,},],},
             ],
+            myEchart_TemperatureVcData:[],
         }
     },
     components:{
+        TemperatureVc,
         Temperature,
         Ph,
         OxygenContent,
@@ -246,8 +261,24 @@ export default {
                 key :'1f4c41416a1a49d5aedf98c7601424c1',
             }
             }).then(res=>{
-                console.log(res.data.now)
+                console.log(res)
                 this.weather = res.data.now;
+                this.icon = `qi-${this.weather.icon}`
+            }).catch(err=>{
+                console.log(err)
+            })
+            this.$axios.get('https://devapi.qweather.com/v7/weather/7d',{
+                params:{
+                location :res.data.location[0].id,
+                key :'1f4c41416a1a49d5aedf98c7601424c1',
+            }
+            }).then(res=>{
+                console.log(res)
+                let daily = this.getWeather(res.data.daily);
+                let tempMax = this.getWeatherTemp(res.data.daily,'tempMax');
+                let tempMin = this.getWeatherTemp(res.data.daily,'tempMin');
+                let tempAverage =  this.getAverageTemp(tempMax,tempMin);
+                this.myEchart_TemperatureVcData = [daily,tempMax,tempMin,tempAverage];
             }).catch(err=>{
                 console.log(err)
             })
@@ -444,6 +475,27 @@ export default {
             aLink.href = this.$refs.myPhoto.src;
             aLink.click();
             aLink.remove();
+        },
+        //处理气象返回的日期
+        getWeather(arr){
+            return arr.map(item => {
+                return item.fxDate.split('-').slice(1).join('-')
+            });
+        },
+        //处理气象返回的属性
+        getWeatherTemp(arr,flag){
+            return arr.map(item => {
+                return item[flag];
+            });
+        },
+        //计算平均气温
+        getAverageTemp(maxArr,minArr){
+            let len = maxArr.length;
+            let res = [];
+            for(let i=0;i<len;i++){
+                res.push((Number(maxArr[i])+Number(minArr[2]))/2)
+            }
+            return res;
         }
     },
 }
