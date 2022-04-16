@@ -21,155 +21,116 @@
           </div>
         </div>
         <!-- 登录表单区域 -->
-        <div class="id">
-            <el-input v-model="form.accNumber" placeholder="邮箱"></el-input>
-        </div>
-        <div class="psw">
-            <el-input placeholder="密码" v-model="form.password" show-password></el-input>
-        </div>
-        <!-- <div class="vCode">
-            <el-input placeholder="验证码" v-model="form.vCode" maxlength="4" show-word-limit></el-input>
-            <span>{{vCode}}</span>
-            <button @click='refreshVcode'><i class="el-icon-refresh"></i></button>
-        </div> -->
-        <div class="btn-login">
-            <button class="login-btn" @click='login'>登录</button>
-        </div>
+        <!-- 表单区域 -->
+        <el-form :model="form" :rules="rules" ref="form">
+            <div class="id">
+                <el-form-item prop="accNumber">
+                    <el-input v-model="form.accNumber" placeholder="邮箱"></el-input>
+                </el-form-item>
+            </div>
+            <div class="psw">
+                 <el-form-item prop="password">
+                    <el-input placeholder="密码" v-model="form.password" show-password></el-input>
+                </el-form-item>
+            </div>
+            <div class="vCode">
+                <el-row :gutter="24">
+                    <el-col :span="12">
+                        <el-form-item prop="vCode">
+                            <el-input placeholder="验证码" v-model="form.vCode" maxlength="4" show-word-limit></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                            <span>{{vCode}}</span>
+                        <button @click='refreshVcode'><i class="el-icon-refresh"></i></button>
+                    </el-col>
+                </el-row>
+            </div>
+            <div class="btn-login">
+                <button class="login-btn" @click.prevent="login('form')">登录</button>
+            </div>
+        </el-form>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
-const zx_axios = axios.create({
-    baseURL:'http://localhost:3000/user'
-})
 export default {
     name:'login',
     data(){
         return {
             labelPosition:'left',
             form: {
-                accNumber:'2568624492@qq.com',
-                password:'',
+                accNumber:'123@qq.com',
+                password:'123456',
                 vCode:''
+            },
+             rules: {//传入el-form ，表单验证规则
+                accNumber: [
+                    { type:'email',required: true, message: '请输入有效邮箱', trigger: ['blur','change'] },
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: ['blur','change'] },
+                    { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: ['blur','change'] },
+                ],
+                vCode:[
+                    { required: true, message: '请输入验证码', trigger: ['blur','change'] },
+                    { min: 4,message: '请输入完整验证码', trigger: ['blur','change'] }
+                ]
             },
             //从服务器接收的验证码
             vCode:'',
         }
     },
     methods:{
-        //刷新验证码
-        refreshVcode(){
-            zx_axios.get('/vCode').then(res=>{
-            console.log(res)
-            //展示验证码
-            this.vCode = res.data.vCode;
-            }).catch(err=>{
-                console.log(err.response)
-                this.$notify({
-                    type: 'error',
-                    title: `状态码：${err.response.status}`,
-                    message: `${err.response.data.errors[0].msg}`,
-                    duration:1500
-                });
-            })
-        },
-        login(){//登录，登录成功跳到首页homepage
-            if(this.form.password !=='12345678'){
-                this.$message({
-                    type: 'error',
-                    message:'密码错误',
-                    duration:2800
-                })
+       //刷新验证码
+        async refreshVcode(){
+            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/user/vCode`))
+            this.vCode = res.data.vCode;//展示验证码
+            if(err){
+                this.$notice('error',err,1500,false)
+            }else{
+                this.$notice('success',res,1500,true)
             }
-            this.$message({
-                type: 'success',
-                message:'登录成功',
-                duration:2800
-            })
-            setTimeout(() => {
-            this.$router.push('/homepage')
-            },500);
-            // //先判断验证码是否一致
-            // if(this.form.vCode ===''){//输入验证码为空
-            //     this.$notify({
-            //         type: 'warning',
-            //         title: `验证码不能为空`,
-            //         message: `请输入新的验证码`,
-            //         duration:1500
-            //     });
-            //     //停止下面代码执行
-            //     return console.log('验证码不能为空');
-            // }else if(this.form.vCode.length<4){//输入验证码位数小于4
-            //     this.$notify({
-            //         type: 'warning',
-            //         title: `验证码错误`,
-            //         message: `请输入4位有效的验证码`,
-            //         duration:1500
-            //     });
-            //     return console.log('请输入4位有效的验证码');
-            // }else if(this.form.vCode !== this.vCode){//输入验证码错误
-            //     this.$notify({
-            //         type: 'error',
-            //         title: `验证码错误`,
-            //         message: `请输入新的验证码`,
-            //         duration:1500
-            //     });
-            //     //刷新验证吗
-            //     this.refreshVcode();
-            //     //将输入框置空
-            //     this.form.vCode='';
-            //     //停止下面代码执行
-            //     return console.log('验证码不一致');
-            // }
-            // //发生登录请求
-            // zx_axios.get('/login',{
-                // params:{
-                //     accNumber:this.form.accNumber,
-                //     password:this.form.password
-                //     }
-                // }).then(res=>{
-                    // console.log(res)
-                    // //获取token&user，并且保存到localStorage中
-                    // const token = res.data.token;
-                    // const user = res.data.user;
-                    // const userName = res.data.name;
-                    // window.localStorage.setItem('token', token);
-                    // window.localStorage.setItem('user', user);
-                    // window.localStorage.setItem('userName', userName);
-                    // if(res.status == 200){
-                    //     this.$message({
-                    //         type: 'success',
-                    //         message:res.data.tips,
-                    //         duration:2800
-                    //     })
-                    //     setTimeout(() => {
-                    //     this.$router.push('/homepage')
-                    //     },500);
-                    // }
-                    // }).catch(err=>{
-                    //     //刷新验证吗
-                    //     this.refreshVcode();
-                    //     //将输入框置空
-                    //     this.form.vCode='';
-                    //     if(err.response.status ===401){
-                    //         this.$notify({
-                    //             type: 'error',
-                    //             title: `状态码：${err.response.status}`,
-                    //             message: `${err.response.data.tips}`,
-                    //             duration:1500
-                    //         });
-                    //     }else{
-                    //         this.$notify({
-                    //             type: 'warning',
-                    //             title: `状态码：${err.response.status}`,
-                    //             message: `${err.response.data.errors[0].msg}`,
-                    //             duration:1500
-                    //         });
-                    //     }
-                    // })
+        },
+        //登录，登录成功跳到首页homepage
+        login(form){
+            this.$refs[form].validate(async (valid) => {
+                //验证不通过
+                if(!valid){ this.$noticeInfo('error','表单验证失败','请检查输入！',1500); return;}
+                //验证通过
+                if(this.form.vCode !== this.vCode){//输入验证码错误
+                    this.$noticeInfo('error','验证码错误','请输入新的验证码',3000)
+                    this.refreshVcode();//刷新验证吗
+                    this.form.vCode=''; //将输入框置空
+                    return ;
+                }
+                //所有验证通过，发送请求
+                let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/user/login`,{
+                    params:{
+                        accNumber:this.form.accNumber,
+                        password:this.form.password
+                    }    
+                }))
+                if(res?.status ===200){ 
+                    //保存数据
+                    localStorage.setItem('token',res.data.token)
+                    localStorage.setItem('user',JSON.stringify(res.data.user))
+                    await this.$router.push('/home')
+                    this.$message({
+                        type: 'success',
+                        message:'登录成功！',
+                        duration:2800
+                    })
+                }
+                if(err !== null){
+                    this.refreshVcode();//刷新验证吗
+                    this.form.vCode='';//将输入框置空
+                    if(err.response.status ===401){this.$notice('error',err,3000,false);return;}
+                    this.$notice('warning',err,3000,false)
+                }
+            });
         },
         register(){//跳转到 账号注册 页面
             this.$router.push('/register')
@@ -180,19 +141,7 @@ export default {
     },
     mounted(){
         //获取验证码
-        zx_axios.get('/vCode').then(res=>{
-            console.log(res)
-            //展示验证码
-            this.vCode = res.data.vCode;
-        }).catch(err=>{
-            console.log(err.response)
-            this.$notify({
-                type: 'error',
-                title: `状态码：${err.response.status}`,
-                message: `${err.response.data.errors[0].msg}`,
-                duration:1500
-            });
-        })
+       this.refreshVcode();
     }
 }
 </script>

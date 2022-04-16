@@ -65,8 +65,8 @@
                                         <div class="topRight">
                                             <div v-for="(key,index) in personalInfoKey" :key="index" class="informationItem">
                                                 <div class="iItemDiv">
-                                                    <div class="key">{{key}}:</div>
-                                                    <div class="val">{{personalInfoKeyValue[index]}}</div>
+                                                    <div class="key">{{personalInfoKeyValue[index]}}:</div>
+                                                    <div class="val">{{userInfo[key]}}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -75,13 +75,13 @@
                                 <div class="bottom">
                                     <div class="bottomDiv">
                                         <div v-for="(key,index) in personalInfoKeyII" :key="index" class="informationItems">
-                                                <div class="iItemDivs">
-                                                    <div v-for="(keys,indexs) in key" :key="indexs" class="iItemBox">
-                                                        <div class="keys">{{keys}}:</div>
-                                                        <div class="vals">{{personalInfoKeyIIValue[index][indexs]}}</div>
-                                                    </div>
+                                            <div class="iItemDivs">
+                                                <div v-for="(keys,indexs) in key" :key="indexs" class="iItemBox">
+                                                    <div class="keys">{{personalInfoKeyIIValue[index][indexs]}}:</div>
+                                                    <div class="vals">{{userInfo[keys]}}</div>
                                                 </div>
                                             </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -156,10 +156,10 @@ export default {
             upPhoto:false,//控制上传照片显示隐藏的字段
             imgSrc:'#',//图片url
             imgType:["image/png","image/jpeg"],//图片类型接收范围
-            personalInfoKey:["姓名","性别","年龄","地区","地址"],//个人资料key
-            personalInfoKeyValue:['子箫','男',18,'广东','广州市海珠区仲恺路500号'],
-            personalInfoKeyII:[["拥有基地","拥有虾塘","拥有设备",],["虾苗投入","收获对虾","产投比",],["注册日期","近期登录","登录地区",],["手机","邮箱",]],
-            personalInfoKeyIIValue:[[4,12,34],[1200,342399,23.2],['2022-03-14','2022-04-11','广东广州'],['18206640187','2568624492@qq.com']],
+            personalInfoKey:["name","sex","age","region","addres"],//个人资料key
+            personalInfoKeyValue:['姓名','性别','年龄','地区','地址'],
+            personalInfoKeyII:[["baseNum","pondNum","equipmentNum",],["shrimpNum","equipmentInvestment","email",],["phone","registerTime","loginTime"]],
+            personalInfoKeyIIValue:[['拥有基地','拥有虾塘','拥有设备'],['虾苗投入','设备投入','邮箱',],['手机','注册日期','近期登录',]],
             myEchart_circleDate:[
                 {name:'中国对虾',data:0.18},
                 {name:'斑节对虾',data:0.34},
@@ -207,6 +207,9 @@ export default {
                 {name:'墨吉对虾',value: 92,},
                 {name:'长毛对虾',value: 112,},],},
             ],
+
+
+            userInfo:null,
         }
     },
     components:{
@@ -216,6 +219,10 @@ export default {
         PolarGraph,
     },
     //生命周期函数
+    beforeMount(){
+        this.userInfo =JSON.parse(localStorage.getItem('user')) 
+        console.log(this.userInfo)
+    },
     mounted(){
         //让侧边栏功能固化hover的效果
         let node = document.querySelectorAll('.asd div')[6];
@@ -409,7 +416,7 @@ export default {
             aLink.href = this.$refs.myPhoto.src;
             aLink.click();
             aLink.remove();
-        }
+        },
     },
 }
 </script>

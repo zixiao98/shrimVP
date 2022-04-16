@@ -15,23 +15,23 @@
                     </div>
                     <div class="asd">
                         <span>管理模块</span>
-                        <div @click="navigation(2)"><i class="el-icon-key"></i><span>基地管理</span></div>
-                        <div @click="navigation(3)"><i class="el-icon-delete"></i><span>虾塘管理</span></div>
-                        <div @click="navigation(4)"><i class="el-icon-delete"></i><span>设备管理</span></div>
+                        <div @click="navigation(2)"><i class="el-icon-location-information"></i><span>基地管理</span></div>
+                        <div @click="navigation(3)"><i class="el-icon-sunset"></i><span>虾塘管理</span></div>
+                        <div @click="navigation(4)"><i class="el-icon-coin"></i><span>设备管理</span></div>
                     </div>
                     <div class="asd">
                         <span>资料模块</span>
-                        <div @click="navigation(5)"><i class="el-icon-coffee"></i><span>对虾资料</span></div>
+                        <div @click="navigation(5)"><i class="el-icon-bangzhu"></i><span>对虾资料</span></div>
                     </div>
                     <div class="asd">
                         <span>监测模块</span>
-                        <div @click="navigation(6)"><i class="el-icon-sugar"></i><span>环境监测</span></div>
+                        <div @click="navigation(6)"><i class="el-icon-view"></i><span>环境监测</span></div>
                         <!-- <div @click="navigation(7)"><i class="el-icon-light-rain"></i><span>xxx</span></div> -->
                     </div>
                     <div class="asd">
                         <span>个人模块</span>
                         <div @click="navigation(8)"><i class="el-icon-user-solid"></i><span>个人主页</span></div>
-                        <div @click="navigation(9)"><i class="el-icon-view"></i><span>登录记录</span></div>
+                        <div @click="navigation(9)"><i class="el-icon-time"></i><span>登录记录</span></div>
                     </div>
                 </div>
             </el-aside>

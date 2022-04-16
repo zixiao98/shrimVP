@@ -84,7 +84,17 @@
                                                     <div class="item"><div>云量</div>：{{weather.cloud}}%</div>
                                                 </div>
                                                 <div class="weatherChart">
-                                                    <TemperatureVc :TemperatureVcData="myEchart_TemperatureVcData"></TemperatureVc>
+                                                    <div class="echart">
+                                                         <TemperatureVc :TemperatureVcData="myEchart_TemperatureVcData"></TemperatureVc>
+                                                    </div>
+                                                    <div class="list">
+                                                        <div v-for=" item,index in weather7d" :key="index">
+                                                            <i :class="'qi-'+item.iconDay" style="font-size:18px;"></i>
+                                                            <i>{{item.textDay}}</i><br/>
+                                                            <i :class="'qi-'+item.iconNight" style="font-size:18px;"></i>
+                                                            <i>{{item.textNight}}</i>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             
@@ -172,6 +182,7 @@ export default {
             weather:{},
             icon:'',
             weatherChartLoading:true,
+            weather7d:[],
 
 
             dialogVisible:false,//拍照对话框
@@ -257,32 +268,33 @@ export default {
             console.log(res.data.location[0].id)
             this.$axios.get('https://devapi.qweather.com/v7/weather/now',{
                 params:{
-                location :res.data.location[0].id,
-                key :'1f4c41416a1a49d5aedf98c7601424c1',
-            }
-            }).then(res=>{
-                console.log(res)
-                this.weather = res.data.now;
-                this.icon = `qi-${this.weather.icon}`
-            }).catch(err=>{
-                console.log(err)
-            })
+                    location :res.data.location[0].id,
+                    key :'1f4c41416a1a49d5aedf98c7601424c1',
+                }
+                }).then(res=>{
+                    console.log(res)
+                    this.weather = res.data.now;
+                    this.icon = `qi-${this.weather.icon}`
+                }).catch(err=>{
+                    console.log(err)
+                })
             this.$axios.get('https://devapi.qweather.com/v7/weather/7d',{
-                params:{
-                location :res.data.location[0].id,
-                key :'1f4c41416a1a49d5aedf98c7601424c1',
-            }
-            }).then(res=>{
-                console.log(res)
-                let daily = this.getWeather(res.data.daily);
-                let tempMax = this.getWeatherTemp(res.data.daily,'tempMax');
-                let tempMin = this.getWeatherTemp(res.data.daily,'tempMin');
-                let tempAverage =  this.getAverageTemp(tempMax,tempMin);
-                this.myEchart_TemperatureVcData = [daily,tempMax,tempMin,tempAverage];
-            }).catch(err=>{
-                console.log(err)
-            })
-            
+                    params:{
+                    location :res.data.location[0].id,
+                    key :'1f4c41416a1a49d5aedf98c7601424c1',
+                }
+                }).then(res=>{
+                    console.log(res)
+                    let daily = this.getWeather(res.data.daily);//日期
+                    let tempMax = this.getWeatherItem(res.data.daily,'tempMax');//最高温
+                    let tempMin = this.getWeatherItem(res.data.daily,'tempMin');//最低温
+                    let tempAverage =  this.getAverageTemp(tempMax,tempMin);//平均温
+                    let humidity = this.getWeatherItem(res.data.daily,'humidity')//获取相对湿度
+                    this.myEchart_TemperatureVcData = [daily,tempMax,tempMin,tempAverage,humidity];
+                    this.weather7d = this.getWeather7d(res.data.daily);
+                }).catch(err=>{
+                    console.log(err)
+                })
         }).catch(err=>{
             console.log(err)
 
@@ -479,11 +491,11 @@ export default {
         //处理气象返回的日期
         getWeather(arr){
             return arr.map(item => {
-                return item.fxDate.split('-').slice(1).join('-')
+                return item.fxDate.split('-').slice(1).join('月')+'号';
             });
         },
         //处理气象返回的属性
-        getWeatherTemp(arr,flag){
+        getWeatherItem(arr,flag){
             return arr.map(item => {
                 return item[flag];
             });
@@ -495,6 +507,19 @@ export default {
             for(let i=0;i<len;i++){
                 res.push((Number(maxArr[i])+Number(minArr[2]))/2)
             }
+            return res;
+        },
+        //获取7天天气预测
+        getWeather7d(arr){
+            let res = [];
+            arr.forEach((item)=>{
+                let obj = {};
+                obj.iconDay = item.iconDay;
+                obj.iconNight = item.iconNight;
+                obj.textDay = item.textDay;
+                obj.textNight = item.textNight;
+                res.push(obj)
+            })
             return res;
         }
     },

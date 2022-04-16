@@ -112,14 +112,11 @@
             margin-bottom: 21px;
         }
         .vCode{//验证码框
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            .el-input{
-                width: 60%;
-            }
             span{
+                position: relative;
+                top:4px;
                 font-size: 24px;
+                margin:0 10px;
                 margin-left: 10px;
                 padding: 3px 10px;
                 border-radius:5px;

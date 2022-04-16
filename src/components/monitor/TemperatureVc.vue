@@ -42,7 +42,7 @@ export default {
             this.myChartsInstance =  this.$echarts.init(this.$refs.myTemperatureVc,'customed');
             let option = {
                 title: {
-                    text: '近7天的温度预测',
+                    text: '近7天的气象预测',
                     fontWeight: 'normal',
                     fontSize: 16,
                     color: '#F1F1F3',
@@ -61,7 +61,7 @@ export default {
                     itemWidth: 14,
                     itemHeight: 5,
                     itemGap: 13,
-                    data: ['最高温度', '平均温度', '最低温度'],
+                    data: ['最高温度', '平均温度', '最低温度','相对湿度'],
                     right: '4%',
                     fontSize: 12,
                     color: '#F1F1F3'
@@ -75,6 +75,9 @@ export default {
                 xAxis: [{
                     type: 'category',
                     boundaryGap: false,
+                    axisLabel:{//坐标轴刻度
+                        color:'#e6e9f0',
+                    },
                     axisLine: {
                         lineStyle: {
                             color: '#57617B'
@@ -84,7 +87,15 @@ export default {
                 }],
                 yAxis: [{
                     type: 'value',
-                    name: '单位（℃）',
+                    name: '温度℃',
+                    nameTextStyle:{
+                        color:'#fff',
+                        margin: 5,
+                        fontSize: 14
+                    },
+                    axisLabel:{//坐标轴刻度
+                        color:'#ccc',
+                    },
                     axisTick: {
                         show: false
                     },
@@ -93,18 +104,20 @@ export default {
                             color: '#57617B'
                         }
                     },
-                    axisLabel: {
-                        margin: 10,
-                        fontSize: 14
-                    },
                     splitLine: {
-                        lineStyle: {
-                            color: '#57617B'
-                        }
+                        show:false,
                     }
                 },{
                     type: 'value',
-                    name: '单位（%）',
+                    name: '湿度%',
+                    nameTextStyle:{
+                        color:'#fff',
+                        margin: 5,
+                        fontSize: 14
+                    },
+                    axisLabel:{//坐标轴刻度
+                        color:'#ccc',
+                    },
                     axisTick: {
                         show: false
                     },
@@ -113,46 +126,20 @@ export default {
                             color: '#57617B'
                         }
                     },
-                    axisLabel: {
-                        margin: 10,
-                        fontSize: 14
-                    },
                     splitLine: {
-                        lineStyle: {
-                            color: '#57617B'
-                        }
-                    }
-                },{
-                    type: 'value',
-                    name: '单位（hPa）',
-                    offset: 10,
-                    axisTick: {
-                        show: false
-                    },
-                    axisLine: {
-                        lineStyle: {
-                            color: '#57617B'
-                        }
-                    },
-                    axisLabel: {
-                        margin: 10,
-                        fontSize: 14
-                    },
-                    splitLine: {
-                        lineStyle: {
-                            color: '#57617B'
-                        }
+                       show:false,
                     }
                 }],
                 series: [{
                     name: '最高温度',
                     type: 'line',
+                    yAxisIndex: 0,
                     smooth: true,
                     symbol: 'circle',
                     symbolSize: 5,
                     showSymbol: false,
                     lineStyle: {
-                            width: 1
+                        width: 2
                     },
                     areaStyle: {
                             color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
@@ -167,21 +154,21 @@ export default {
 
                     },
                     itemStyle: {
-
                             color: 'rgb(219,50,51)',
-                            borderColor: 'rgba(219,50,51,0.2)',
+                            borderColor: 'rgba(219,50,51,0.3)',
                             borderWidth: 12
                     },
                     // data: [220, 182, 191, 134, 150, 120, 110, 125, 145, 122, 165, 122]
                 }, {
                     name: '平均温度',
                     type: 'line',
+                    yAxisIndex: 0,
                     smooth: true,
                     symbol: 'circle',
                     symbolSize: 5,
                     showSymbol: false,
                     lineStyle: {
-                            width: 1
+                        width: 2
                     },
                     areaStyle: {
                             color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
@@ -196,7 +183,7 @@ export default {
                     },
                     itemStyle: {
                             color: 'rgb(137,189,27)',
-                            borderColor: 'rgba(137,189,2,0.27)',
+                            borderColor: 'rgba(137,189,2,0.3)',
                             borderWidth: 12
 
                     },
@@ -205,12 +192,13 @@ export default {
                 }, {
                     name: '最低温度',
                     type: 'line',
+                    yAxisIndex: 0,
                     smooth: true,
                     symbol: 'circle',
                     symbolSize: 5,
                     showSymbol: false,
                     lineStyle: {
-                            width: 1
+                        width: 2
                     },
                     areaStyle: {
                             color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
@@ -225,7 +213,39 @@ export default {
                     },
                     itemStyle: {
                             color: 'rgb(0,136,212)',
-                            borderColor: 'rgba(0,136,212,0.2)',
+                            borderColor: 'rgba(0,136,212,0.3)',
+                            borderWidth: 12
+
+                    },
+                    
+                    // data: [220, 182, 125, 145, 122, 191, 134, 150, 120, 110, 165, 122]
+                }, {
+                    name: '相对湿度',
+                    type: 'line',
+                    yAxisIndex: 1,
+                    smooth: true,
+                    symbol: 'circle',
+                    symbolSize: 5,
+                    showSymbol: false,
+                    lineStyle: {
+                        width: 2
+                    },
+                    areaStyle: {
+                        color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                offset: 0,
+                                color: 'rgba(235,100,251,0.4)'
+                            },
+                            {
+                                offset: 1,
+                                color: '#3fbbff0d'
+                            }
+                        ], false),
+                        shadowColor: 'rgba(0, 0, 0, 0.1)',
+                        shadowBlur: 10
+                    },
+                    itemStyle: {
+                            color: '#eb64fb',
+                            borderColor: 'rgba(235,100,251,0.2)',
                             borderWidth: 12
 
                     },
@@ -251,6 +271,7 @@ export default {
                     { data: data[1]}, 
                     { data: data[3]}, 
                     { data: data[2]}, 
+                    { data: data[4]}, 
                 ]
             }
             this.myChartsInstance.setOption(option)
