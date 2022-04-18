@@ -21,14 +21,15 @@
                                     </div>
                                 </div>
                                 <el-table :data="tableData" style="width: 100%">
-                                    <el-table-column prop="loginId" label="登录账号" align="center" width="200"></el-table-column>
+                                    <el-table-column prop="accNumber" label="登录账号" align="center" width="200"></el-table-column>
                                     <el-table-column label="登录状态" align="center" width="150">
                                         <template slot-scope="scope">
-                                            {{scope.row.loginStatus ? '成功' :'失败'}}
+                                            <el-tag effect="dark" :type="tagType[scope.row.status].type">{{ tagType[scope.row.status].name }}</el-tag>
+                                            <!-- {{scope.row.status ? '失败' :'成功'}} -->
                                         </template>
                                     </el-table-column>
-                                    <el-table-column prop="loginRegion" label="登录地区" align="center" width="200"></el-table-column>
-                                    <el-table-column prop="createDate" label="登录时间" align="center"></el-table-column>
+                                    <el-table-column prop="region" label="登录地区" align="center" width="200"></el-table-column>
+                                    <el-table-column prop="loginTime" label="登录时间" align="center"></el-table-column>
                                     <el-table-column label="操作" width="230" align="center">
                                          <template slot-scope="scope">
                                             <el-button size="small" type="primary" icon="el-icon-view" @click="handleDetails(scope.row)">查看</el-button>
@@ -36,11 +37,12 @@
                                     </el-table-column> 
                                 </el-table>
                                 <el-pagination
-                                    :current-page="1"
+                                    @current-change="pageChange"
+                                    :current-page="curPg"
                                     :page-sizes="pss"
                                     :page-size="ps"
                                     layout="sizes,total, prev, pager, next, jumper"
-                                    :total="tableData.length"
+                                    :total="count"
                                 ></el-pagination>
                             </div>
                         </div>
@@ -75,17 +77,20 @@
             >
             <div class="dialogDiv">
                 <el-form :model="showForm" ref="showForm" label-width="100px">
+                    <el-form-item label="id">
+                        <el-input v-model="showForm._id" disabled></el-input>
+                    </el-form-item>
                     <el-form-item label="登录账号">
-                        <el-input v-model="showForm.loginId" disabled></el-input>
+                        <el-input v-model="showForm.accNumber" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="登录地区">
-                        <el-input v-model="showForm.loginRegion" disabled></el-input>
+                        <el-input v-model="showForm.region" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="登录时间">
-                        <el-input v-model="showForm.createDate" disabled></el-input>
+                        <el-input v-model="showForm.loginTime" disabled></el-input>
                     </el-form-item>
-                    <el-form-item>
-                        <!-- <el-button @click="resetForm('addForm')">重置</el-button> -->
+                    <el-form-item label="登录状态">
+                        <el-input v-model="showForm.status" disabled></el-input>
                     </el-form-item>
                 </el-form>
             </div>
@@ -103,103 +108,50 @@ import PolarGraphII from '../components/loginrecord/polarGraphII.vue'
 export default {
     data(){
         return {
+            curPg:1,//当前页数
+            curPgFreeze:1,//冻结页数
             pss:[10],//分页尺寸数组
             ps:10,//当前分页尺寸
             dialogVisible:false,//添加信息对话框
             dialogVisibleII:false,//修改信息对话框
             optionValue:[
                 {
-                    name:'登录账号',
-                    value:'loginId',
+                    name:'登录状态',
+                    value:'status',
                 },
                 {
                     name:'登录地区',
-                    value:'loginRegion',
+                    value:'region',
                 },
                 {
                     name:'登录时间',
-                    value:'createDate',
+                    value:'loginTime',
                 },
             ],//查询条件数组
             select:null,//选中的查询条件
             searchInput:'',//搜索关键词
-            tableData: [
+            tableData: [],//表格展示数据
+            tableDatas:[],//搜索时暂存已经展示的数据
+            tagType:[
                 {
-                    id:'129',//登录记录id
-                    createDate:'2022/03/11 01:16:12',//登录时间
-                    loginId:'2568624492@qq.com',//登录账号
-                    loginStatus:1,//登录状态
-                    loginRegion:'广东广州',//登录地区
+                    type:'success',
+                    name:'成功',
                 },
                 {
-                    id:'128',//登录记录id
-                    createDate:'2022/04/10 19:22:35',//登录时间
-                    loginId:'2568624492@qq.com',//登录账号
-                    loginStatus:1,//登录状态
-                    loginRegion:'广东广州',//登录地区
+                    type:'warning',
+                    name:'失败',
                 },
-                {
-                    id:'127',//登录记录id
-                    createDate:'2022/03/26 22:31:14',//登录时间
-                    loginId:'2568624492@qq.com',//登录账号
-                    loginStatus:1,//登录状态
-                    loginRegion:'广东广州',//登录地区
-                },
-                {
-                    id:'126',//登录记录id
-                    createDate:'2022/03/25 21:46:38',//登录时间
-                    loginId:'2568624492@qq.com',//登录账号
-                    loginStatus:1,//登录状态
-                    loginRegion:'广东广州',//登录地区
-                },
-                {
-                    id:'125',//登录记录id
-                    createDate:'2022/03/24 16:31:14',//登录时间
-                    loginId:'2568624492@qq.com',//登录账号
-                    loginStatus:1,//登录状态
-                    loginRegion:'广东广州',//登录地区
-                },
-                {
-                    id:'125',//登录记录id
-                    createDate:'2022/03/22 20:19:25',//登录时间
-                    loginId:'2568624492@qq.com',//登录账号
-                    loginStatus:1,//登录状态
-                    loginRegion:'广东广州',//登录地区
-                },
-                {
-                    id:'124',//登录记录id
-                    createDate:'2022/03/17 16:16:23',//登录时间
-                    loginId:'2568624492@qq.com',//登录账号
-                    loginStatus:1,//登录状态
-                    loginRegion:'广东广州',//登录地区
-                },
-                {
-                    id:'123',//登录记录id
-                    createDate:'2022/03/16 21:12:33',//登录时间
-                    loginId:'2568624492@qq.com',//登录账号
-                    loginStatus:1,//登录状态
-                    loginRegion:'广东广州',//登录地区
-                },
-            ],//表格展示数据
-            addForm: {
-                id:'',//登录记录id
-                createDate:'',//登录时间
-                loginId:'',//登录账号
-                loginStatus:1,//登录状态
-                loginRegion:0,//登录地区
-            },
-            showForm: {
-                id:'',//登录记录id
-                createDate:'',//登录时间
-                loginId:'',//登录账号
-                loginStatus:1,//登录状态
-                loginRegion:0,//登录地区
-            },
+            ],//登录记录tag
+            count:0,//数据条数
+            showForm: {},//查看数据
         }
     },
     components:{
         LineII,
         PolarGraphII,
+    },
+    created(){
+        this.initData()
     },
     //生命周期函数
     mounted(){
@@ -220,6 +172,11 @@ export default {
         }
     },
     methods:{
+        //初始化数据
+        async initData(){
+            //即获取第一页数据
+            this.getDataByPage(1)
+        },
         SelectClick(c){
             console.log(c)
         },
@@ -245,30 +202,101 @@ export default {
                     });
                 return;
             }
-            this.tableDatas = JSON.parse(JSON.stringify(this.tableData));
-            this.tableData=this.tableData.filter(item=>{
-                return String(item[this.select]).includes(this.searchInput)
-            })
-            if(this.tableData.length){
-                this.$message({
-                    type: 'success',
-                    message: '查找成功!'
-                });
-            }else{
-                this.$message({
-                    message: '无匹配数据!'
-                });
-            }
+            //通过查询
+            this.getDataByPageOptions(1)
+            // this.tableDatas = JSON.parse(JSON.stringify(this.tableData));
+            // this.tableData=this.tableData.filter(item=>{
+            //     return String(item[this.select]).includes(this.searchInput)
+            // })
+            // this.count = this.tableData;
+            // this.curPg = 1;
+            // if(this.tableData.length){
+            //     this.$message({
+            //         type: 'success',
+            //         message: '查找成功!'
+            //     });
+            // }else{
+            //     this.$message({
+            //         message: '无匹配数据!'
+            //     });
+            // }
             
         },
         lookBack(){
-            this.tableData = JSON.parse(JSON.stringify(this.tableDatas));
+            // this.tableData = JSON.parse(JSON.stringify(this.tableDatas));
+            this.getDataByPage(this.curPgFreeze)
+            this.curPg = Number(this.curPgFreeze);
             this.select ='';
             this.searchInput='';
         },
+        //显示详情
         handleDetails(row){
             this.showForm = row;
+            this.showForm.status =  this.showForm.status ? '失败' : '成功';
             this.dialogVisible = true;
+        },
+        //分页变化
+        async pageChange(pg){
+            this.curPgFreeze = pg
+            console.log(pg,this.curPgFreeze)
+            this.getDataByPage(pg)
+        },
+        //分页查询
+        async getDataByPage(pg){
+            const token = window.localStorage.getItem('token');
+            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/user/loginrecord/page`,{
+                params: {
+                    pg: pg
+                },
+                headers: {
+                    'Authorization': 'Bearer '+token,
+                }
+            }))
+            if(res?.status === 200){
+                this.tableData = res.data.data;
+                for (const item of this.tableData) {
+                    item.loginTime = new Date(item.loginTime).toLocaleString();
+                }
+                this.count = res.data.count;
+                this.$message({
+                    type: 'success',
+                    message:'获取数据成功！',
+                    duration:2800
+                })
+            }
+            if(err){
+                this.$noticeInfo('error','失败','获取数据失败！！',3000)
+            }
+        },
+        //条件分页查询
+        async getDataByPageOptions(pg){
+            console.log(this.select,this.searchInput)
+            let that = this;
+            const token = window.localStorage.getItem('token');
+            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/user/loginrecord/pageOptions`,{
+                params: {
+                    pg: pg,
+                    [that.select]:that.searchInput,
+                },
+                headers: {
+                    'Authorization': 'Bearer '+token,
+                }
+            }))
+            if(res?.status === 200){
+                this.tableData = res.data.data;
+                for (const item of this.tableData) {
+                    item.loginTime = new Date(item.loginTime).toLocaleString();
+                }
+                this.count = res.data.count;
+                this.$message({
+                    type: 'success',
+                    message:'获取数据成功！',
+                    duration:2800
+                })
+            }
+            if(err){
+                this.$noticeInfo('error','失败','获取数据失败！！',3000)
+            }
         }
     },
 }

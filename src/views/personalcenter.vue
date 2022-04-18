@@ -51,7 +51,9 @@
                         <div class="mainBox">
                             <div class="mainDiv">
                                 <div class="top">
+                                   
                                     <div class="topDiv">
+                                         <i class="el-icon-s-tools elIcon" @click="upDateUserInfo">修改</i>
                                         <div class="topLeft">
                                             <div class="img">
                                                 <img src="@/assets/img/logo.png" alt="个人中心的头像" ref="myPhoto">
@@ -82,6 +84,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="weatherDiv">
+
                                     </div>
                                 </div>
                             </div>
@@ -137,6 +142,57 @@
                 <el-button type="primary" @click="putImg">确 定</el-button>
             </div>
         </el-dialog>
+        <!-- 修改用户资料 -->
+        <el-dialog
+            title="修改用户资料"
+            :visible.sync="dialogVisibleIII"
+            width="50%"
+            >
+            <div class="dialogDiv">
+                <el-form :model="updateForm" ref="updateForm" :rules="rules" label-width="100px">
+                    <el-form-item label="姓名" prop="name">
+                        <el-input v-model="updateForm.name"></el-input>
+                    </el-form-item>
+                    <el-row :gutter="24">
+                         <el-col :span="14">
+                            <el-form-item label="年龄" prop="age">
+                                <el-input v-model.number="updateForm.age"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="10">
+                            <el-form-item label="性别">
+                                <el-radio-group v-model="updateForm.sex">
+                                    <el-radio :label="1">男</el-radio>
+                                    <el-radio :label="0">女</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-form-item label="地区" prop="region">
+                        <el-cascader
+                            placeholder="地区"
+                            size="large"
+                            :options="options"
+                            v-model="updateForm.region"
+                            @change="handleChange">
+                        </el-cascader>
+                    </el-form-item>
+                    <el-form-item label="地址">
+                        <el-input v-model="updateForm.addres"></el-input>
+                    </el-form-item>
+                    <el-form-item label="邮箱" prop="email">
+                        <el-input v-model="updateForm.email"></el-input>
+                    </el-form-item>
+                    <el-form-item label="手机">
+                        <el-input v-model="updateForm.phone"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisibleIII = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisibleIII = false">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -145,6 +201,7 @@ import PieIII from '../components/personalcenter/pieIII.vue'
 import BarIII from '../components/personalcenter/barIII.vue'
 import Circles from '../components/personalcenter/circle.vue'
 import PolarGraph from '../components/personalcenter/polarGraph.vue'
+import { regionData,CodeToText,TextToCode } from 'element-china-area-data';
 export default {
     data(){
         return {
@@ -156,6 +213,29 @@ export default {
             upPhoto:false,//控制上传照片显示隐藏的字段
             imgSrc:'#',//图片url
             imgType:["image/png","image/jpeg"],//图片类型接收范围
+            dialogVisibleIII:false,//修改用户资料对话框
+            updateForm:{},
+            rules: {//传入el-form ，表单验证规则
+                name: [
+                    { required: true, message: '请输入你的名称', trigger: ['blur','change'] },
+                    { min: 2, max: 18,message: '长度在 2 到 18 个字符', trigger: ['blur','change'] }
+                ],
+                age:[
+                    { required: true, message: '请输入年龄', trigger: ['blur','change'] },
+                    { type:'number',min: 18, max: 120, message: '18-120', trigger: ['blur','change'] }
+                ],
+                region:[
+                    {required:true,message: '请选择你的地区', trigger:'change'}
+                ],
+                email:[
+                    { required: true, message: '请输入邮箱地址', trigger: ['blur', 'change']},
+                    { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+                ]
+            },
+            //省市区联动
+            options: regionData,
+            selectedOptions: '',
+
             personalInfoKey:["name","sex","age","region","addres"],//个人资料key
             personalInfoKeyValue:['姓名','性别','年龄','地区','地址'],
             personalInfoKeyII:[["baseNum","pondNum","equipmentNum",],["shrimpNum","equipmentInvestment","email",],["phone","registerTime","loginTime"]],
@@ -416,6 +496,19 @@ export default {
             aLink.href = this.$refs.myPhoto.src;
             aLink.click();
             aLink.remove();
+        },
+        upDateUserInfo(){
+            this.dialogVisibleIII = true;
+            this.updateForm =JSON.parse(localStorage.getItem('user')) 
+            console.log(this.updateForm)
+            let s = this.updateForm.region.split('/');
+            this.updateForm.region =  [TextToCode[s[0]].code,TextToCode[s[0]][s[1]].code,TextToCode[s[0]][s[1]][s[2]].code]
+            console.log(this.updateForm)
+        },
+        //省市区联动
+        handleChange () {
+            let s = this.userForm.region;
+            this.selectedOptions = `${CodeToText[s[0]]}/${CodeToText[s[1]]}/${CodeToText[s[2]]}`
         },
     },
 }

@@ -9,11 +9,26 @@
                 height: calc(45% - 16px);;
                 padding: 8px;
                 .topDiv{
+                    position: relative;
                     height: 100%;
                     border-radius: 8px;
                     background-color: rgba(255, 255, 255, 0.507);
                     display: flex;
                     align-items: center;
+                    .elIcon{
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        color:#fff;
+                        display: inline-block;
+                        padding: 5px 10px;
+                        border-bottom: 2px solid #ccc;
+                        &:hover{
+                            cursor:pointer;
+                            color: #333;
+                            border-bottom-color:#333;
+                        }
+                    }
                     .topLeft{//个人资料上部-左-头像
                         height: calc(100% - 56px);
                         width: 43%;
@@ -121,11 +136,11 @@
                 height: calc(55% - 16px);;
                 padding: 8px;
                 .bottomDiv{
-                    height: 100%;
+                    height: 65%;
                     border-radius: 8px;
                     background-color: rgba(255, 255, 255, 0.507);
                     .informationItems{
-                        height: calc(25% - 20px);
+                        height: calc(33% - 20px);
                         padding: 10px;
                         .iItemDivs{
                             height: 100%;
@@ -158,6 +173,10 @@
                             }
                         }
                     }
+                }
+                .weatherDiv{
+                    height: calc(35% - 16px);
+                    padding-top: 16px;
                 }
             }
         }

@@ -29,10 +29,12 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                              <el-radio-group v-model="userForm.sex">
-                                <el-radio :label="1">男</el-radio>
-                                <el-radio :label="0">女</el-radio>
-                            </el-radio-group>
+                            <el-form-item>
+                                <el-radio-group v-model="userForm.sex">
+                                    <el-radio :label="1">男</el-radio>
+                                    <el-radio :label="0">女</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
                         </el-col>
                     </el-row>
                 </div>

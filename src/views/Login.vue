@@ -62,7 +62,7 @@ export default {
         return {
             labelPosition:'left',
             form: {
-                accNumber:'123@qq.com',
+                accNumber:'2568624492@qq.com',
                 password:'123456',
                 vCode:''
             },
