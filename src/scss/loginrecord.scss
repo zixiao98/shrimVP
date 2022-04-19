@@ -37,7 +37,7 @@
                             }
                         }
                         .search{
-                            width: calc(40% - 100px);
+                            width: calc(50% - 100px);
                             padding: 0 50px;
                             display: flex;
                             align-items: center;
@@ -52,6 +52,12 @@
                                     transform: scale(1.1);
                                 }
                             }
+                        }
+                        .tipsInfo{
+                            display: inline-block;
+                            font-size: 14px;
+                            color: #fff;
+                            // width: 100px;
                         }
                     }
                     // 以下修改elementui的table默认样式

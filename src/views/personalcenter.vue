@@ -51,9 +51,8 @@
                         <div class="mainBox">
                             <div class="mainDiv">
                                 <div class="top">
-                                   
                                     <div class="topDiv">
-                                         <i class="el-icon-s-tools elIcon" @click="upDateUserInfo">修改</i>
+                                         <i class="el-icon-s-tools elIcon" @click="openDialogChangeInfo">修改</i>
                                         <div class="topLeft">
                                             <div class="img">
                                                 <img src="@/assets/img/logo.png" alt="个人中心的头像" ref="myPhoto">
@@ -68,7 +67,8 @@
                                             <div v-for="(key,index) in personalInfoKey" :key="index" class="informationItem">
                                                 <div class="iItemDiv">
                                                     <div class="key">{{personalInfoKeyValue[index]}}:</div>
-                                                    <div class="val">{{userInfo[key]}}</div>
+                                                    <div v-if="personalInfoKeyValue[index]=='性别'" class="val">{{userInfo[key]?'男':'女'}}</div>
+                                                    <div v-else class="val">{{userInfo[key]}}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -85,8 +85,46 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="weatherDiv">
-
+                                    <div class="weatherDiv"
+                                        v-loading="weatherChartLoading" 
+                                        element-loading-text="拼命加载中"
+                                        element-loading-spinner="el-icon-loading"
+                                        element-loading-background="rgba(20,20,20,.4)">
+                                        <div class="weatherTitle">
+                                            <el-cascader
+                                                placeholder="地区"
+                                                size="mini"
+                                                :options="options"
+                                                v-model="weatherLoction"
+                                                @change="handleChanges">
+                                            </el-cascader>
+                                            <i>来源：{{wRefer}}</i>
+                                            <i>更新：{{weather.obsTime}}</i>
+                                        </div>
+                                        <div class="weatherInfo">
+                                            <div class="weatherIcon">
+                                                <i :class="icon" style="font-size:100px;"></i><br/>
+                                                <i>{{weather.text}}</i>
+                                            </div>  
+                                            <div class="item">
+                                                <div>实时温度：<i>{{weather.temp}}℃</i></div>
+                                                <div>体感温度：<i>{{weather.feelsLike}}℃</i></div>
+                                                <div>露点温度：<i>{{weather.dew}}℃</i></div>
+                                                <div>相对湿度：<i>{{weather.humidity}}%</i></div>
+                                            </div>
+                                            <div class="item">
+                                                <div>云量：<i>{{weather.cloud}}%</i></div>
+                                                <div>风向：<i>{{weather.windDir}}</i></div>
+                                                <div>风速：<i>{{weather.windSpeed}}km/h</i></div>
+                                                <div>风力等级：<i>{{weather.windScale}}级</i></div>
+                                            </div>
+                                            <div class="item">
+                                                <div>降雨量：<i>{{weather.precip}}mm/h</i></div>
+                                                <div>能见度：<i>{{weather.vis}}km</i></div>
+                                                <div>大气压强：<i>{{weather.pressure}}hPa</i></div>
+                                                
+                                            </div>
+                                        </div>      
                                     </div>
                                 </div>
                             </div>
@@ -146,7 +184,7 @@
         <el-dialog
             title="修改用户资料"
             :visible.sync="dialogVisibleIII"
-            width="50%"
+            width="600px"
             >
             <div class="dialogDiv">
                 <el-form :model="updateForm" ref="updateForm" :rules="rules" label-width="100px">
@@ -180,17 +218,23 @@
                     <el-form-item label="地址">
                         <el-input v-model="updateForm.addres"></el-input>
                     </el-form-item>
-                    <el-form-item label="邮箱" prop="email">
-                        <el-input v-model="updateForm.email"></el-input>
-                    </el-form-item>
-                    <el-form-item label="手机">
-                        <el-input v-model="updateForm.phone"></el-input>
-                    </el-form-item>
+                    <el-row :gutter="24">
+                        <el-col :span="14">
+                            <el-form-item label="邮箱" prop="email">
+                                <el-input v-model="updateForm.email"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="10">
+                            <el-form-item label="手机">
+                                <el-input v-model="updateForm.phone"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleIII = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisibleIII = false">确 定</el-button>
+                <el-button type="primary" @click="modifyUserInfo">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -287,9 +331,14 @@ export default {
                 {name:'墨吉对虾',value: 92,},
                 {name:'长毛对虾',value: 112,},],},
             ],
-
-
+            //用户信息
             userInfo:null,
+            //天气
+            weatherChartLoading:true,
+            weather:{},
+            wRefer:null,
+            icon:'',
+            weatherLoction:'',
         }
     },
     components:{
@@ -300,14 +349,24 @@ export default {
     },
     //生命周期函数
     beforeMount(){
-        this.userInfo =JSON.parse(localStorage.getItem('user')) 
-        console.log(this.userInfo)
+        this.userInfo =JSON.parse(localStorage.getItem('user'));
+        //数据处理
+        this.userInfo.shrimpNum =this.userInfo.shrimpNum + '尾'
+        this.userInfo.equipmentInvestment =this.userInfo.equipmentInvestment + '￥'
+        let time =  new Date(this.userInfo.loginTime)
+        this.userInfo.loginTime = time.toLocaleString().split(" ")[1];
+        this.userInfo.registerTime = this.userInfo.registerTime.split("T")[0]
     },
     mounted(){
         //让侧边栏功能固化hover的效果
         let node = document.querySelectorAll('.asd div')[6];
         node.style.color = '#fff';
         node.style.backgroundColor = '#303133';
+        //获取用户的地理位置
+        let l = this.userInfo.region.split('/');
+        this.weatherLoction =  [TextToCode[l[0]].code,TextToCode[l[0]][l[1]].code,TextToCode[l[0]][l[1]][l[2]].code]
+        //获取天气信息
+        this.getWeatherData(l[2])
     },
     beforeDestroy(){
         //让侧边栏功能'取消'固化hover的效果
@@ -321,6 +380,38 @@ export default {
         }
     },
     methods:{
+        // 获取天气信息
+        async getWeatherData(location){
+            //获取地理位置id
+            let [err,res] = await this.$awaitTo(this.$axios.get('https://geoapi.qweather.com/v2/city/lookup',{
+                params:{
+                    location :location,
+                    key :'1f4c41416a1a49d5aedf98c7601424c1',
+                }
+            }))
+            console.log(res)
+            if(res?.data.code ==="200"){
+                //24小时天气
+                let [error,result]= await this.$awaitTo(this.$axios.get('https://devapi.qweather.com/v7/weather/now',{
+                    params:{
+                        location :res.data.location[0].id,
+                        key :'1f4c41416a1a49d5aedf98c7601424c1',
+                    }
+                }))
+                if(result){
+                    console.log(result)
+                    this.weather = result.data.now;
+                    this.wRefer = result.data.refer.sources.join(' ');
+                    this.weather.obsTime = new Date(this.weather.obsTime).toLocaleString()
+                    this.icon = `qi-${this.weather.icon}`
+                }
+                if(error){this.$noticeInfo('error','出现错误！','',3000)}
+            }
+            if(err){
+                this.$noticeInfo('error','出现错误！','',3000)
+            }
+            this.weatherChartLoading = false
+        },
         // 打开摄像头
         async openCamera(){
             let video = this.$refs.video;
@@ -497,18 +588,47 @@ export default {
             aLink.click();
             aLink.remove();
         },
-        upDateUserInfo(){
+        //打开修改用户信息dialog
+        openDialogChangeInfo(){
             this.dialogVisibleIII = true;
-            this.updateForm =JSON.parse(localStorage.getItem('user')) 
-            console.log(this.updateForm)
+            this.updateForm =JSON.parse(localStorage.getItem('user'))
             let s = this.updateForm.region.split('/');
             this.updateForm.region =  [TextToCode[s[0]].code,TextToCode[s[0]][s[1]].code,TextToCode[s[0]][s[1]][s[2]].code]
-            console.log(this.updateForm)
         },
-        //省市区联动
-        handleChange () {
+        //修改用户信息
+        async modifyUserInfo(){
+            console.log(this.updateForm)
+            let newInfoForm = {};
+            newInfoForm.name = this.updateForm.name;
+            newInfoForm.age = this.updateForm.age;
+            newInfoForm.sex = this.updateForm.sex;
+            newInfoForm.age = this.updateForm.age;
+            newInfoForm.addres = this.updateForm.addres;
+            newInfoForm.email = this.updateForm.email;
+            newInfoForm.phone = this.updateForm.phone;
+            console.log(newInfoForm)
+            // let token = window.localStorage.getItem('token');
+            // let [err,res] = await this.$awaitTo(this.$axios.put(`${this.$baseUrl}/user/modify`,{
+            //         data:{
+            //             updateForm:this.updateForm
+            //         },
+            //     },{headers: {'Authorization': 'Bearer '+token,}}))
+            // console.log(err,res)
+        },
+        //省市区联动 ---修改用户信息
+        handleChange(){
             let s = this.userForm.region;
             this.selectedOptions = `${CodeToText[s[0]]}/${CodeToText[s[1]]}/${CodeToText[s[2]]}`
+        },
+        //省市区联动 ---获取地理位置天气
+        handleChanges(){
+            let s = this.weatherLoction;
+            let loction = CodeToText[s[2]]
+            if( loction=='市辖区'||loction =='城区'){
+                loction = CodeToText[s[1]]
+            }
+            this.weatherChartLoading = true;
+            this.getWeatherData(loction)
         },
     },
 }

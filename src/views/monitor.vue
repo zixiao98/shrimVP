@@ -258,47 +258,47 @@ export default {
         let node = document.querySelectorAll('.asd div')[5];
         node.style.color = '#fff';
         node.style.backgroundColor = '#303133';
-        
-        this.$axios.get('https://geoapi.qweather.com/v2/city/lookup',{
-            params:{
-                location :'海珠',
-                key :'1f4c41416a1a49d5aedf98c7601424c1',
-            }
-        }).then(res=>{
-            console.log(res.data.location[0].id)
-            this.$axios.get('https://devapi.qweather.com/v7/weather/now',{
-                params:{
-                    location :res.data.location[0].id,
-                    key :'1f4c41416a1a49d5aedf98c7601424c1',
-                }
-                }).then(res=>{
-                    console.log(res)
-                    this.weather = res.data.now;
-                    this.icon = `qi-${this.weather.icon}`
-                }).catch(err=>{
-                    console.log(err)
-                })
-            this.$axios.get('https://devapi.qweather.com/v7/weather/7d',{
-                    params:{
-                    location :res.data.location[0].id,
-                    key :'1f4c41416a1a49d5aedf98c7601424c1',
-                }
-                }).then(res=>{
-                    console.log(res)
-                    let daily = this.getWeather(res.data.daily);//日期
-                    let tempMax = this.getWeatherItem(res.data.daily,'tempMax');//最高温
-                    let tempMin = this.getWeatherItem(res.data.daily,'tempMin');//最低温
-                    let tempAverage =  this.getAverageTemp(tempMax,tempMin);//平均温
-                    let humidity = this.getWeatherItem(res.data.daily,'humidity')//获取相对湿度
-                    this.myEchart_TemperatureVcData = [daily,tempMax,tempMin,tempAverage,humidity];
-                    this.weather7d = this.getWeather7d(res.data.daily);
-                }).catch(err=>{
-                    console.log(err)
-                })
-        }).catch(err=>{
-            console.log(err)
-
-        })
+        //获取天气信息
+        this.getWeatherData('海珠区')
+        // this.$axios.get('https://geoapi.qweather.com/v2/city/lookup',{
+        //     params:{
+        //         location :'海珠',
+        //         key :'1f4c41416a1a49d5aedf98c7601424c1',
+        //     }
+        // }).then(res=>{
+        //     console.log(res.data.location[0].id)
+        //     this.$axios.get('https://devapi.qweather.com/v7/weather/now',{
+        //         params:{
+        //             location :res.data.location[0].id,
+        //             key :'1f4c41416a1a49d5aedf98c7601424c1',
+        //         }
+        //         }).then(res=>{
+        //             console.log(res)
+        //             this.weather = res.data.now;
+        //             this.icon = `qi-${this.weather.icon}`
+        //         }).catch(err=>{
+        //             console.log(err)
+        //         })
+        //     this.$axios.get('https://devapi.qweather.com/v7/weather/7d',{
+        //             params:{
+        //             location :res.data.location[0].id,
+        //             key :'1f4c41416a1a49d5aedf98c7601424c1',
+        //         }
+        //         }).then(res=>{
+        //             console.log(res)
+        //             let daily = this.getWeather(res.data.daily);//日期
+        //             let tempMax = this.getWeatherItem(res.data.daily,'tempMax');//最高温
+        //             let tempMin = this.getWeatherItem(res.data.daily,'tempMin');//最低温
+        //             let tempAverage =  this.getAverageTemp(tempMax,tempMin);//平均温
+        //             let humidity = this.getWeatherItem(res.data.daily,'humidity')//获取相对湿度
+        //             this.myEchart_TemperatureVcData = [daily,tempMax,tempMin,tempAverage,humidity];
+        //             this.weather7d = this.getWeather7d(res.data.daily);
+        //         }).catch(err=>{
+        //             console.log(err)
+        //         })
+        // }).catch(err=>{
+        //     console.log(err)
+        // })
     },
     beforeDestroy(){
         //让侧边栏功能'取消'固化hover的效果
@@ -312,6 +312,51 @@ export default {
         }
     },
     methods:{
+        // 获取天气信息
+        async getWeatherData(location){
+            //获取地理位置id
+            let [err,res] = await this.$awaitTo(this.$axios.get('https://geoapi.qweather.com/v2/city/lookup',{
+                params:{
+                    location :location,
+                    key :'1f4c41416a1a49d5aedf98c7601424c1',
+                }
+            }))
+            console.log(res)
+            if(res?.data.code ==="200"){
+                //24小时天气
+                let [error,result]= await this.$awaitTo(this.$axios.get('https://devapi.qweather.com/v7/weather/now',{
+                    params:{
+                        location :res.data.location[0].id,
+                        key :'1f4c41416a1a49d5aedf98c7601424c1',
+                    }
+                }))
+                if(result){
+                    this.weather = result.data.now;
+                    this.icon = `qi-${this.weather.icon}`
+                }
+                if(error){this.$noticeInfo('error','出现错误！','',3000)}
+                //7天天气
+                let [errors,results]= await this.$awaitTo(this.$axios.get('https://devapi.qweather.com/v7/weather/7d',{
+                    params:{
+                        location :res.data.location[0].id,
+                        key :'1f4c41416a1a49d5aedf98c7601424c1',
+                    }
+                }))
+                if(results){
+                    let daily = this.getWeather(results.data.daily);//日期
+                    let tempMax = this.getWeatherItem(results.data.daily,'tempMax');//最高温
+                    let tempMin = this.getWeatherItem(results.data.daily,'tempMin');//最低温
+                    let tempAverage =  this.getAverageTemp(tempMax,tempMin);//平均温
+                    let humidity = this.getWeatherItem(results.data.daily,'humidity')//获取相对湿度
+                    this.myEchart_TemperatureVcData = [daily,tempMax,tempMin,tempAverage,humidity];
+                    this.weather7d = this.getWeather7d(results.data.daily);
+                }
+                if(errors){this.$noticeInfo('error','出现错误！','',3000)}
+            }
+            if(err){
+                this.$noticeInfo('error','出现错误！','',3000)
+            }
+        },
         // 打开摄像头
         async openCamera(){
             let video = this.$refs.video;

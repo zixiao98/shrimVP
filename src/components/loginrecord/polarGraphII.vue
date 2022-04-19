@@ -1,6 +1,6 @@
 <template>
   <div class="lzj-container">
-      <div class="lzj-chart" ref='myPolarGraph'></div>
+      <div class="lzj-chart" ref='myPolarGraph' v-loading="Loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"  element-loading-background="rgba(20,20,20,.4)"></div>
   </div>
 </template>
 
@@ -8,6 +8,7 @@
 export default {
     data(){
         return {
+            Loading:true,
             colors: [
                 "#67C23A",//80%以上
                 "#99CC66",//60%~79%
@@ -107,8 +108,7 @@ export default {
                     }
                 }]
             };
-            this.myChartsInstance.setOption(option)
-
+            this.myChartsInstance.setOption(option) 
         },
         // 获取数据
         async getData(){

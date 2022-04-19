@@ -204,9 +204,9 @@ export default {
     },
     //生命周期函数
     mounted(){
-        //获取用户
-        // this.name= window.localStorage.getItem('user');
-        console.log()
+        //获取用户名称
+        let {name,accNumber} =JSON.parse(window.localStorage.getItem('user'));   
+        this.name= name+accNumber
         //让时间第一时间显示出来
         this.time = (new Date()).toLocaleString();
         this.timer =setInterval(() => {

@@ -199,7 +199,7 @@ export default {
                     }
                 }))
                 console.log(res,err)
-                if(res.status ===201){ 
+                if(res?.status ===201){ 
                     this.$message({
                         type: 'success',
                         message:'注册成功,两秒后跳转至 登录 页面',
@@ -208,51 +208,14 @@ export default {
                     setTimeout(() => {this.backLogin();}, 2000);
                 }
                 if(err){
+                    console.log(err.response)
                     this.refreshVcode();//刷新验证吗
                     this.userForm.vCode='';//将输入框置空
-                    if(err.response.status ===401){this.$notice('error',err,3000,false);return;}
-                    this.$notice('warning',err,3000,false)
+                    if(err.response.status ===400){
+                        this.$noticeInfo('warning',400,err.response.data.errors[0].msg,3000);return;
+                    }
+                    this.$notice('error',err,3000,false)
                 }
-                // this.$axios.post(`${this.$baseUrl}/register`,{
-                //     data:{
-                //         name:this.userForm.name,
-                //         accNumber:this.userForm.accNumber,
-                //         password:this.userForm.password
-                //     }
-                // }).then(res=>{
-                //     if(res.status ===201){ //
-                //         this.$message({
-                //             type: 'success',
-                //             message:'注册成功,三秒后跳转至 登录 页面',
-                //             duration:2800
-                //         })
-                //         setTimeout(() => {
-                //             this.backLogin();
-                //         }, 1000);
-                //     }
-                // }).catch(err => {
-                //     console.log(err)
-                //     console.log(this.userForm)
-                //     //刷新验证吗
-                //     this.refreshVcode();
-                //     //将输入框置空
-                //     this.userForm.vCode='';
-                //     if(err.response.status ===401){
-                //         this.$notify({
-                //             type: 'error',
-                //             title: `状态码：${err.response.status}`,
-                //             message: `${err.response.data.tips}`,
-                //             duration:1500
-                //         });
-                //     }else{
-                //         this.$notify({
-                //             type: 'warning',
-                //             title: `状态码：${err.response.status}`,
-                //             message: `${err.response.data.errors[0].msg}`,
-                //             duration:1500
-                //         });
-                //     }
-                // })
             });
         },
         backLogin(){//返回登录页面
