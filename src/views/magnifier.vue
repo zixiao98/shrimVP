@@ -8,7 +8,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
-                        <img src="../assets/img/1.jpg" alt="" ref="smallImg">
+                        <img :src="pic" alt="" ref="smallImg">
                         <div class="magnifier" ref="magnifier"></div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                 <span class="three"></span>
                 <span class="four"></span>
                 <div class="bgDiv">
-                    <img src="../assets/img/1.jpg" alt="" ref="bigImg">
+                    <img :src="pic" alt="" ref="bigImg">
                 </div>
             </div>
         </div>
@@ -104,16 +104,13 @@ import RadarII from '@/components/magnifier/radarII.vue';
 export default {
     data(){
         return {
+            imgI: "require(@/assets/img/01.jpeg)",
             x:null,
             y:null,
+            pic:'',
             commandIndex:0,
             // 数据
-            shrimpData:{
-                name:'中国对虾',
-                engName:'fenneropenaeus chinensis',
-                otherName:'大虾、对虾、肉虾、黄虾(雄)、青虾(雌虾)、明虾',
-                textString:'主要分布于我国黄渤海和朝鲜西部沿海。我国的辽宁、河北、山东省及天津市沿海是对虾的重要产地。捕捞季节过去每年有春、秋两季，4～6月份为春汛；8～10月份为秋汛。10月中下旬为旺汛期。目前在我国沿海北自辽宁丹东市，南至海南沿海均开展了中国对虾养殖生产，养殖年产量约20万吨，大大超过自然海域的捕捞量。对虾肉质鲜嫩味美，营养丰富。每百克虾肉含蛋白质20.6克，脂肪0.7克，并含有多种维生素及人体必须的微量元素，系高蛋白营养水产品。鲜食可烹调红焖大虾、煎明虾、溜虾段、琵琶大虾、炒虾仁等。加工干制成虾干、虾米等为上乘的海味品',
-            },
+            shrimpData:{},
             textArr:[],
             arr:[
                 {
@@ -148,7 +145,8 @@ export default {
                                 }
                             }
                         }
-                    }
+                    },
+                    pic:'http://lzjcs.oss-cn-guangzhou.aliyuncs.com/lzj/2022-04-22/96f4dd47-f8ee-48a7-9dce-b4a87fa7ab18-1.jpeg'
                 },
                 {
                     name:'斑节对虾',
@@ -182,7 +180,8 @@ export default {
                                 }
                             }
                         }
-                    }
+                    },
+                     pic:'http://lzjcs.oss-cn-guangzhou.aliyuncs.com/lzj/2022-04-22/122e68e6-8825-418a-99f2-56436b94ddab-1.jpeg'
                 },
                 {
                     name:'日本对虾',
@@ -216,7 +215,8 @@ export default {
                                 }
                             }
                         }
-                    }
+                    },
+                     pic:'http://lzjcs.oss-cn-guangzhou.aliyuncs.com/lzj/2022-04-22/0daa68ec-e267-4946-a761-f94459ecab82-1.jpeg'
                 },
                 {
                     name:'墨吉对虾',
@@ -250,7 +250,8 @@ export default {
                                 }
                             }
                         }
-                    }
+                    },
+                     pic:'http://lzjcs.oss-cn-guangzhou.aliyuncs.com/lzj/2022-04-22/b4f35d23-350d-4487-9e73-ca4c3ccae5c1-1.jpeg'
                 },
                 {
                     name:'长毛对虾',
@@ -284,7 +285,8 @@ export default {
                                 }
                             }
                         }
-                    }
+                    },
+                     pic:'http://lzjcs.oss-cn-guangzhou.aliyuncs.com/lzj/2022-04-22/291756ce-66e7-4657-ba8d-3a69fc93008c-1.jpg'
                 },
             ],
 
@@ -332,6 +334,7 @@ export default {
     mounted(){
         // 更新对虾介绍
             this.shrimpData = this.arr[0];
+            this.pic = this.shrimpData.pic;
             this.textArr = this.shrimpData.textString.split('。')
         // 更新echart图表信息
             console.log(this.$refs)
@@ -378,6 +381,7 @@ export default {
             this.commandIndex = c-1;
             // 更新对虾介绍
             this.shrimpData = await this.arr[c-1];
+            this.pic = this.shrimpData.pic;
             this.textArr = this.shrimpData.textString.split('。')
             // 更新echart图表信息
             this.$refs.barII.updateChart(this.shrimpData.data)

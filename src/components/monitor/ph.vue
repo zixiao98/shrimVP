@@ -11,8 +11,7 @@ export default {
             
         }
     },
-    mounted()
-    {
+    mounted(){
         this.intChart()
         window.addEventListener('resize',this.adaptChart)
     },
@@ -182,10 +181,15 @@ export default {
             this.myChartsInstance.setOption(option)
             this.myChartsInstance.resize()//echarts实例图表自适应方法
         },
+        //销毁实例
+        disposeChart(){
+            this.myChartsInstance.dispose();
+        },
     },
     beforeDestroy(){
         // 解绑事件
         window.addEventListener('resize',this.adaptChart)
+        this.disposeChart();
     }
 }
 </script>

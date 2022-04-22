@@ -6,13 +6,26 @@
 
 <script>
 export default {
+    props:["pondId","weatherTemp"],
     data(){
         return {
-            
+            timer:null,//定时器id
         }
     },
-    mounted()
-    {
+    watch:{
+        "weatherTemp":function(newVal,oldVal){
+            console.log(newVal,oldVal)
+            if(newVal){
+                console.log(true,this.weatherTemp)
+                this.updateChart({data:(Number(this.weatherTemp) +  Math.random()).toFixed(2),subtext:'更新频率：5秒/次'})
+                this.dyncData(this.weatherTemp)
+            }else{
+                this.updateChart({data:0,subtext:'未连接'})
+            }
+        }
+    },
+    mounted(){
+        console.log(this.pondId,this.weatherTemp)
         this.intChart()
         window.addEventListener('resize',this.adaptChart)
     },
@@ -33,7 +46,7 @@ export default {
             // 注册主题
             this.$echarts.registerTheme('customed',theme.data)
             this.myChartsInstance =  this.$echarts.init(this.$refs.myTemperature,'customed');
-            var gauge_value = 15.6; //能力值取代码置于值于此处
+            var gauge_value = 0; //能力值取代码置于值于此处
             let color = [ [0.3, '#5470c6'],[0.7, '#5dc3ea'],[1, '#ee6666']];
             let changeColor = this.getColor(gauge_value,color);
             let option = {
@@ -41,20 +54,20 @@ export default {
                     {
                         show: true,
                         x: "center",
-                        y: "90%",
-                        text: '更新时间：一分钟前',
-                            fontSize: 14,
-                            fontWeight: 'bolder',
-                            color: changeColor
+                        y: "85%",
+                        subtext:'未连接',
+                        subtextStyle:{
+                            fontSize:16,
+                            color: "#ddd",
+                        }
                     },
                     {
                         show: true,
                         left: 10,
                         top: 10,
                         text: '虾塘水温',
-                            // fontSize: 24,
-                            fontWeight: 'bolder',
-                            color: changeColor
+                        fontWeight: 'bolder',
+                        color: changeColor
                     }
                 ],
                 tooltip: {
@@ -123,7 +136,7 @@ export default {
                         color: changeColor
 
                     },
-                   title: {
+                    title: {
                         fontSize: 30,
                         fontWeight: 'bolder',
                         fontStyle: 'normal',
@@ -147,17 +160,14 @@ export default {
         // 更新数据
         updateChart(data){
             let option ={
-                xAxis: {
-                    data: data.barII.xAxis.data,
-                },
-                series: [
-                    {
-                        data:data.barII.series.data,
-                    },
-                    
-                ]
+                title:[{subtext: data.subtext}],
+                series: [{ data: [{ value: data.data}]}]
             }
             this.myChartsInstance.setOption(option)
+        },
+         //销毁实例
+        disposeChart(){
+            this.myChartsInstance.dispose();
         },
         // 图表自适应
         adaptChart(){
@@ -171,10 +181,25 @@ export default {
             this.myChartsInstance.setOption(option)
             this.myChartsInstance.resize()//echarts实例图表自适应方法
         },
+        //动态数据
+        dyncData(temp){
+            if(this.timer){
+                clearInterval(this.timer)
+            }
+            //清除定时器
+            let self = this;
+            this.timer = setInterval(()=>{
+                let temps = (Number(temp) +  Math.random()).toFixed(2);
+                self.updateChart({data:temps,subtext:'更新频率：5秒/次'})
+            },5000)
+            
+        }
     },
     beforeDestroy(){
         // 解绑事件
         window.addEventListener('resize',this.adaptChart)
+        this.disposeChart();
+        clearInterval(this.timer)//清除定时器
     }
 }
 </script>

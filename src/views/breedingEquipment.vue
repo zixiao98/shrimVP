@@ -58,27 +58,71 @@
         <el-dialog
             title="添加设备"
             :visible.sync="dialogVisible"
-            width="50%"
+            width="1000px"
             >
             <div class="dialogDiv">
                 <el-form :model="addForm" ref="addForm" label-width="150px">
-                    <el-form-item label="设备名称">
-                        <el-input v-model="addForm.bEName"></el-input>
+                    <el-form-item label="创建者id:">
+                        {{addForm.createById}}
                     </el-form-item>
-                    <el-form-item label="设备类型">
-                        <el-input v-model="addForm.bEType"></el-input>
-                    </el-form-item>
-                    <el-form-item label="设备金额">
-                        <el-input v-model="addForm.bEPrice"></el-input>
-                    </el-form-item>
-                    <el-form-item label="购买设备人员">
-                        <el-input v-model="addForm.bEBuyBy"></el-input>
-                    </el-form-item>
-                    <el-form-item label="所属基地">
-                        <el-input v-model="addForm.bEforBaseName"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <!-- <el-button @click="resetForm('addForm')">重置</el-button> -->
+                    <el-row>
+                        <el-col :span="14">
+                            <el-form-item label="设备名称">
+                                <el-input v-model="addForm.bEName"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="10">
+                            <el-form-item label="所属基地" prop="baseById">
+                                <!-- <el-input v-model="addForm.pondforBaseName"></el-input> -->
+                                <el-select v-model="addForm.baseById">
+                                    <el-option v-for="item in baseIdAndNameArr" :key="item._id" :label="item.baseName" :value="item._id"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="设备类型">
+                                <el-input v-model="addForm.bEType"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="购买金额">
+                                <el-input v-model="addForm.bEPrice">
+                                    <template slot="append">人民币￥</template>
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <el-form-item label="购买人员">
+                                <el-input v-model="addForm.bEBuyBy"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="设备状态">
+                                <el-input v-model="addForm.bEBuyBy"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="修理次数">
+                                <el-input v-model="addForm.bEBuyBy"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                     
+                    <el-form-item label="设备图片">
+                       <el-upload
+                            class="avatar-uploader"
+                            action="http://121.196.247.161:8885/user/upload/"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <!-- {{imageUrl}} -->
                     </el-form-item>
                 </el-form>
             </div>
@@ -135,43 +179,25 @@
 export default {
     data(){
         return {
+            imageUrl: '',//图片预览
+
+            singlePage:true,
+            curPg:1,//当前页数
             pss:[10],//分页尺寸数组
             ps:10,//当前分页尺寸
+            count:0,//数据条数
+            flag:false,//是否处于查询状态的标志
+            updateIndex:0,//修改信息的表格index
+
             dialogVisible:false,//添加信息对话框
             dialogVisibleII:false,//修改信息对话框
             optionValue:[
-                {
-                    name:'添加时间',
-                    value:'createDate',
-                },
-                {
-                    name:'设备名称',
-                    value:'bEName',
-                },
-                {
-                    name:'设备类型',
-                    value:'bEType',
-                },
-                {
-                    name:'设备状态',
-                    value:'bEStatus',
-                },
-                {
-                    name:'修理次数',
-                    value:'bERepairTimes',
-                },
-                {
-                    name:'设备金额',
-                    value:'bEPrice',
-                },
-                {
-                    name:'购买设备人员',
-                    value:'bEBuyBy',
-                },
-                {
-                    name:'所属基地',
-                    value:'bEforBaseName',
-                }
+                {name:'设备名称',value:'eqName'},
+                {name:'设备类型',value:'eqType'},
+                {name:'设备状态',value:'eqStatus'},
+                {name:'修理次数',value:'eqFixedTime'},
+                {name:'设备金额',value:'eqPayfor'},
+                {name:'购买设备人员',value:'eqBuyBy'},
             ],//查询条件数组
             select:'',//选中的查询条件
             searchInput:'',//搜索关键词
@@ -250,6 +276,7 @@ export default {
                 },
                 
             ],//表格展示数据
+            //添加信息数据
             addForm: {
                 id:'',//设备id
                 createDate:'',//添加时间
@@ -261,20 +288,13 @@ export default {
                 bERepairTimes:0,//设备修理次数
                 bEforBaseId:0,//设备所属基地id
                 bEforBaseName:'',//设备所属基地名称
-            },//添加信息数据
-            updateForm:{
-                id:'',//设备id
-                createDate:'',//添加时间
-                bEName:'',//设备名称
-                bEType:1,//设备类型
-                bEPrice:0,//设备金额
-                bEBuyBy:'',//购买设备人员
-                bEStatus:0,//设备状态
-                bERepairTimes:0,//设备修理次数
-                bEforBaseId:0,//设备所属基地id
-                bEforBaseName:'',//设备所属基地名称
-            },//修改信息数据
-            //设备状态
+            },
+            //修改信息数据
+            updateForm:{},
+            //基地列表
+            baseIdAndNameArr:[],
+            
+            //设备状态的tag
             bEStatusTag:[
                 {
                     type:'success',
@@ -305,8 +325,8 @@ export default {
         let node = document.querySelectorAll('.asd div')[3];
         node.style.color = '#fff';
         node.style.backgroundColor = '#303133';
-        //获取user
-        // this.userName = window.localStorage.getItem('userName');
+        //获取基地列表
+        this.getBaseIdAndName()
     },
     beforeDestroy(){
         //让侧边栏功能'取消'固化hover的效果
@@ -321,6 +341,64 @@ export default {
         
     },
     methods:{
+        //获取基地列表
+        async getBaseIdAndName(){
+            let token = window.localStorage.getItem('token');
+            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/breedingBase/baseIdAndName`,{
+                headers: {'Authorization': 'Bearer '+token,}
+            }))
+            console.log(res,err)
+            if(res?.status ===200){ 
+                this.$noticeInfo('success',res?.status,res.data.tips,3000)
+                // this.tableData[this.updateIndex] = res.data.data;//xxxxxx!!!!
+                this.baseIdAndNameArr = res.data.data;
+            }
+            if(err){this.$noticeInfo('error','失败','获取基地列表失败！！',3000)}
+        },
+        //添加设备信息的图片上传
+        handleAvatarSuccess(res, file) {
+            console.log(res,file)
+            if(res?.code == 200){
+                this.$message.success(res?.message);
+                this.imageUrl =  res?.url[0];
+                return;
+            }
+            this.$message.error('上传图片失败!');
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPG) {
+            this.$message.error('上传头像图片只能是 JPG 格式!');
+            }
+            if (!isLt2M) {
+            this.$message.error('上传头像图片大小不能超过 2MB!');
+            }
+            return isJPG && isLt2M;
+        },
+        //修改设备信息的图片上传
+        handleAvatarSuccessII(res, file) {
+            console.log(res,file)
+            if(res?.code == 200){
+                this.$message.success(res?.message);
+                this.updateForm.eqPic =  res?.url[0];
+                return;
+            }
+            this.$message.error('上传图片失败!');
+        },
+        beforeAvatarUploadII(file) {
+            const isJPG = file.type === 'image/jpeg';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPG) {
+            this.$message.error('上传头像图片只能是 JPG 格式!');
+            }
+            if (!isLt2M) {
+            this.$message.error('上传头像图片大小不能超过 2MB!');
+            }
+            return isJPG && isLt2M;
+        },
         SelectClick(c){
             console.log(c)
         },
@@ -463,4 +541,5 @@ export default {
 
 <style lang="scss" scoped>
     @import '@/scss/tabelPage.scss';
+    @import '@/scss/upImg.scss';
 </style>

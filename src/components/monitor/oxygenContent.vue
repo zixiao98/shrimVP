@@ -1,13 +1,5 @@
 <template>
     <div class="lzj-container">
-        <!-- <div class="switch">
-            <el-dropdown trigger="click" @command='this.dropdownClick' >
-                <p>其他对虾<i class="el-icon-arrow-down el-icon--right"></i></p>
-                <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item v-for="(item,index) in this.circleDate" :key="index" :command='index' >{{item.name}}</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
-        </div> -->
         <div class="lzj-chart" ref='myCircle'></div>
     </div>
 </template>
@@ -15,8 +7,10 @@
 <script>
 import 'echarts-liquidfill'
 export default {
+    props:["pondId","weatherTemp"],
     data(){
         return {
+            timer:null,//定时器id
             newDate:0.67,
             color: [
                 "#67C23A",//80%以上
@@ -27,16 +21,26 @@ export default {
             ],
         }
     },
-    props:["circleDate"],
-    mounted()
-    {
+    watch:{
+        "weatherTemp":function(newVal,oldVal){
+            console.log(newVal,oldVal)
+            if(newVal){
+                let num =  Number(this.weatherTemp)*3/100 + Math.random()/10/3.5
+                this.updateChart(num,'更新频率：10秒/次')
+                this.dyncData(this.weatherTemp)
+            }else{
+                this.updateChart(0,'未连接')
+            }
+        }
+    },
+    mounted(){
         this.intChart()
         window.addEventListener('resize',this.adaptChart)
     },
     methods:{
         // 下拉菜单回调函数
         async dropdownClick(){
-            let {name,data} =await this.circleDate[0];
+            let {name,data} ={name:'中国对虾',data:0.68};
             let color = this.getColor(data)
             this.updateChart(name,data,color)
         },
@@ -62,6 +66,15 @@ export default {
             this.myChartsInstance =  this.$echarts.init(this.$refs.myCircle,'customed');
             let option = {
                 title: [
+                    {
+                        show: true,
+                        x: "center",
+                        subtext:'未连接',
+                        subtextStyle:{
+                            fontSize:16,
+                            color: "#ddd",
+                        }
+                    },
                      {
                         text: '含氧量',
                         x: 'center',
@@ -86,8 +99,8 @@ export default {
                         animationDurationUpdate: 800,
                         radius: '70%',
                         center: ['50%', '45%'],
-                        color: [this.getColor(this.circleDate[0].data)],
-                        data: [this.circleDate[0].data],//data个数代表波浪数
+                        color: [this.getColor(0)],
+                        data: [0],//data个数代表波浪数
                        
                         backgroundStyle: {
                             borderWidth: 0,
@@ -103,7 +116,7 @@ export default {
                             borderDistance: 10,
                             itemStyle: {
                                 borderWidth: 3,
-                                borderColor: this.getColor(this.circleDate[0].data),
+                                borderColor: this.getColor(0),
                             },
                         },
                        
@@ -117,24 +130,18 @@ export default {
 
         },
         // 更新数据
-        updateChart(text,data,color){
-            let option ={
-                title: [
-                    {
-                        text:text,
-                    },
-                ],
-                series: [
-                    {
-                        color: [color],
-                        data:[data],
-                        outline: {
-                            itemStyle: {
-                                borderColor:color,
-                            },
+        updateChart(data,subtext){
+             let option ={
+                title:[{subtext: subtext}],
+                series: [{ 
+                    color: [this.getColor(data)],
+                    data: [data],
+                    outline: {
+                        itemStyle: {
+                            borderColor: this.getColor(data),
                         },
                     },
-                ]
+                }]
             }
             this.myChartsInstance.setOption(option)
         },
@@ -150,10 +157,29 @@ export default {
             this.myChartsInstance.setOption(option)
             this.myChartsInstance.resize()//echarts实例图表自适应方法
         },
+        //销毁实例
+        disposeChart(){
+            this.myChartsInstance.dispose();
+        },
+        //动态数据
+        dyncData(temp){
+            if(this.timer){
+                clearInterval(this.timer)
+            }
+            //清除定时器
+            let self = this;
+            this.timer = setInterval(()=>{
+                let num =  Number(temp)*3/100 + Math.random()/10/3.5
+                self.updateChart(num,'更新频率：10秒/次')
+            },10000)
+            
+        }
     },
     beforeDestroy(){
         // 解绑事件
         window.addEventListener('resize',this.adaptChart)
+        this.disposeChart();
+        clearInterval(this.timer)//清除定时器
     }
 }
 </script>

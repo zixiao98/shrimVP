@@ -68,6 +68,12 @@
                                     }
                                 }
                             }
+                            .tipsInfo{
+                                display: inline-block;
+                                font-size: 14px;
+                                color: #fff;
+                                // width: 100px;
+                            }
                         }
                         // 以下修改elementui的table默认样式
                         /deep/ .el-table, .el-table__expanded-cell {
@@ -78,7 +84,7 @@
                             background-color: transparent;
                             border: none;
                         }
-                        /deep/.el-table td.el-table__cell, .el-table th.el-table__cell.is-leaf{
+                        /deep/.el-table td.el-table__cell, .el-table th.el-table__cell.is-leaf{//处理横线
                             border-bottom: 1px solid #ccc;
                         }
                         /deep/.el-table .el-table__cell{
@@ -131,7 +137,6 @@
                             cursor: pointer;
                             border-radius: 10%;
                         }
-                        
                         /deep/.el-pagination__total,/deep/.el-pagination__jump{
                             color: #ccc;
                         }

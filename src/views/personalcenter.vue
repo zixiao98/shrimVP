@@ -55,7 +55,7 @@
                                          <i class="el-icon-s-tools elIcon" @click="openDialogChangeInfo">修改</i>
                                         <div class="topLeft">
                                             <div class="img">
-                                                <img src="@/assets/img/logo.png" alt="个人中心的头像" ref="myPhoto">
+                                                <img :src="userPic" alt="个人中心的头像" ref="myPhoto">
                                             </div>
                                             <div class="btn">
                                                 <button class="photo" @click="dialogVisible = true">拍照</button>
@@ -137,7 +137,7 @@
         <el-dialog
             title="进行拍照操作"
             :visible.sync="dialogVisible"
-            width="50%"
+            width="600px"
             @close = 'closeDialog'
             >
             <div id="top">
@@ -163,7 +163,7 @@
         <el-dialog
             title="进行上传操作"
             :visible.sync="dialogVisibleII"
-            width="30%"
+            width="500px"
              @close = 'closeUPimgDialog'
             >
             <div id="top">
@@ -234,7 +234,7 @@
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleIII = false">取 消</el-button>
-                <el-button type="primary" @click="modifyUserInfo">确 定</el-button>
+                <el-button type="primary" @click="modifyUserInfo('updateForm')">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -249,6 +249,7 @@ import { regionData,CodeToText,TextToCode } from 'element-china-area-data';
 export default {
     data(){
         return {
+            userPic:'123',//用户头像
             dialogVisible:false,//拍照对话框
             photoFlag:false,//是否有拍摄好的拍照的标志
             imgFlag:false,//是否有上传好的图片的标志
@@ -258,7 +259,10 @@ export default {
             imgSrc:'#',//图片url
             imgType:["image/png","image/jpeg"],//图片类型接收范围
             dialogVisibleIII:false,//修改用户资料对话框
-            updateForm:{},
+            picture:'',
+            updateForm:{
+                region:[],
+            },
             rules: {//传入el-form ，表单验证规则
                 name: [
                     { required: true, message: '请输入你的名称', trigger: ['blur','change'] },
@@ -332,7 +336,7 @@ export default {
                 {name:'长毛对虾',value: 112,},],},
             ],
             //用户信息
-            userInfo:null,
+            userInfo:{},
             //天气
             weatherChartLoading:true,
             weather:{},
@@ -349,24 +353,14 @@ export default {
     },
     //生命周期函数
     beforeMount(){
-        this.userInfo =JSON.parse(localStorage.getItem('user'));
-        //数据处理
-        this.userInfo.shrimpNum =this.userInfo.shrimpNum + '尾'
-        this.userInfo.equipmentInvestment =this.userInfo.equipmentInvestment + '￥'
-        let time =  new Date(this.userInfo.loginTime)
-        this.userInfo.loginTime = time.toLocaleString().split(" ")[1];
-        this.userInfo.registerTime = this.userInfo.registerTime.split("T")[0]
+    //初始化用户信息，天气
+    this.getUserInfo()
     },
     mounted(){
         //让侧边栏功能固化hover的效果
         let node = document.querySelectorAll('.asd div')[6];
         node.style.color = '#fff';
         node.style.backgroundColor = '#303133';
-        //获取用户的地理位置
-        let l = this.userInfo.region.split('/');
-        this.weatherLoction =  [TextToCode[l[0]].code,TextToCode[l[0]][l[1]].code,TextToCode[l[0]][l[1]][l[2]].code]
-        //获取天气信息
-        this.getWeatherData(l[2])
     },
     beforeDestroy(){
         //让侧边栏功能'取消'固化hover的效果
@@ -380,7 +374,48 @@ export default {
         }
     },
     methods:{
-        // 获取天气信息
+        //获取用户信息
+        async getUserInfo(){
+            let token = window.localStorage.getItem('token');
+            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/user/userInfo`,{
+                    headers: {'Authorization': 'Bearer '+token,}
+            }))
+            if(res?.status === 200){
+                this.$noticeInfo('success',res?.status,res?.data.tips,3000)
+                //保存数据
+                localStorage.setItem('user',JSON.stringify(res.data.user))
+                //更新数据
+                let user=  localStorage.getItem('user');
+                await this.dealInitUserData(user)//user
+                await this.getWeatherLocaltion()//weather
+            }
+            if(err){
+                    this.$noticeInfo('error','出现错误！','',3000)
+            }
+        },
+        //数据初始化处理
+        dealInitUserData(data){
+            this.userInfo =JSON.parse(data);
+            //数据处理
+            this.userInfo.shrimpNum =this.userInfo.shrimpNum + '尾'
+            this.userInfo.equipmentInvestment =this.userInfo.equipmentInvestment + '￥'
+            let time =  new Date(this.userInfo.loginTime)
+            this.userInfo.loginTime = time.toLocaleString().split(" ")[1];
+            this.userInfo.registerTime = this.userInfo.registerTime.split("T")[0];
+            this.userPic = this.userInfo.pic
+        },
+        //获取地理位置
+        getWeatherLocaltion(){
+            let l = this.userInfo.region.split('/');
+            this.weatherLoction =  [TextToCode[l[0]].code,TextToCode[l[0]][l[1]].code,TextToCode[l[0]][l[1]][l[2]].code]
+            let s = this.weatherLoction;
+            let loction = CodeToText[s[2]]
+            if( loction=='市辖区'||loction =='城区'){loction = CodeToText[s[1]]}
+            if( loction=='市辖区'||loction =='城区'){loction = CodeToText[s[0]]}
+            this.weatherChartLoading = true;
+            this.getWeatherData(loction)
+        },
+        //获取天气信息 -location(Text)
         async getWeatherData(location){
             //获取地理位置id
             let [err,res] = await this.$awaitTo(this.$axios.get('https://geoapi.qweather.com/v2/city/lookup',{
@@ -404,13 +439,14 @@ export default {
                     this.wRefer = result.data.refer.sources.join(' ');
                     this.weather.obsTime = new Date(this.weather.obsTime).toLocaleString()
                     this.icon = `qi-${this.weather.icon}`
+                    this.weatherChartLoading = false
                 }
                 if(error){this.$noticeInfo('error','出现错误！','',3000)}
             }
             if(err){
                 this.$noticeInfo('error','出现错误！','',3000)
             }
-            this.weatherChartLoading = false
+            
         },
         // 打开摄像头
         async openCamera(){
@@ -483,22 +519,26 @@ export default {
             }
             this.dialogVisible = false;  
         },
-        // 使用拍摄好的照片
+        //使用拍摄好的照片
         putPhoto(){
             this.dialogVisible = false;
             if(!this.photoFlag){return false}
             window.localStorage.setItem('personnalPhoto',this.$refs.photo.getAttribute('src'))
-            this.$refs.myPhoto.src = window.localStorage.getItem('personnalPhoto')
+            // this.$refs.myPhoto.src = window.localStorage.getItem('personnalPhoto')
+            this.userPic = window.localStorage.getItem('personnalPhoto')
             this.photoFlag = false;
+            this.picture = window.localStorage.getItem('personnalPhoto');
+            //更新头像
+            this.updateUserImg()
         },
-        // 关闭视频流
+        //关闭视频流
         closeCamera(){
              if(this.$refs.video.srcObject){
                 this.$refs.video.srcObject.getTracks()[0].stop();
                 this.$refs.video.srcObject=null;
              }
         },
-        // 清空图片-将拍摄好的图片清空
+        //清空图片-将拍摄好的图片清空
         clearPhoto(){
             let ctx = this.$refs.canvas.getContext('2d')
             let styleObj = window.getComputedStyle ? getComputedStyle(this.$refs.canvas,null) : this.$refs.canvas.currentStyle;
@@ -509,7 +549,7 @@ export default {
             const data = this.$refs.canvas.toDataURL('image/png');
             this.$refs.photo.setAttribute('src', data);
         },
-        // 关闭对话框--拍照
+        //关闭对话框--拍照
         closeDialog(){
             this.closeCamera()
             this.clearPhoto()
@@ -528,8 +568,12 @@ export default {
             this.dialogVisibleII = false;
             if(!this.imgFlag){return false}
             window.localStorage.setItem('personnalPhoto',this.imgSrc)
-            this.$refs.myPhoto.src = window.localStorage.getItem('personnalPhoto')
+            // this.$refs.myPhoto.src = window.localStorage.getItem('personnalPhoto')
+            this.userPic = window.localStorage.getItem('personnalPhoto')
             this.imgFlag = false;
+            this.picture = window.localStorage.getItem('personnalPhoto');
+            //更新头像
+            this.updateUserImg()
         },
         //input-file变化
         inputChange(){
@@ -558,10 +602,10 @@ export default {
             if(files){
                 //判断选中的文件类型是不是在范围中
                 if(this.imgType.includes(files.type)){
-                    //判断文件大小是不是超过1m
-                    if(files.size>1024*1024){
+                    //判断文件大小是不是超过100kb
+                    if(files.size>1024*1024/10-1000){
                         this.$message({
-                            message:"请选择大小 1m 以下的图片",
+                            message:"请选择大小 90kb 以下的图片",
                             type:'warning',
                             duration:"3000"
                         })
@@ -588,16 +632,85 @@ export default {
             aLink.click();
             aLink.remove();
         },
+        //上传头像
+        async updateUserImg(){
+            console.log(this.picture)
+            let token = window.localStorage.getItem('token');
+            let [err,res] = await this.$awaitTo(this.$axios.put(`${this.$baseUrl}/user/modifyPic`,{
+                    data:{
+                        pic:this.picture
+                    },
+                },{headers: {'Authorization': 'Bearer '+token,}}))
+            if(res?.status === 200){
+                this.$noticeInfo('success',res?.status,res?.data.tips,3000)
+                //保存数据
+                localStorage.setItem('user',JSON.stringify(res.data.user))
+            }
+            if(err){
+                this.$nextTick(()=>{
+                    let user = JSON.parse(window.localStorage.getItem('user'))
+                    this.userPic = user.pic;
+                    console.log(this.userPic)
+                })
+               
+                this.$noticeInfo('error','图片上传失败','',3000)
+            }
+        },
         //打开修改用户信息dialog
         openDialogChangeInfo(){
             this.dialogVisibleIII = true;
             this.updateForm =JSON.parse(localStorage.getItem('user'))
+            //code -省市区
             let s = this.updateForm.region.split('/');
             this.updateForm.region =  [TextToCode[s[0]].code,TextToCode[s[0]][s[1]].code,TextToCode[s[0]][s[1]][s[2]].code]
+            //Text -省市区
+            let l = this.updateForm.region;
+            this.selectedOptions = `${CodeToText[l[0]]}/${CodeToText[l[1]]}/${CodeToText[l[2]]}`
         },
         //修改用户信息
-        async modifyUserInfo(){
-            console.log(this.updateForm)
+        modifyUserInfo(form){
+            //表单验证
+            this.$refs[form].validate(async (valid) => {
+                //验证不通过
+                if(!valid){ this.$noticeInfo('error','表单验证失败','请检查输入！',1500); return;}
+                let newUserData = await this.dealUpdateUserInfo();
+                let token = window.localStorage.getItem('token');
+                let [err,res] = await this.$awaitTo(this.$axios.put(`${this.$baseUrl}/user/modify`,{
+                        data:{
+                            updateForm:newUserData
+                        },
+                    },{headers: {'Authorization': 'Bearer '+token,}}))
+                if(res?.status === 200){
+                    this.$noticeInfo('success',res?.status,res?.data.tips,3000)
+                    //保存数据
+                    localStorage.setItem('user',JSON.stringify(res.data.user))
+                    //更新数据
+                    let user=  localStorage.getItem('user');
+                    await this.dealInitUserData(user)//user
+                    await this.getWeatherLocaltion()//weather
+                }
+                if(err){
+                     this.$noticeInfo('error','出现错误！','',3000)
+                }
+                 this.dialogVisibleIII = false;
+            });
+        },
+        //省市区联动 ---修改用户信息
+        handleChange(){
+            let s = this.updateForm.region;
+            this.selectedOptions = `${CodeToText[s[0]]}/${CodeToText[s[1]]}/${CodeToText[s[2]]}`
+        },
+        //省市区联动 ---获取地理位置天气
+        handleChanges(){
+            let s = this.weatherLoction;
+            let loction = CodeToText[s[2]]
+            if( loction=='市辖区'||loction =='城区'){loction = CodeToText[s[1]]}
+            if( loction=='市辖区'||loction =='城区'){loction = CodeToText[s[0]]}
+            this.weatherChartLoading = true;
+            this.getWeatherData(loction)
+        },
+        //处理要更新的用户信息
+        dealUpdateUserInfo(){
             let newInfoForm = {};
             newInfoForm.name = this.updateForm.name;
             newInfoForm.age = this.updateForm.age;
@@ -606,30 +719,9 @@ export default {
             newInfoForm.addres = this.updateForm.addres;
             newInfoForm.email = this.updateForm.email;
             newInfoForm.phone = this.updateForm.phone;
-            console.log(newInfoForm)
-            // let token = window.localStorage.getItem('token');
-            // let [err,res] = await this.$awaitTo(this.$axios.put(`${this.$baseUrl}/user/modify`,{
-            //         data:{
-            //             updateForm:this.updateForm
-            //         },
-            //     },{headers: {'Authorization': 'Bearer '+token,}}))
-            // console.log(err,res)
-        },
-        //省市区联动 ---修改用户信息
-        handleChange(){
-            let s = this.userForm.region;
-            this.selectedOptions = `${CodeToText[s[0]]}/${CodeToText[s[1]]}/${CodeToText[s[2]]}`
-        },
-        //省市区联动 ---获取地理位置天气
-        handleChanges(){
-            let s = this.weatherLoction;
-            let loction = CodeToText[s[2]]
-            if( loction=='市辖区'||loction =='城区'){
-                loction = CodeToText[s[1]]
-            }
-            this.weatherChartLoading = true;
-            this.getWeatherData(loction)
-        },
+            newInfoForm.region = this.selectedOptions;
+            return newInfoForm 
+        }
     },
 }
 </script>

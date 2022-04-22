@@ -119,7 +119,6 @@ export default {
                     let time = new Date(item.loginTime).toString().replace(' GMT+0800 (中国标准时间)','')
                     this.polarGraphIIData.push(time)
                 })
-                this.polarGraphIIData.push('Tue Apr 18 2022 01:28:01')
                 return this.dealData(this.classify())
             }
             if(err){
@@ -168,11 +167,11 @@ export default {
             let Mon = this.census(this.filterByDays('Mon',this.polarGraphIIData)); 
             let Tue = this.census(this.filterByDays('Tue',this.polarGraphIIData));
             let Wed = this.census(this.filterByDays('Wed',this.polarGraphIIData));
-            let Thur = this.census(this.filterByDays('Thur',this.polarGraphIIData));
+            let Thu = this.census(this.filterByDays('Thu',this.polarGraphIIData));
             let Fri = this.census(this.filterByDays('Fri',this.polarGraphIIData));
             let Sat = this.census(this.filterByDays('Sat',this.polarGraphIIData));
             let Sun = this.census(this.filterByDays('Sun',this.polarGraphIIData));
-            return [Mon,Tue,Wed,Thur,Fri,Sat,Sun]
+            return [Mon,Tue,Wed,Thu,Fri,Sat,Sun]
         },
         //数据处理
         dealData(arr){
@@ -186,7 +185,6 @@ export default {
                     }
                 }
             })
-            console.log(this.dataModel)
             return this.dataModel.reduce((pre,cur)=>{
                 return pre.concat(cur)
             },[])

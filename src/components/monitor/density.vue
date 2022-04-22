@@ -6,9 +6,24 @@
 
 <script>
 export default {
+    props:["pondId","weatherTemp"],
     data(){
         return{
-
+            timer:null,//定时器id
+            initData:[0, 0, 0, 0, 0, 0, 0, 0],
+        }
+    },
+     watch:{
+        "weatherTemp":function(newVal,oldVal){
+            console.log(newVal,oldVal)
+            if(newVal){
+                this.initData[7] =Number(this.weatherTemp) + Math.floor(Math.random()*10);
+                // this.$set(this.initData,7,Number(this.weatherTemp) + Math.floor(Math.random()*10))
+                this.updateChart({data:this.initData,subtext:'更新频率：10秒/次'})
+                this.dyncData(this.weatherTemp)
+            }else{
+                this.updateChart({data:this.initData,subtext:'未连接'})
+            }
         }
     },
     mounted(){
@@ -24,11 +39,23 @@ export default {
             this.$echarts.registerTheme('customed',theme.data)
             this.myChartsInstance = this.$echarts.init(this.$refs.myDensity,'customed')//用获取实例来注册
             const option = {
-                title: {
-                    text: "过去八周虾塘对虾密度",
-                    left: 10,
-                    top: 10,
-                },
+                title:[
+                    {
+                        show: true,
+                        x: "center",
+                        y: "85%",
+                        subtext:'未连接',
+                        subtextStyle:{
+                            fontSize:16,
+                            color: "#ddd",
+                        }
+                    },
+                    {
+                        text: "对虾密度",
+                        left: 10,
+                        top: 10,
+                    },
+                ] ,
                 grid: {
                     top: '20%',
                     left: '10%',
@@ -38,13 +65,13 @@ export default {
                 },
                 xAxis: {
                     type: 'category',
-                    name:'周',
+                    name:'秒',
                     nameLocation:'start',
                     nameTextStyle:{
                         color:'#fff'
                     },
                     boundaryGap: false,
-                    data: ['前8','前7','前6','前5', '前4', '前3', '前2', '前1'],
+                    data: ['前80','前70','前60','前50', '前40', '前30', '前20', '前10'],
                     axisLabel: {
                         margin: 30,
                         color: '#ffffff63'
@@ -129,7 +156,7 @@ export default {
                             }
                         ], false),
                     },
-                    data: [33, 48, 51, 61, 69, 84, 87, 90, 116, 128]
+                    data: this.initData
                 }]
             };
             this.myChartsInstance.setOption(option)
@@ -139,17 +166,42 @@ export default {
 
         },
         // 更新数据
-        updateChart(){
-
+        updateChart(data){
+             let option ={
+                title:[{subtext: data.subtext}],
+                series: [{ data:data.data}]
+            }
+            this.myChartsInstance.setOption(option)
         },
         // 图表自适应
         adaptChart(){
             this.myChartsInstance.resize()//echarts实例图表自适应方法
         },
+        //销毁实例
+        disposeChart(){
+            this.myChartsInstance.dispose();
+        },
+        //动态数据
+        dyncData(temp){
+            if(this.timer){
+                clearInterval(this.timer)
+            }
+            //清除定时器
+            let self = this;
+            this.timer = setInterval(()=>{
+                let num = Number(temp) + Math.floor(Math.random()*10);
+                this.initData.shift();
+                this.initData.push(num)
+                self.updateChart({data:this.initData,subtext:'更新频率：10秒/次'})
+            },10000)
+            
+        }
     },
     beforeDestroy(){
-         // 解绑事件
+        // 解绑事件
         window.removeEventListener('resize',this.adaptChart)
+        this.disposeChart();
+        clearInterval(this.timer)//清除定时器
     }
 
 }

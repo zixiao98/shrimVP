@@ -16,12 +16,12 @@
                                             <el-option v-for="item in optionValue" :key="item.value" :label="item.name" :value="item.value"></el-option>
                                         </el-select>
                                         <el-input placeholder="请输入内容" v-model="searchInput" class="input-with-select"></el-input>
-                                            <el-tooltip class="item" effect="dark" content="条件搜索" placement="bottom-start">
-                                                 <i class="el-icon-search" @click.stop="lookUp"></i>
-                                            </el-tooltip>
-                                            <el-tooltip class="item" effect="dark" content="原始数据" placement="bottom-start">
-                                                 <i class="el-icon-refresh-left" @click.stop="lookBack"></i>
-                                            </el-tooltip>
+                                        <el-tooltip class="item" effect="dark" content="条件搜索" placement="bottom-start">
+                                                <i class="el-icon-search" @click.stop="lookUp"></i>
+                                        </el-tooltip>
+                                        <el-tooltip class="item" effect="dark" content="原始数据" placement="bottom-start">
+                                                <i class="el-icon-refresh-left" @click.stop="lookBack"></i>
+                                        </el-tooltip>
                                     </div>
                                     <i v-show="flag" class="tipsInfo">查询数据如下：</i>
                                 </div>
@@ -177,7 +177,7 @@ export default {
     },
     methods:{
         //初始化数据
-        async initData(){
+        initData(){
             //即获取第一页数据
             this.getDataByPage(1)
         },
@@ -216,7 +216,7 @@ export default {
                 }
             }
             console.log(this.select,this.searchInput,this.search)
-            //通过查询
+            //条件分页查询
             this.getDataByPageOptions(1)
             this.flag = true;//显示“查询数据如下”
         },
