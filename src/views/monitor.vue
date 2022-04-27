@@ -72,7 +72,7 @@
                                                     <el-select v-model="pondSelectId" placeholder="请选择" size="small">
                                                         <el-option v-for="item in pondInfoArr" :key="item._id" :label="item.pondName" :value="item._id"></el-option>
                                                     </el-select>
-                                                    虾塘监测信息(右侧)
+                                                    <i>虾塘监测信息(右侧)</i>
                                                 </div>
                                             </div>
                                             <div class="weather"
@@ -177,24 +177,6 @@ import { CodeToText,TextToCode } from 'element-china-area-data';
 export default {
     data(){
         return {
-            options: [{
-                value: '选项1',
-                label: '黄金糕'
-                }, {
-                value: '选项2',
-                label: '双皮奶'
-                }, {
-                value: '选项3',
-                label: '蚵仔煎'
-                }, {
-                value: '选项4',
-                label: '龙须面'
-                }, {
-                value: '选项5',
-                label: '北京烤鸭'
-                }],
-            value: '选项1',
-            
             //以上是测试数据
             wRefer:null,//天气来源
             weather:{},

@@ -79,7 +79,7 @@
                         </el-col>
                         <el-col :span="12">
                              <span>{{vCode}}</span>
-                            <button @click='refreshVcode'><i class="el-icon-refresh"></i></button>
+                            <button @click.prevent='refreshVcode'><i class="el-icon-refresh"></i></button>
                         </el-col>
                       </el-row>
                 </div>
@@ -119,10 +119,10 @@ export default {
         };
         return {
             userForm: {//传入el-form ，表单数据
-                accNumber: '123@qq.com',
-                password:'123456',
-                psws:'123456',//辅助字段
-                name:'1231231',
+                accNumber: '',
+                password:'',
+                psws:'',//辅助字段
+                name:'',
                 sex:1,
                 region:[],
                 vCode:'',//辅助字段

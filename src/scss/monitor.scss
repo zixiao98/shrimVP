@@ -134,7 +134,7 @@
                                 }
                             }
                             .shrimpPound{
-                                padding-right: 10px;
+                                // padding-right: 10px;
                                 /deep/.el-input__inner {
                                     background-color: transparent;
                                     color:#fff;
@@ -144,6 +144,11 @@
                                 }
                                 /deep/.el-select__caret{
                                     color: #ccc;
+                                }
+                                i{
+                                    font-size: 14px;
+                                    padding-right: 20px;
+                                    color: #eee;
                                 }
                             }
                         }

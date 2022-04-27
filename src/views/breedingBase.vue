@@ -130,6 +130,7 @@
                             <el-form-item label="基地地区">
                                 <!-- <el-input v-model="updateForm.baseRegion"></el-input> -->
                                 <el-cascader
+                                    disabled
                                     size="large"
                                     :options="options"
                                     v-model="updateForm.baseRegion"

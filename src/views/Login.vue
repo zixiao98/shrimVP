@@ -42,7 +42,7 @@
                     </el-col>
                     <el-col :span="12">
                             <span>{{vCode}}</span>
-                        <button @click='refreshVcode'><i class="el-icon-refresh"></i></button>
+                        <button @click.prevent='refreshVcode'><i class="el-icon-refresh"></i></button>
                     </el-col>
                 </el-row>
             </div>
@@ -62,8 +62,8 @@ export default {
         return {
             labelPosition:'left',
             form: {
-                accNumber:'2568624492@qq.com',
-                password:'123456',
+                accNumber:'',
+                password:'',
                 vCode:''
             },
              rules: {//传入el-form ，表单验证规则

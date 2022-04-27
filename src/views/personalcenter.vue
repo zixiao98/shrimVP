@@ -52,8 +52,11 @@
                             <div class="mainDiv">
                                 <div class="top">
                                     <div class="topDiv">
-                                         <i class="el-icon-s-tools elIcon" @click="openDialogChangeInfo">修改</i>
+                                        <i class="el-icon-s-tools elIcon" @click="openDialogChangeInfo">用户信息</i>
                                         <div class="topLeft">
+                                            <div class="pasw">
+                                                <i class="el-icon-menu elIcon" @click="openDialogSettingPsw">密保问题</i>
+                                            </div>
                                             <div class="img">
                                                 <img :src="userPic" alt="个人中心的头像" ref="myPhoto">
                                             </div>
@@ -237,6 +240,33 @@
                 <el-button type="primary" @click="modifyUserInfo('updateForm')">确 定</el-button>
             </div>
         </el-dialog>
+        <!-- 设置密保问题 -->
+        <el-dialog
+            title="设置密保问题"
+            :visible.sync="dialogVisibleIV"
+            width="600px"
+            >
+            <div class="dialogDiv">
+                <el-form :model="pswForm" label-width="100px">
+                    <el-form-item label="问题一" prop="name">
+                        <el-input v-model="pswForm.question1"></el-input>
+                    </el-form-item>
+                    <el-form-item label="答案一" prop="name">
+                        <el-input v-model="pswForm.answer1"></el-input>
+                    </el-form-item>
+                    <el-form-item label="问题二" prop="name">
+                        <el-input v-model="pswForm.question2"></el-input>
+                    </el-form-item>
+                    <el-form-item label="答案二" prop="name">
+                        <el-input v-model="pswForm.answer2"></el-input>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisibleIV = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisibleIV = false">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -259,6 +289,7 @@ export default {
             imgSrc:'#',//图片url
             imgType:["image/png","image/jpeg"],//图片类型接收范围
             dialogVisibleIII:false,//修改用户资料对话框
+            dialogVisibleIV:false,//设置密保问题对话框
             picture:'',
             updateForm:{
                 region:[],
@@ -343,6 +374,13 @@ export default {
             wRefer:null,
             icon:'',
             weatherLoction:'',
+            //密保问题
+            pswForm:{
+                question1:'',
+                answer1:'',
+                question2:'',
+                answer2:'',
+            }
         }
     },
     components:{
@@ -694,6 +732,10 @@ export default {
                 }
                  this.dialogVisibleIII = false;
             });
+        },
+        //打开设置密保问题dialog
+        openDialogSettingPsw(){
+            this.dialogVisibleIV = true;
         },
         //省市区联动 ---修改用户信息
         handleChange(){

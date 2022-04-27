@@ -552,6 +552,7 @@ export default {
              //置空
             this.resetAddBaseForm(this.addForm)
             this.dialogVisible = true;
+            //获取创建者id
             let {_id} = JSON.parse(window.localStorage.getItem('user'));
             this.addForm.createById = _id;
         },

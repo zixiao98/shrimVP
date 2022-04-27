@@ -30,13 +30,22 @@
                         }
                     }
                     .topLeft{//个人资料上部-左-头像
-                        height: calc(100% - 56px);
+                        height: 100%;
                         width: 43%;
-                        padding: 48px 0 8px 0;
+                        padding: 40px 0 8px 0;
                         // background-color: #fff; 
+                        .pasw{
+                            position: relative;
+                            i{
+                                border: none;
+                                &:hover{
+                                    color: #333;
+                                }
+                            }
+                        }
                         .img{//头像
-                            height: calc(70% - 10px);
-                            padding: 5px;
+                            height: calc(70% - 40px);
+                            padding: 35px 5px 5px 5px;
                             img{
                                 width: calc(100% - 4px);
                                 height: calc(100% - 4px);
@@ -47,7 +56,7 @@
                             } 
                         }
                         .btn{
-                            height: calc(25% - 10px);
+                            height: calc(20% - 10px);
                             padding: 5px;
                             display: flex;
                             justify-content: space-around;

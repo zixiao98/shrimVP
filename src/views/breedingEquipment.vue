@@ -24,17 +24,17 @@
                                 </div>
                                 <el-table :data="tableData" style="width: 100%">
                                     <el-table-column prop="createDate" label="添加时间" align="center"  width="200"></el-table-column>
-                                    <el-table-column prop="bEName" label="设备名称" align="center"  width="260"></el-table-column>
-                                    <el-table-column prop="bEType" label="设备类型" align="center" width="100"></el-table-column>
+                                    <el-table-column prop="eqName" label="设备名称" align="center"  width="260"></el-table-column>
+                                    <el-table-column prop="eqType" label="设备类型" align="center" width="100"></el-table-column>
                                     <el-table-column label="设备状态" align="center" width="100">
                                          <template slot-scope="scope">
-                                           <el-tag effect="dark" :type="bEStatusTag[scope.row.bEStatus].type">{{ bEStatusTag[scope.row.bEStatus].value }}</el-tag>
+                                           <el-tag effect="dark" :type="eqStatusTag[scope.row.eqStatus].type">{{ eqStatusTag[scope.row.eqStatus].value }}</el-tag>
                                         </template>
                                     </el-table-column>
-                                    <el-table-column prop="bEPrice" label="设备金额" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="bEBuyBy" label="购买设备人员" align="center"  width="160"></el-table-column>
-                                    <el-table-column prop="bERepairTimes" label="修理次数" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="bEforBaseName" label="所属基地" align="center" ></el-table-column>
+                                    <el-table-column prop="eqPayfor" label="设备金额" align="center" width="100"></el-table-column>
+                                    <el-table-column prop="eqBuyBy" label="购买设备人员" align="center"  width="160"></el-table-column>
+                                    <el-table-column prop="eqFixedTime" label="修理次数" align="center" width="100"></el-table-column>
+                                    <el-table-column prop="baseById" label="所属基地" align="center" ></el-table-column>
                                     <el-table-column label="操作" width="230" align="center">
                                         <template slot-scope="scope">
                                             <el-button size="small" type="primary" icon="el-icon-edit" @click="handleClick(scope.row)">编辑</el-button>
@@ -43,11 +43,13 @@
                                     </el-table-column> 
                                 </el-table>
                                 <el-pagination
-                                    :current-page="1"
+                                    :hide-on-single-page="singlePage"
+                                    @current-change="pageChange"
+                                    :current-page="curPg"
                                     :page-sizes="pss"
                                     :page-size="ps"
                                     layout="sizes,total, prev, pager, next, jumper"
-                                    :total="tableData.length"
+                                    :total="count"
                                 ></el-pagination>
                             </div>
                         </div>
@@ -61,19 +63,18 @@
             width="1000px"
             >
             <div class="dialogDiv">
-                <el-form :model="addForm" ref="addForm" label-width="150px">
+                <el-form :model="addForm" :rules="rules" ref="addForm" label-width="150px">
                     <el-form-item label="创建者id:">
                         {{addForm.createById}}
                     </el-form-item>
                     <el-row>
                         <el-col :span="14">
-                            <el-form-item label="设备名称">
-                                <el-input v-model="addForm.bEName"></el-input>
+                            <el-form-item label="设备名称" prop="eqName">
+                                <el-input v-model="addForm.eqName"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="10">
                             <el-form-item label="所属基地" prop="baseById">
-                                <!-- <el-input v-model="addForm.pondforBaseName"></el-input> -->
                                 <el-select v-model="addForm.baseById">
                                     <el-option v-for="item in baseIdAndNameArr" :key="item._id" :label="item.baseName" :value="item._id"></el-option>
                                 </el-select>
@@ -83,12 +84,14 @@
                     <el-row>
                         <el-col :span="12">
                             <el-form-item label="设备类型">
-                                <el-input v-model="addForm.bEType"></el-input>
+                                <el-select v-model="addForm.eqType">
+                                    <el-option v-for="item in eqTypeTag" :key="item.data" :label="item.value" :value="item.data"></el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="购买金额">
-                                <el-input v-model="addForm.bEPrice">
+                                <el-input v-model="addForm.eqPayfor" type="Number">
                                     <template slot="append">人民币￥</template>
                                 </el-input>
                             </el-form-item>
@@ -96,18 +99,20 @@
                     </el-row>
                     <el-row>
                         <el-col :span="8">
-                            <el-form-item label="购买人员">
-                                <el-input v-model="addForm.bEBuyBy"></el-input>
+                            <el-form-item label="购买人员" prop="eqBuyBy">
+                                <el-input v-model="addForm.eqBuyBy"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
                             <el-form-item label="设备状态">
-                                <el-input v-model="addForm.bEBuyBy"></el-input>
+                                <el-select v-model="addForm.eqStatus" disabled>
+                                    <el-option v-for="item in eqStatusTag" :key="item.data" :label="item.value" :value="item.data"></el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
                             <el-form-item label="修理次数">
-                                <el-input v-model="addForm.bEBuyBy"></el-input>
+                                <el-input v-model="addForm.eqFixedTime" type="Number"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -128,7 +133,7 @@
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submitForm">确 定</el-button>
+                <el-button type="primary" @click="addEq('addForm')">确 定</el-button>
             </div>
         </el-dialog>
         <el-dialog
@@ -138,32 +143,78 @@
             >
             <div class="dialogDiv">
                 <el-form :model="updateForm" ref="updateForm" label-width="150px">
-                    <el-form-item label="设备名称">
-                        <el-input v-model="updateForm.bEName"></el-input>
-                    </el-form-item>
-                    <el-form-item label="设备类型">
-                        <el-input v-model="updateForm.bEType"></el-input>
-                    </el-form-item>
-                    <el-form-item label="设备金额">
-                        <el-input v-model="updateForm.bEPrice"></el-input>
-                    </el-form-item>
-                    <el-form-item label="购买设备人员">
-                        <el-input v-model="updateForm.bEBuyBy"></el-input>
-                    </el-form-item>
-                    <el-form-item label="设备状态">
-                        <!-- <el-input v-model="updateForm.bEStatus"></el-input> -->
-                        <el-select v-model="updateForm.bEStatus">
-                            <el-option v-for="item in bEStatusTag" :key="item.data" :label="item.value" :value="item.data"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="修理次数">
-                        <el-input v-model="updateForm.bERepairTimes"></el-input>
-                    </el-form-item>
-                    <el-form-item label="所属基地">
-                        <el-input v-model="updateForm.bEforBaseName"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <!-- <el-button @click="resetForm('addForm')">重置</el-button> -->
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="创建者id:">
+                                {{updateForm.createById}}
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="10">
+                            <el-form-item label="设备id:">
+                                {{updateForm.baseById}}
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                     <el-row>
+                        <el-col :span="14">
+                            <el-form-item label="设备名称" prop="eqName">
+                                <el-input v-model="updateForm.eqName"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="10">
+                            <el-form-item label="所属基地" prop="baseById">
+                                <el-select v-model="updateForm.baseById">
+                                    <el-option v-for="item in baseIdAndNameArr" :key="item._id" :label="item.baseName" :value="item._id"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="设备类型">
+                                <el-select v-model="updateForm.eqType">
+                                    <el-option v-for="item in eqTypeTag" :key="item.data" :label="item.value" :value="item.data"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item label="购买金额">
+                                <el-input v-model="updateForm.eqPayfor" type="Number">
+                                    <template slot="append">人民币￥</template>
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <el-form-item label="购买人员" prop="eqBuyBy">
+                                <el-input v-model="updateForm.eqBuyBy" disabled></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="设备状态">
+                                <el-select v-model="updateForm.eqStatus">
+                                    <el-option v-for="item in eqStatusTag" :key="item.data" :label="item.value" :value="item.data"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="8">
+                            <el-form-item label="修理次数">
+                                <el-input v-model="updateForm.eqFixedTime" type="Number"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-form-item label="设备图片">
+                       <el-upload
+                            class="avatar-uploader"
+                            action="http://121.196.247.161:8885/user/upload/"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                            <img v-if="updateForm.eqPic" :src="updateForm.eqPic" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <!-- {{updateForm.eqPic}} -->
                     </el-form-item>
                 </el-form>
             </div>
@@ -201,122 +252,49 @@ export default {
             ],//查询条件数组
             select:'',//选中的查询条件
             searchInput:'',//搜索关键词
-            tableData: [
-                {
-                    id:'128',//设备id
-                    createDate:'2022/03/15 21:08:11',//添加时间
-                    bEName:'12测试',//设备名称
-                    bEType:'精密型',//设备类型
-                    bEPrice:4123,//设备金额
-                    bEBuyBy:'王五',//购买设备人员
-                    bEStatus:0,//设备状态
-                    bERepairTimes:0,//设备修理次数
-                    bEforBaseId:0,//设备所属基地id
-                    bEforBaseName:'12312',//设备所属基地名称
-                },
-                {
-                    id:'127',//设备id
-                    createDate:'2022/03/15 22:21:13',//添加时间
-                    bEName:'测试测试',//设备名称
-                    bEType:'精密型',//设备类型
-                    bEPrice:1355,//设备金额
-                    bEBuyBy:'果园',//购买设备人员
-                    bEStatus:1,//设备状态
-                    bERepairTimes:1,//设备修理次数
-                    bEforBaseId:0,//设备所属基地id
-                    bEforBaseName:'12314122',//设备所属基地名称
-                },
-                {
-                    id:'126',//设备id
-                    createDate:'2022/03/14 20:27:31',//添加时间
-                    bEName:'测试1231',//设备名称
-                    bEType:'精密型',//设备类型
-                    bEPrice:7561,//设备金额
-                    bEBuyBy:'假果园',//购买设备人员
-                    bEStatus:2,//设备状态
-                    bERepairTimes:4,//设备修理次数
-                    bEforBaseId:0,//设备所属基地id
-                    bEforBaseName:'12测试312',//设备所属基地名称
-                },
-                {
-                    id:'125',//设备id
-                    createDate:'2022/03/13 20:31:21',//添加时间
-                    bEName:'123测试123',//设备名称
-                    bEType:'精密型',//设备类型
-                    bEPrice:6531,//设备金额
-                    bEBuyBy:'张五',//购买设备人员
-                    bEStatus:2,//设备状态
-                    bERepairTimes:0,//设备修理次数
-                    bEforBaseId:0,//设备所属基地id
-                    bEforBaseName:'12421312',//设备所属基地名称
-                },
-                {
-                    id:'124',//设备id
-                    createDate:'2022/03/13 20:30:31',//添加时间
-                    bEName:'1测试23123',//设备名称
-                    bEType:'精密型',//设备类型
-                    bEPrice:4122,//设备金额
-                    bEBuyBy:'梁二',//购买设备人员
-                    bEStatus:0,//设备状态
-                    bERepairTimes:6,//设备修理次数
-                    bEforBaseId:0,//设备所属基地id
-                    bEforBaseName:'1122312',//设备所属基地名称
-                },
-                {
-                    id:'123',//设备id
-                    createDate:'2022/03/13 20:29:21',//添加时间
-                    bEName:'123123测试',//设备名称
-                    bEType:'精密型',//设备类型
-                    bEPrice:2312,//设备金额
-                    bEBuyBy:'张三',//购买设备人员
-                    bEStatus:0,//设备状态
-                    bERepairTimes:0,//设备修理次数
-                    bEforBaseId:0,//设备所属基地id
-                    bEforBaseName:'121测试312',//设备所属基地名称
-                },
-                
-            ],//表格展示数据
+            tableData: [],//表格展示数据
             //添加信息数据
             addForm: {
-                id:'',//设备id
-                createDate:'',//添加时间
-                bEName:'',//设备名称
-                bEType:1,//设备类型
-                bEPrice:0,//设备金额
-                bEBuyBy:'',//购买设备人员
-                bEStatus:0,//设备状态
-                bERepairTimes:0,//设备修理次数
-                bEforBaseId:0,//设备所属基地id
-                bEforBaseName:'',//设备所属基地名称
+                createById:'',//创建者id
+                baseById:'',//所属基地id
+                eqName:'',//设备名称
+                eqPic:'',//设备图片
+                eqType:0,//设备类型
+                eqStatus:0,//设备状态
+                eqPayfor:0,//购买设备金额
+                eqBuyBy:'',//购买设备人员
+                eqFixedTime:0,//修理次数
             },
             //修改信息数据
             updateForm:{},
             //基地列表
             baseIdAndNameArr:[],
-            
+            //设备类型的tag
+            eqTypeTag:[
+                {type:'info',value:'普通型',data:0},
+                {type:'',value:'精密型',data:1},
+                {type:'success',value:'实验型',data:2},
+            ],
             //设备状态的tag
-            bEStatusTag:[
-                {
-                    type:'success',
-                    value:'正常',
-                    data:0,
-                },
-                {
-                    type:'warning',
-                    value:'异常',
-                    data:1,
-                },
-                {
-                    type:'danger',
-                    value:'故障',
-                    data:2,
-                },
-                {
-                    type:'info',
-                    value:'维修中',
-                    data:3,
-                },
-            ]
+            eqStatusTag:[
+                {type:'success',value:'正常',data:0},
+                {type:'warning',value:'异常',data:1},
+                {type:'danger',value:'故障',data:2},
+                {type:'info',value:'维修中',data:3},
+            ],
+             rules: {//传入el-form ，表单验证规则
+                eqName: [
+                    { required: true, message: '请输入名称', trigger: ['blur','change'] },
+                    { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: ['blur','change'] }
+                ],
+                baseById:[
+                    {required:true,message: '请选择基地', trigger:'change'}
+                ],
+                eqBuyBy: [
+                    { required: true, message: '请输入名称', trigger: ['blur','change'] },
+                    { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: ['blur','change'] }
+                ],
+            },
         }
     },
     //生命周期函数
@@ -449,7 +427,54 @@ export default {
         // 跳转到添加页面
         addContent(){
             this.dialogVisible = true;
+            //获取创建者id
+            let {_id} = JSON.parse(window.localStorage.getItem('user'));
+            this.addForm.createById = _id;
         },
+        //添加设备
+        async addEq(form){
+            //表单验证
+            await this.$refs[form].validate(async (valid) => {
+                //验证不通过
+                if(!valid){ this.$noticeInfo('error','表单验证失败','请检查输入！',1500); return;}
+                //验证通过
+                console.log(this.addForm,this.imageUrl)
+                let token = window.localStorage.getItem('token');
+                let [err,res] = await this.$awaitTo(this.$axios.post(`${this.$baseUrl}/breedingEq/addEq`,{
+                    params:{
+                        pg:this.curPg,
+                    },
+                    data:{
+                        createById:this.addForm.createById,//创建者id
+                        baseById:this.addForm.baseById,//设备所属基地id
+                        eqName:this.addForm.eqName,//设备名称
+                        eqPic:this.imageUrl,//设备图片
+                        eqType:this.addForm.eqType,//设备类型
+                        eqStatus:this.addForm.eqStatus,//设备状态
+                        eqPayfor:this.addForm.eqPayfor,//购买金额
+                        eqBuyBy:this.addForm.eqBuyBy,//购买人员
+                        eqFixedTime:this.addForm.eqFixedTime,//修理次数
+                    }
+                },{headers: {'Authorization': 'Bearer '+token,}}))
+                console.log(res,err)
+                if(res?.status ===201){ 
+                    this.dialogVisible = false;
+                    if(this.flag == true){
+                        this.lookBack();
+                        return;
+                    }
+                    this.$noticeInfo('success',res?.status,res.data.tips,3000)
+                    this.tableData = res.data.data;
+                    for (const item of this.tableData) {
+                        item.createDate = new Date(item.createDate).toLocaleString();
+                    }
+                    this.count = res.data.count;
+                }
+                if(err){this.$noticeInfo('error','失败','添加数据失败！！',3000)}
+            });
+            
+        },
+        //待删除
         submitForm() {
             // this.$refs[formName].validate((valid) => {
             // if (valid) {
@@ -534,6 +559,102 @@ export default {
                                     message: '已取消操作'
                             });          
                 });
+        },
+
+        //
+        //初始化数据
+        initData(){
+            //即获取第一页数据
+            this.getDataByPage(1)
+        },
+        //分页变化
+        async pageChange(pg){
+            if(this.flag){this.getDataByPageOptions(pg);return;}
+            this.getDataByPage(pg)
+        },
+        //分页查询
+        async getDataByPage(pg){
+            const token = window.localStorage.getItem('token');
+            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/shrimpPond/pondPage`,{
+                params: {
+                    pg: pg
+                },
+                headers: {
+                    'Authorization': 'Bearer '+token,
+                }
+            }))
+            if(res?.status === 200){
+                this.tableData = res.data.data;
+                for (const item of this.tableData) {
+                    item.createDate = new Date(item.createDate).toLocaleString();
+                }
+                this.count = res.data.count;
+                this.curPg = pg;
+                if(this.count>0){
+                    this.$message({
+                        type: 'success',
+                        message:'获取数据成功！',
+                        duration:2800
+                    })
+                }else{
+                    this.$message({
+                        type: 'warning',
+                        message:'暂无数据!',
+                        duration:2800
+                    })
+                }
+            }
+            if(err){this.$noticeInfo('error','失败','获取数据失败！！',3000)}
+        },
+        //条件分页查询
+        async getDataByPageOptions(pg){
+            console.log(pg)
+            console.log(this.select,this.searchInput)
+            let that = this;
+            const token = window.localStorage.getItem('token');
+            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/shrimpPond/pondPageOptions`,{
+                params: {
+                    pg: pg,
+                    [that.select]:that.searchInput,
+                },
+                headers: {
+                    'Authorization': 'Bearer '+token,
+                }
+            }))
+            console.log(err,res)
+            if(res?.status === 200){
+                this.tableData = res.data.data;
+                for (const item of this.tableData) {
+                    item.createDate = new Date(item.createDate).toLocaleString();
+                }
+                this.count = res.data.count;
+                this.curPg = pg;
+                if(this.count>0){
+                    this.$message({
+                        type: 'success',
+                        message:'获取数据成功！',
+                        duration:2800
+                    })
+                }else{
+                    this.$message({
+                        type: 'warning',
+                        message:'无匹配数据!',
+                        duration:2800
+                    })
+                }
+            }
+            if(err){
+                this.$noticeInfo('error','失败','获取数据失败！！',3000)
+            }
+        },
+        //表单置空
+        resetAddBaseForm(obj){
+            for (const key in obj) {
+                if (Object.hasOwnProperty.call(obj, key)) {
+                    obj[key] = Array.isArray(obj[key]) ? [] :'';
+                }
+            }
+            this.imageUrl = '';
         }
     }
 }

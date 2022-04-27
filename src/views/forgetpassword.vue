@@ -19,16 +19,26 @@
                         <el-input v-model="userSecurityQuestion.answer" placeholder="答案"></el-input>
                     </el-form-item>
                 </div>
+                <div class="psw">
+                    <el-form-item label="新密码:">
+                        <el-input v-model="password" show-password></el-input>
+                    </el-form-item>
+                </div>
+                <div class="psw">
+                    <el-form-item label="确认密码:">
+                        <el-input v-model="psws" show-password></el-input>
+                    </el-form-item>
+                </div>
                 <div class="vCode">
                     <el-form-item label="验证码:"></el-form-item>
                     <el-input v-model="userSecurityQuestion.vCode"  maxlength="4" show-word-limit placeholder="验证码"></el-input>
                     <span>{{vCode}}</span>
-                    <button @click='refreshVcode'><i class="el-icon-refresh"></i></button>
+                    <button @click.prevent='refreshVcode'><i class="el-icon-refresh"></i></button>
                 </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <button class='left' @click="dialogVisible = false">取 消</button>
-                <button class='right' type="primary" @click="findBackByQuestion">确 定</button>
+                <button class='right' type="primary" @click.prevent="findBackByQuestion">确 定</button>
             </span>
         </el-dialog>
         <div class="psw-box">
@@ -50,7 +60,7 @@
             </div>
             </div>
             <!-- 表单区域 -->
-            <div class="box-card" v-if="!changeFlag">
+            <div class="box-card" v-if="changeFlag">
                 <div class="card-left">
                     <div class="words">
                         请输入你需要找回密码的账号！
@@ -65,7 +75,7 @@
                     </div>
                 </div>
             </div>
-            <div class="box-card" v-if="changeFlag">
+            <div class="box-card" v-if="!changeFlag">
                 <div class="card-left">
                     <div class="words">
                         请选择你需要找回密码的方式！
@@ -76,13 +86,17 @@
                         <span class="left">你的账号：</span>
                         <span class="right">{{accNumber}}</span>
                     </div>
-                    <div class="btn-email">
+                    <!-- <div class="btn-email">
                         <button class="check-btn" @click='toFindBackByEmail'>找回</button>by
                         <el-link :underline="false" class="link">邮箱验证</el-link>
+                    </div> -->
+                    <div class="btn-securityQuestion">
+                        <button class="check-btn" @click='toFindBackByQuestion'>找回</button>by
+                        <el-link :underline="false" class="link">密保问题1</el-link>
                     </div>
                     <div class="btn-securityQuestion">
                         <button class="check-btn" @click='toFindBackByQuestion'>找回</button>by
-                        <el-link :underline="false" class="link">密保问题</el-link>
+                        <el-link :underline="false" class="link">密保问题2</el-link>
                     </div>
                 </div>
             </div>
@@ -174,12 +188,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-const zx_axios = axios.create({
-    baseURL:'http://localhost:3000/user'
-})
 export default {
-    name:'login',
     data(){
         return {
             //要找回的账号
@@ -187,13 +196,15 @@ export default {
             //切换card的标识字段
             changeFlag:false,
             //密保问题
-            question:'',
+            question:'我的生日是几月几号？',
             //密保
             userSecurityQuestion:{
                 question:'',
                 answer:'',
                 vCode:''
             },
+            password:'',
+            psws:'',
             //对话框标识位
             dialogVisible:false,
             //从服务器接收的验证码
@@ -202,18 +213,14 @@ export default {
     },
     methods:{
         //刷新验证码
-        refreshVcode(){
-            zx_axios.get('/vCode').then(res=>{
-                //展示验证码
-                this.vCode = res.data.vCode;
-            }).catch(err=>{
-                this.$notify({
-                    type: 'error',
-                    title: `状态码：${err.response.status}`,
-                    message: `${err.response.data.errors[0].msg}`,
-                    duration:1500
-                });
-            })
+        async refreshVcode(){
+            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/user/vCode`))
+            this.vCode = res.data.vCode;//展示验证码
+            if(err){
+                this.$notice('error',err,1500,false)
+            }else{
+                this.$notice('success',res,1500,true)
+            }
         },
         //找回密码
         toCheck(){
@@ -302,40 +309,40 @@ export default {
                     type: 'warning'
                 }).then(() => {//确定提交修改
                    //发送请求-验证密保是否正确
-                    zx_axios.post('/verifySecurityQuestion',{
-                        params:{
-                            accNumber:this.accNumber,
-                            question:this.userSecurityQuestion.question,
-                            answer:this.userSecurityQuestion.answer
-                        }
-                    }).then(res=>{
-                        console.log(res)
-                        this.$notify({
-                            type: 'success',
-                            title: `状态码：${res.status}`,
-                            message: `${res.data.tips}`,
-                            duration:3000,
-                            offset:68
-                        });
-                        //关闭对话框
-                        this.dialogVisible = !this.dialogVisible;
-                        //返回登录页
-                        setTimeout(() => {
-                            this.$router.replace('/');
-                        }, 1000);
-                    }).catch(err=>{
-                        console.log(err)
-                        //刷新验证码
-                        this.refreshVcode();
-                        //将输入框置空
-                        this.userSecurityQuestion.vCode='';
-                        this.$notify({
-                            type: 'error',
-                            title: `状态码：${err.response.status}`,
-                            message: `${err.response.data.tips}`,
-                            duration:1500
-                        });
-                    })
+                    // zx_axios.post('/verifySecurityQuestion',{
+                    //     params:{
+                    //         accNumber:this.accNumber,
+                    //         question:this.userSecurityQuestion.question,
+                    //         answer:this.userSecurityQuestion.answer
+                    //     }
+                    // }).then(res=>{
+                    //     console.log(res)
+                    //     this.$notify({
+                    //         type: 'success',
+                    //         title: `状态码：${res.status}`,
+                    //         message: `${res.data.tips}`,
+                    //         duration:3000,
+                    //         offset:68
+                    //     });
+                    //     //关闭对话框
+                    //     this.dialogVisible = !this.dialogVisible;
+                    //     //返回登录页
+                    //     setTimeout(() => {
+                    //         this.$router.replace('/');
+                    //     }, 1000);
+                    // }).catch(err=>{
+                    //     console.log(err)
+                    //     //刷新验证码
+                    //     this.refreshVcode();
+                    //     //将输入框置空
+                    //     this.userSecurityQuestion.vCode='';
+                    //     this.$notify({
+                    //         type: 'error',
+                    //         title: `状态码：${err.response.status}`,
+                    //         message: `${err.response.data.tips}`,
+                    //         duration:1500
+                    //     });
+                    // })
                 }).catch(() => {
                     this.$message({
                     type: 'info',
