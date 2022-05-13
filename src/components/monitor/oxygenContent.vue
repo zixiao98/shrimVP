@@ -1,5 +1,9 @@
 <template>
-    <div class="lzj-container">
+    <div class="lzj-container"
+        v-loading="loading" 
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading"
+        element-loading-background="rgba(20,20,20,.4)">
         <div class="lzj-chart" ref='myCircle'></div>
     </div>
 </template>
@@ -10,6 +14,7 @@ export default {
     props:["pondId","weatherTemp"],
     data(){
         return {
+            loading:true,
             timer:null,//定时器id
             newDate:0.67,
             color: [
@@ -24,17 +29,20 @@ export default {
     watch:{
         "weatherTemp":function(newVal,oldVal){
             console.log(newVal,oldVal)
-            if(newVal){
+            if(newVal&&this.pondId){
                 let num =  Number(this.weatherTemp)*3/100 + Math.random()/10/3.5
                 this.updateChart(num,'更新频率：10秒/次')
                 this.dyncData(this.weatherTemp)
-            }else{
-                this.updateChart(0,'未连接')
             }
         }
     },
-    mounted(){
-        this.intChart()
+    async mounted(){
+        await this.intChart()
+        if(this.pondId){
+            let num =  Number(this.weatherTemp)*3/100 + Math.random()/10/3.5
+            this.updateChart(num,'更新频率：10秒/次')
+            this.dyncData(this.weatherTemp)
+        }
         window.addEventListener('resize',this.adaptChart)
     },
     methods:{
@@ -124,6 +132,10 @@ export default {
                 ],
             };
             this.myChartsInstance.setOption(option)
+            let timer =  setTimeout(()=>{
+                this.loading = false;
+                clearTimeout(timer)
+            },300)
         },
         // 获取数据
         getData(){

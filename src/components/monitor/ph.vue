@@ -1,18 +1,35 @@
 <template>
-  <div class="lzj-container">
+  <div class="lzj-container"
+    v-loading="loading" 
+    element-loading-text="拼命加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(20,20,20,.4)">
       <div class="lzj-chart" ref='myPh'></div>
   </div>
 </template>
 
 <script>
 export default {
+    props:["pondId","weatherTemp"],
     data(){
         return {
-            
+            loading:true,
+            timer:null,//定时器id
         }
     },
-    mounted(){
-        this.intChart()
+     watch:{
+        "weatherTemp":function(newVal,oldVal){
+            console.log(newVal,oldVal)
+            if(newVal&&this.pondId){
+                this.updateChart({data:[6.3, 4.5, 3.8, 5.8, 7.2, 8.1],subtext:'更新频率：4小时/次'})
+            }
+        },
+    },
+    async mounted(){
+        await this.intChart()
+        if(this.pondId){
+            this.updateChart({data:[6.3, 4.5, 3.8, 5.8, 7.2, 8.1],subtext:'更新频率：4小时/次'})
+        }
         window.addEventListener('resize',this.adaptChart)
     },
     methods:{
@@ -23,15 +40,25 @@ export default {
             // 注册主题
             this.$echarts.registerTheme('customed',theme.data)
             this.myChartsInstance =  this.$echarts.init(this.$refs.myPh,'customed');
-            var data = [2, 3, 4, 5, 6, 7,];
+            var data = [0, 0, 0, 0, 0, 0,];
             var data1 = [14, 14, 14, 14, 14, 14,];
             var xdata = ['过去24h', '过去20h', '过去16h', '过去12h', '过去8h', '过去4h'];
             let option = {
-                title:{
+                title:[
+                     {
+                        show: true,
+                        x: "center",
+                        subtext:'未连接',
+                        subtextStyle:{
+                            fontSize:16,
+                            color: "#ddd",
+                        }
+                    },
+                    {
                     text:'虾塘过去24时PH值',
                     left:'center',
                     bottom:20,
-                },
+                }],
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
@@ -148,7 +175,10 @@ export default {
             };
 
             this.myChartsInstance.setOption(option)
-
+            let timer =  setTimeout(()=>{
+                this.loading = false;
+                clearTimeout(timer)
+            },300)
         },
         // 获取数据
         getData(){
@@ -157,16 +187,13 @@ export default {
         // 更新数据
         updateChart(data){
             let option ={
-                xAxis: {
-                    data: data.barII.xAxis.data,
-                },
-                series: [
-                    {
-                        data:data.barII.series.data,
-                    },
-                    
+                title:[{subtext:data.subtext}],
+                series:[
+                    {data:data.data},
+                    {data:[14, 14, 14, 14, 14, 14]},
+                    {data:data.data}
                 ]
-            }
+            };
             this.myChartsInstance.setOption(option)
         },
         // 图表自适应

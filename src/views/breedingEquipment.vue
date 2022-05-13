@@ -298,6 +298,9 @@ export default {
         }
     },
     //生命周期函数
+    created(){
+        this.initData()
+    },
     mounted(){
         //让侧边栏功能固化hover的效果
         let node = document.querySelectorAll('.asd div')[3];
@@ -575,7 +578,7 @@ export default {
         //分页查询
         async getDataByPage(pg){
             const token = window.localStorage.getItem('token');
-            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/shrimpPond/pondPage`,{
+            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/breedingEq/EqPage`,{
                 params: {
                     pg: pg
                 },

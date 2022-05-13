@@ -69,7 +69,7 @@
                                                     <i>来源：{{wRefer}}</i>
                                                 </div>
                                                 <div class="shrimpPound">
-                                                    <el-select v-model="pondSelectId" placeholder="请选择" size="small">
+                                                    <el-select v-model="pondSelectId" placeholder="暂无数据" size="small" @change="handelPondSelect">
                                                         <el-option v-for="item in pondInfoArr" :key="item._id" :label="item.pondName" :value="item._id"></el-option>
                                                     </el-select>
                                                     <i>虾塘监测信息(右侧)</i>
@@ -130,7 +130,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
-                        <Temperature :weatherTemp="toTemperatureTemp" :pondId="pondSelectId"></Temperature>
+                        <Temperature v-if="showFlag" :weatherTemp="toTemperatureTemp" :pondId="pondSelectId"></Temperature>
                     </div>
                 </div>
                 <div class="leftBottom">
@@ -139,7 +139,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
-                        <Ph :weatherTemp="toTemperatureTemp" :pondId="pondSelectId"></Ph>
+                        <Ph v-if="showFlag" :weatherTemp="toTemperatureTemp" :pondId="pondSelectId"></Ph>
                     </div>
                 </div>
             </div>
@@ -150,7 +150,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
-                        <Density :weatherTemp="toTemperatureTemp" :pondId="pondSelectId"></Density>
+                        <Density v-if="showFlag" :weatherTemp="toTemperatureTemp" :pondId="pondSelectId"></Density>
                     </div>
                 </div>
                 <div class="rightBottom">
@@ -159,7 +159,7 @@
                         <span class="two"></span>
                         <span class="three"></span>
                         <span class="four"></span>
-                         <OxygenContent :weatherTemp="toTemperatureTemp" :pondId="pondSelectId"></OxygenContent>
+                         <OxygenContent v-if="showFlag" :weatherTemp="toTemperatureTemp" :pondId="pondSelectId"></OxygenContent>
                     </div>
                 </div>
             </div>
@@ -193,7 +193,7 @@ export default {
 
             toTemperatureTemp:'',//props ->Temperature
            
-            
+            showFlag:true,
             
         }
     },
@@ -353,15 +353,23 @@ export default {
             })
             return res;
         },
-        //
-        handelSelect(val){
+        //切换基地
+        async handelSelect(val){
+            this.showFlag = false;
             let arr =  this.baseInfoArr.filter(item => item._id == val)
             this.chosedBase = arr[0];
             //重新获取虾塘列表
-            this.getPondIdAndName(val)
+            await this.getPondIdAndName(val)
             //重新获取天气信息
-            this.getWeatherLocaltion()
+            await this.getWeatherLocaltion()
+            this.showFlag = true;
         },
+        //切换虾塘
+        async handelPondSelect(val){
+            this.showFlag =  await false;
+            console.log(val)
+            this.showFlag =  await true;
+        }
     },
 }
 </script>
