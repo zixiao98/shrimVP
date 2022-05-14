@@ -163,7 +163,7 @@
                         </el-col>
                         <el-col :span="10">
                             <el-form-item label="所属基地" prop="baseById">
-                                <el-select v-model="updateForm.baseById">
+                                <el-select v-model="updateForm.baseById" disabled>
                                     <el-option v-for="item in baseIdAndNameArr" :key="item._id" :label="item.baseName" :value="item._id"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -209,8 +209,8 @@
                             class="avatar-uploader"
                             action="http://121.196.247.161:8885/user/upload/"
                             :show-file-list="false"
-                            :on-success="handleAvatarSuccess"
-                            :before-upload="beforeAvatarUpload">
+                            :on-success="handleAvatarSuccessII"
+                            :before-upload="beforeAvatarUploadII">
                             <img v-if="updateForm.eqPic" :src="updateForm.eqPic" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
@@ -220,7 +220,7 @@
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleII = false">取 消</el-button>
-                <el-button type="primary" @click="submitChangeForm">确 定</el-button>
+                <el-button type="primary" @click="updateEqInfo">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -405,27 +405,16 @@ export default {
                     });
                 return;
             }
-            this.tableDatas = JSON.parse(JSON.stringify(this.tableData));
-            this.tableData=this.tableData.filter(item=>{
-                return String(item[this.select]).includes(this.searchInput)
-            })
-            console.log()
-            if(this.tableData.length){
-                this.$message({
-                    type: 'success',
-                    message: '查找成功!'
-                });
-            }else{
-                this.$message({
-                    message: '无匹配数据!'
-                });
-            }
-            
+            //条件分页查询
+            this.getDataByPageOptions(1)
+            this.flag = true;//显示“查询数据如下”
         },
         lookBack(){
-            this.tableData = JSON.parse(JSON.stringify(this.tableDatas));
+            //复原
+            this.initData();
             this.select ='';
             this.searchInput='';
+            this.flag = false;
         },
         // 跳转到添加页面
         addContent(){
@@ -517,6 +506,33 @@ export default {
             this.updateForm = row;
             this.dialogVisibleII = true;
         },
+        //修改设备信息
+        async updateEqInfo(){
+            //验证通过
+            let token = window.localStorage.getItem('token');
+            let [err,res] = await this.$awaitTo(this.$axios.put(`${this.$baseUrl}/breedingEq/modify`,{
+                data:{
+                    id:this.updateForm._id,
+                    eqName:this.updateForm.eqName,
+                    eqType:this.updateForm.eqType,
+                    eqStatus:this.updateForm.eqStatus,
+                    eqPayfor:this.updateForm.eqPayfor,
+                    eqFixedTime:this.updateForm.eqFixedTime,
+                    eqPic:this.updateForm.eqPic,
+                }
+            },{headers: {'Authorization': 'Bearer '+token,}}))
+            console.log(res,err)
+            if(res?.status ===200){ 
+                this.$noticeInfo('success',res?.status,res.data.tips,3000)
+                // this.tableData[this.updateIndex] = res.data.data;//xxxxxx!!!!
+                //Vue中，不能通过直接索引来改变某一项的值而达到响应式的目的，需要用// Vue.set Vue.set(vm.items, indexOfItem, newValue) 或者 vue重写的 splice方法
+                this.$set(this.tableData,this.updateIndex,res.data.data)
+                this.tableData[this.updateIndex].createDate = new Date(this.tableData[this.updateIndex].createDate).toLocaleString();
+                this.dialogVisibleII = false;
+            }
+            if(err){this.$noticeInfo('error','失败','修改数据失败！！',3000)}
+        },
+        //待删除
         submitChangeForm(){
             console.log(this.updateForm)
             this.$confirm('是否修改该组数据?', '提示', {
@@ -542,6 +558,42 @@ export default {
                             });          
                 });
         },
+        //删除设备信息
+        async deleteEq(id){
+            //验证通过
+            let token = window.localStorage.getItem('token');
+            let [err,res] = await this.$awaitTo(this.$axios.delete(`${this.$baseUrl}/breedingEq/deleteEq`,{
+                data:{//delete方法只有两个参数，params需要放在data里
+                    params:{
+                        id:id,
+                        pg:this.curPg
+                    },
+                },
+                headers: {
+                    'Authorization': 'Bearer '+token,
+                }
+            }))
+            console.log(res,err)
+            if(res?.status ===200){ 
+                this.$noticeInfo('success',res?.status,res.data.tips,3000)
+                if(this.flag){
+                    console.log(this.count%10,this.curPg)
+                    if(this.count%10==1&&this.curPg>1){//一页删空时候，查询上一页
+                        console.log(true)
+                        this.getDataByPageOptions(this.curPg-1);
+                        return;
+                    }
+                    this.getDataByPageOptions(this.curPg);
+                    return;
+                }
+                this.tableData = res.data.data;
+                for (const item of this.tableData) {
+                    item.createDate = new Date(item.createDate).toLocaleString();
+                }
+                this.count = res.data.count;
+            }
+            if(err){this.$noticeInfo('error','失败','删除数据失败！！',3000)}
+        },
         handleDelete(row){
             console.log(row)
              this.$confirm('是否删除该组数据?', '提示', {
@@ -550,17 +602,12 @@ export default {
                         type: 'warning'
                     }).then(() => {
                             //删除
-                            this.tableData = this.tableData.filter((item)=>item.id !== row.id)
-                            console.log(this.tableData)
-                            this.$message({
-                                type: 'success',
-                                message: '删除成功!'
-                            });
+                            this.deleteEq(row._id)
                         }).catch(() => {
-                                this.$message({
-                                    type: 'info',
-                                    message: '已取消操作'
-                            });          
+                            this.$message({
+                                type: 'info',
+                                message: '已取消操作'
+                        });          
                 });
         },
 
@@ -615,7 +662,7 @@ export default {
             console.log(this.select,this.searchInput)
             let that = this;
             const token = window.localStorage.getItem('token');
-            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/shrimpPond/pondPageOptions`,{
+            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/breedingEq/EqPageOptions`,{
                 params: {
                     pg: pg,
                     [that.select]:that.searchInput,
