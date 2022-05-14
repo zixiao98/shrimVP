@@ -25,19 +25,27 @@
                                 <el-table :data="tableData" style="width: 100%">
                                     <el-table-column prop="createDate" label="添加时间" align="center"  width="200"></el-table-column>
                                     <el-table-column prop="eqName" label="设备名称" align="center"  width="260"></el-table-column>
-                                    <el-table-column prop="eqType" label="设备类型" align="center" width="100"></el-table-column>
+                                    <el-table-column label="设备类型" align="center" width="100">
+                                        <template slot-scope="scope">
+                                           <el-tag effect="dark" :type="eqTypeTag[scope.row.eqType].type">{{ eqTypeTag[scope.row.eqType].value }}</el-tag>
+                                        </template>
+                                    </el-table-column>
                                     <el-table-column label="设备状态" align="center" width="100">
-                                         <template slot-scope="scope">
+                                        <template slot-scope="scope">
                                            <el-tag effect="dark" :type="eqStatusTag[scope.row.eqStatus].type">{{ eqStatusTag[scope.row.eqStatus].value }}</el-tag>
                                         </template>
                                     </el-table-column>
                                     <el-table-column prop="eqPayfor" label="设备金额" align="center" width="100"></el-table-column>
                                     <el-table-column prop="eqBuyBy" label="购买设备人员" align="center"  width="160"></el-table-column>
                                     <el-table-column prop="eqFixedTime" label="修理次数" align="center" width="100"></el-table-column>
-                                    <el-table-column prop="baseById" label="所属基地" align="center" ></el-table-column>
+                                    <el-table-column label="所属基地" align="center" >
+                                        <template slot-scope="scope">
+                                           {{ getBaseName(scope.row.baseById) }}
+                                        </template>
+                                    </el-table-column>
                                     <el-table-column label="操作" width="230" align="center">
                                         <template slot-scope="scope">
-                                            <el-button size="small" type="primary" icon="el-icon-edit" @click="handleClick(scope.row)">编辑</el-button>
+                                            <el-button size="small" type="primary" icon="el-icon-edit" @click="handleClick(scope.row,scope.$index)">编辑</el-button>
                                             <el-button size="small" type="danger" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
                                         </template>
                                     </el-table-column> 
@@ -252,6 +260,7 @@ export default {
             ],//查询条件数组
             select:'',//选中的查询条件
             searchInput:'',//搜索关键词
+            search:'',//发送给数据库的真正关键词
             tableData: [],//表格展示数据
             //添加信息数据
             addForm: {
@@ -333,6 +342,7 @@ export default {
                 this.$noticeInfo('success',res?.status,res.data.tips,3000)
                 // this.tableData[this.updateIndex] = res.data.data;//xxxxxx!!!!
                 this.baseIdAndNameArr = res.data.data;
+                console.log(this.baseIdAndNameArr)
             }
             if(err){this.$noticeInfo('error','失败','获取基地列表失败！！',3000)}
         },
@@ -405,6 +415,28 @@ export default {
                     });
                 return;
             }
+            this.search = this.searchInput;
+            if(this.select =='eqType'){
+                if(/\u666e+\u901a?/.test(this.searchInput)){
+                    this.search = 0;
+                }else if(/\u7cbe+\u5bc6?/.test(this.searchInput)){
+                    this.search = 1;
+                }else{
+                    this.search = 2;
+                }
+            }
+            if(this.select =='eqStatus'){
+                if(/\u6b63+\u5e38?/.test(this.searchInput)){
+                    this.search = 0;
+                }else if(/\u5f02+\u5e38?/.test(this.searchInput)){
+                    this.search = 1;
+                }else if(/\u6545+\u969c?/.test(this.searchInput)){
+                    this.search = 2;
+                }else{
+                    this.search = 3;
+                }
+            }
+            console.log(this.select,this.searchInput,this.search)
             //条件分页查询
             this.getDataByPageOptions(1)
             this.flag = true;//显示“查询数据如下”
@@ -502,8 +534,9 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
-        handleClick(row){
-            this.updateForm = row;
+        handleClick(row,index){
+            this.updateIndex = index;
+            this.updateForm = JSON.parse(JSON.stringify(row));
             this.dialogVisibleII = true;
         },
         //修改设备信息
@@ -665,7 +698,7 @@ export default {
             let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/breedingEq/EqPageOptions`,{
                 params: {
                     pg: pg,
-                    [that.select]:that.searchInput,
+                    [that.select]:that.search,
                 },
                 headers: {
                     'Authorization': 'Bearer '+token,
@@ -705,6 +738,13 @@ export default {
                 }
             }
             this.imageUrl = '';
+        },
+        //获取对应基地名称
+        getBaseName(id){
+            let sp = this.baseIdAndNameArr.filter(item=>{
+                return item._id == id
+            })
+            return sp[0]?.baseName
         }
     }
 }

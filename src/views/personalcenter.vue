@@ -264,7 +264,7 @@
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisibleIV = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisibleIV = false">确 定</el-button>
+                <el-button type="primary" @click="SetPsw">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -375,12 +375,7 @@ export default {
             icon:'',
             weatherLoction:'',
             //密保问题
-            pswForm:{
-                question1:'',
-                answer1:'',
-                question2:'',
-                answer2:'',
-            }
+            pswForm:{},
         }
     },
     components:{
@@ -428,7 +423,16 @@ export default {
                 await this.getWeatherLocaltion()//weather
             }
             if(err){
-                    this.$noticeInfo('error','出现错误！','',3000)
+                this.$noticeInfo('error','获取用户信息错误！','',3000)
+            }
+            let [errII,resII] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/user/Psw/getPsw`,{
+                    headers: {'Authorization': 'Bearer '+token,}
+            }))
+            if(resII?.status === 200){
+                this.pswForm = resII.data.data
+            }
+            if(errII){
+                this.$noticeInfo('error','获取密保问题错误！','',3000)
             }
         },
         //数据初始化处理
@@ -736,6 +740,23 @@ export default {
         //打开设置密保问题dialog
         openDialogSettingPsw(){
             this.dialogVisibleIV = true;
+        },
+        //修改(设置密保问题)
+        async SetPsw(){
+            let token = window.localStorage.getItem('token');
+            let [err,res] = await this.$awaitTo(this.$axios.put(`${this.$baseUrl}/user/Psw/setPsw`,{
+                data:{
+                    updateForm:this.pswForm
+                },
+            },{headers: {'Authorization': 'Bearer '+token,}}))
+            if(res?.status === 200){
+                this.pswForm = res.data.psw;
+                this.dialogVisibleIV = false;
+                 this.$noticeInfo('success','设置密保问题成功！','',2000)
+            }
+            if(err){
+                this.$noticeInfo('error','设置密保问题错误！','',3000)
+            }
         },
         //省市区联动 ---修改用户信息
         handleChange(){

@@ -20,7 +20,7 @@ export default {
             date = get7days().slice(1,8-date.length).concat(date)
             let len = dateSum.length
             for(let i=0;i<8-len-1;i++){
-                dateSum.unshift(Math.round(Math.random()*10)+1)
+                dateSum.unshift((i-1)*2+3)
             }
         }
         this.initChart(date,dateSum)

@@ -82,7 +82,9 @@ export default {
                     borderColor: changeColor,
                     borderWidth: '1px',
                     fontWeight: 'bolder',
-                    color: '#E9EEF3'
+                    textStyle:{
+                        color: '#fff'
+                    }
                 },
                 series: [{
                     name: '水温',

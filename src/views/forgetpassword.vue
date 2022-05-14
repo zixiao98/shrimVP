@@ -8,25 +8,25 @@
             width="35%"
             center
             :before-close="handleClose">
-            <el-form :model="userSecurityQuestion" ref="userSecurityQuestion" label-width="80px">
+            <el-form :model="userSecurityQuestion" :rules="rules" ref="userSecurityQuestion" label-width="85px">
                 <div class="question">
                     <el-form-item label="密保问题:">
                         <span>{{question}}</span>
                     </el-form-item>
                 </div>
                 <div class="answer">
-                    <el-form-item label="密保答案:">
+                    <el-form-item label="答案:" prop="answer">
                         <el-input v-model="userSecurityQuestion.answer" placeholder="答案"></el-input>
                     </el-form-item>
                 </div>
                 <div class="psw">
-                    <el-form-item label="新密码:">
-                        <el-input v-model="password" show-password></el-input>
+                    <el-form-item label="新密码:" prop="password">
+                        <el-input v-model="userSecurityQuestion.password" show-password></el-input>
                     </el-form-item>
                 </div>
                 <div class="psw">
-                    <el-form-item label="确认密码:">
-                        <el-input v-model="psws" show-password></el-input>
+                    <el-form-item label="确认密码:" prop="psws">
+                        <el-input v-model="userSecurityQuestion.psws" show-password></el-input>
                     </el-form-item>
                 </div>
                 <div class="vCode">
@@ -38,7 +38,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <button class='left' @click="dialogVisible = false">取 消</button>
-                <button class='right' type="primary" @click.prevent="findBackByQuestion">确 定</button>
+                <button class='right' type="primary" @click.prevent="findBackByQuestion('userSecurityQuestion')">确 定</button>
             </span>
         </el-dialog>
         <div class="psw-box">
@@ -60,7 +60,7 @@
             </div>
             </div>
             <!-- 表单区域 -->
-            <div class="box-card" v-if="changeFlag">
+            <div class="box-card" v-if="!changeFlag">
                 <div class="card-left">
                     <div class="words">
                         请输入你需要找回密码的账号！
@@ -75,7 +75,7 @@
                     </div>
                 </div>
             </div>
-            <div class="box-card" v-if="!changeFlag">
+            <div class="box-card" v-if="changeFlag">
                 <div class="card-left">
                     <div class="words">
                         请选择你需要找回密码的方式！
@@ -84,18 +84,18 @@
                 <div class="card-right">
                     <div class="accNumber">
                         <span class="left">你的账号：</span>
-                        <span class="right">{{accNumber}}</span>
+                        <span class="rights">{{accNumber}}</span>
                     </div>
                     <!-- <div class="btn-email">
                         <button class="check-btn" @click='toFindBackByEmail'>找回</button>by
                         <el-link :underline="false" class="link">邮箱验证</el-link>
                     </div> -->
                     <div class="btn-securityQuestion">
-                        <button class="check-btn" @click='toFindBackByQuestion'>找回</button>by
+                        <button class="check-btn" @click='toFindBackByQuestion(1)'>找回</button>by
                         <el-link :underline="false" class="link">密保问题1</el-link>
                     </div>
                     <div class="btn-securityQuestion">
-                        <button class="check-btn" @click='toFindBackByQuestion'>找回</button>by
+                        <button class="check-btn" @click='toFindBackByQuestion(2)'>找回</button>by
                         <el-link :underline="false" class="link">密保问题2</el-link>
                     </div>
                 </div>
@@ -190,9 +190,29 @@
 <script>
 export default {
     data(){
+        //以下两个属性用于密码二次检验
+        var validatePass = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请输入密码'));
+            } else {
+                if (this.userSecurityQuestion.psws !== '') {
+                    this.$refs.userSecurityQuestion.validateField('psws');//触发确定密码的校验
+                }
+                callback();
+            }
+        };
+        var validatePass2 = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入密码'));
+            } else if (value !== this.userSecurityQuestion.password) {
+                callback(new Error('两次输入密码不一致!'));
+            } else {
+                callback();
+            }
+        };
         return {
             //要找回的账号
-            accNumber: "",
+            accNumber: "2568624492@qq.com",
             //切换card的标识字段
             changeFlag:false,
             //密保问题
@@ -201,14 +221,29 @@ export default {
             userSecurityQuestion:{
                 question:'',
                 answer:'',
-                vCode:''
+                vCode:'',
+                password:'',
+                psws:'',
             },
-            password:'',
-            psws:'',
             //对话框标识位
             dialogVisible:false,
             //从服务器接收的验证码
-            vCode:''
+            vCode:'',
+            pswData:{},
+             rules: {//传入el-form ，表单验证规则
+                answer: [
+                    { required: true, message: '请输入密保答案', trigger: ['blur','change'] },
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: ['blur','change'] },
+                    { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: ['blur','change'] },
+                    { validator: validatePass, trigger: ['blur','change'] }
+                ],
+                psws:[
+                    { required: true, message: '请输入密码', trigger: ['blur','change'] },
+                    { validator: validatePass2, trigger: ['blur','change'] }
+                ]
+            },
         }
     },
     methods:{
@@ -223,35 +258,24 @@ export default {
             }
         },
         //找回密码
-        toCheck(){
-            this.changeFlag = !this.changeFlag;
-            // zx_axios.get('/accNumber',{
-            //     params:{
-            //         accNumber:this.accNumber
-            //     }
-            // }).then(res=>{
-            //     //切换
-            //     this.changeFlag = !this.changeFlag;
-            //     //存储密保问题
-            //     this.question = res.data.question;
-            //     console.log(this.question)
-            // }).catch(err=>{
-            //     if(err.response.status ===401){
-            //         this.$notify({
-            //             type: 'error',
-            //             title: `状态码：${err.response.status}`,
-            //             message: `${err.response.data.tips}`,
-            //             duration:1500
-            //         });
-            //     }else{
-            //         this.$notify({
-            //             type: 'warning',
-            //             title: `状态码：${err.response.status}`,
-            //             message: `${err.response.data.errors[0].msg}`,
-            //             duration:1500
-            //         });
-            //     }
-            // })
+        async toCheck(){
+            let [err,res] = await this.$awaitTo(this.$axios.get(`${this.$baseUrl}/user/Psw/findAcAndPsw`,{
+                    params:{accNumber:this.accNumber}    
+                }))
+                console.log(res?.status)
+            if(res?.status == 204){
+                console.log(res?.status)
+
+                this.$noticeInfo('error',204,'该用户不存在',1500)
+            }
+            if(res?.status == 200){
+                this.changeFlag = !this.changeFlag;
+                this.pswData = res.data.data;
+                console.log(this.pswData)
+            }
+            if(err){
+                this.$notice('error',err,1500,false)
+            }
         },
         //通过邮箱验证找回
         toFindBackByEmail(){
@@ -263,15 +287,26 @@ export default {
             });
         },
         //通过密保问题找回
-        toFindBackByQuestion(){
+        toFindBackByQuestion(n){
             this.dialogVisible = !this.dialogVisible;
             this.refreshVcode();
-            this.userSecurityQuestion.question = this.question;
+            if(n ==1){
+                console.log(this.pswData.question1)
+                this.question = this.pswData.question1;
+                this.userSecurityQuestion.question = 'question1';
+            }else{
+                console.log(this.pswData.question2)
+                this.question = this.pswData.question2;
+                this.userSecurityQuestion.question = 'question2';
+            }
         },
         //确定用密保问题找回密码
-        findBackByQuestion(){
+         findBackByQuestion(form){
             console.log(this.userSecurityQuestion)
-             //先判断验证码是否一致
+            this.$refs[form].validate(async (valid) =>{
+                //验证不通过
+                if(!valid){ this.$noticeInfo('error','表单验证失败','请检查输入！',1500); return;}
+                 //先判断验证码是否一致
             if(this.userSecurityQuestion.vCode ===''){//输入验证码为空
                 this.$notify({
                     type: 'warning',
@@ -307,48 +342,39 @@ export default {
                     confirmButtonText: '是',
                     cancelButtonText: '否',
                     type: 'warning'
-                }).then(() => {//确定提交修改
+                }).then(async () => {//确定提交修改
                    //发送请求-验证密保是否正确
-                    // zx_axios.post('/verifySecurityQuestion',{
-                    //     params:{
-                    //         accNumber:this.accNumber,
-                    //         question:this.userSecurityQuestion.question,
-                    //         answer:this.userSecurityQuestion.answer
-                    //     }
-                    // }).then(res=>{
-                    //     console.log(res)
-                    //     this.$notify({
-                    //         type: 'success',
-                    //         title: `状态码：${res.status}`,
-                    //         message: `${res.data.tips}`,
-                    //         duration:3000,
-                    //         offset:68
-                    //     });
-                    //     //关闭对话框
-                    //     this.dialogVisible = !this.dialogVisible;
-                    //     //返回登录页
-                    //     setTimeout(() => {
-                    //         this.$router.replace('/');
-                    //     }, 1000);
-                    // }).catch(err=>{
-                    //     console.log(err)
-                    //     //刷新验证码
-                    //     this.refreshVcode();
-                    //     //将输入框置空
-                    //     this.userSecurityQuestion.vCode='';
-                    //     this.$notify({
-                    //         type: 'error',
-                    //         title: `状态码：${err.response.status}`,
-                    //         message: `${err.response.data.tips}`,
-                    //         duration:1500
-                    //     });
-                    // })
+                    let [err,res] = await this.$awaitTo(this.$axios.post(`${this.$baseUrl}/user/Psw/valPsw`,{
+                        data:{
+                            createById:this.pswData.createById,
+                            question:this.userSecurityQuestion.question,
+                            answer:this.userSecurityQuestion.answer,
+                            password:this.userSecurityQuestion.password,
+                        }
+                    }))
+                    if(res?.status == 204){
+                        this.$noticeInfo('error',204,'密保问题答案错误',1500)
+                    }
+                    if(res?.status == 200){
+                        this.$message({
+                            type: 'success',
+                            message:'修改密码成功',
+                            duration:1800
+                        })
+                        setTimeout(() => {this.backLogin();}, 2000);
+                    }
+                    if(err){
+                        this.$notice('error',err,1500,false)
+                    }
+                    // this.dialogVisible = !this.dialogVisible;
                 }).catch(() => {
                     this.$message({
                     type: 'info',
                     message: '已取消操作'
                     });          
                 });
+            })
+            
         },
         backLogin(){//返回登录页面
             this.$router.push('/')

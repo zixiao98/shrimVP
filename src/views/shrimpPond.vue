@@ -61,7 +61,11 @@
                                             {{scope.row.harvestDate.length ==0? '-' :scope.row.harvestDate}}
                                         </template>
                                     </el-table-column>
-                                    <el-table-column prop="baseById" label="所属基地" align="center"></el-table-column>
+                                    <el-table-column label="所属基地" align="center" >
+                                        <template slot-scope="scope">
+                                           {{ getBaseName(scope.row.baseById) }}
+                                        </template>
+                                    </el-table-column>
                                     <el-table-column label="操作" width="200" align="center">
                                          <template slot-scope="scope">
                                             <el-button size="small" type="primary" icon="el-icon-edit" @click="handleClick(scope.row,scope.$index)">编辑</el-button>
@@ -564,8 +568,9 @@ export default {
                 if(!valid){ this.$noticeInfo('error','表单验证失败','请检查输入！',1500); return;}
                 //验证通过
                 if(String(this.addForm.harvestDate).length>0){
-                    this.addForm.harvestDate = new Date().toLocaleString().split(" ")[0].split("/").join("-");
+                    this.addForm.harvestDate = new Date(this.addForm.harvestDate).toLocaleString().split(" ")[0].split("/").join("-");
                 }
+                console.log(this.addForm)
                 let token = window.localStorage.getItem('token');
                 let [err,res] = await this.$awaitTo(this.$axios.post(`${this.$baseUrl}/shrimpPond/addPond`,{
                     params:{
@@ -883,6 +888,13 @@ export default {
                 }
             }
             this.imageUrl = '';
+        },
+        //获取对应基地名称
+        getBaseName(id){
+            let sp = this.baseIdAndNameArr.filter(item=>{
+                return item._id == id
+            })
+            return sp[0]?.baseName
         }
     }
 }

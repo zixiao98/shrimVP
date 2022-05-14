@@ -21,14 +21,24 @@ export default {
         "weatherTemp":function(newVal,oldVal){
             console.log(newVal,oldVal)
             if(newVal&&this.pondId){
-                this.updateChart({data:[6.3, 4.5, 3.8, 5.8, 7.2, 8.1],subtext:'更新频率：4小时/次'})
+                let num = Math.floor(Math.random()*10)
+                let arr = [7.3, 7.5, 7.8, 7.8, 7.2, 7.1];
+                for(let i=0;i<num;i++){
+                    arr.unshift(arr.pop())
+                }
+                this.updateChart({data:arr,subtext:'更新频率：4小时/次'})
             }
         },
     },
     async mounted(){
         await this.intChart()
         if(this.pondId){
-            this.updateChart({data:[6.3, 4.5, 3.8, 5.8, 7.2, 8.1],subtext:'更新频率：4小时/次'})
+            let num = Math.floor(Math.random()*10)
+            let arr = [7.3, 7.5, 7.8, 7.8, 7.2, 7.1];
+            for(let i=0;i<num;i++){
+                arr.unshift(arr.pop())
+            }
+            this.updateChart({data:arr,subtext:'更新频率：4小时/次'})
         }
         window.addEventListener('resize',this.adaptChart)
     },

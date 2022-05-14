@@ -72,7 +72,7 @@
                 <el-footer height="28px">
                     <div class='center'>
                         <i class="el-icon-check"></i>
-                        <span>Shrimp culture visualization platform 对虾养殖可视化平台 2022 © shrimp culture by lzj</span>
+                        <span>Precision Breeding Management Visualization Platform for Shrimp 对虾养殖可视化平台 2022 © by lzj</span>
                     </div>
                 </el-footer>
             </el-container>
